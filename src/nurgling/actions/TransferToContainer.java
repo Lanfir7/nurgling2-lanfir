@@ -22,7 +22,6 @@ public class TransferToContainer implements Action{
 
     Container container;
     Context context;
-
     public TransferToContainer(Gob gob, String cap, NAlias items) {
         Container container = new Container();
         container.gob = gob;

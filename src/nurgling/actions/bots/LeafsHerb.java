@@ -2,7 +2,9 @@ package nurgling.actions.bots;
 
 import haven.Coord;
 import haven.Gob;
+import haven.MenuGrid;
 import nurgling.NGameUI;
+import nurgling.NInventory;
 import nurgling.NUtils;
 import nurgling.actions.*;
 import nurgling.areas.NArea;
@@ -13,6 +15,8 @@ import nurgling.widgets.Specialisation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.TreeMap;
+
 public class LeafsHerb implements Action {
     // Определяем элементы для поиска (стокпайлы и столы хербалиста)
     private static final NAlias leafPiles = new NAlias("gfx/terobjs/stockpile-leaf");
@@ -22,10 +26,11 @@ public class LeafsHerb implements Action {
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
-        NUtils.getGameUI().msg("Starting leaf collection...");
+        if(!new StackOff().run(gui).IsSuccess())
+            return Results.ERROR("Не получилось выключить стаки");
 
-        // Находим область, где находятся листья
-        NArea leafArea = NArea.findSpec(Specialisation.SpecName.leafs.toString());
+        NUtils.getGameUI().msg("Starting leaf collection...");
+        NArea leafArea = NArea.findIn("Fresh Tea Leaves");
 
         // Находим стокпайлы с листьями
         ArrayList<Gob> leafPilesList = Finder.findGobs(leafArea, leafPiles);
@@ -33,7 +38,6 @@ public class LeafsHerb implements Action {
             NUtils.getGameUI().msg("No leaf piles found!");
             return Results.FAIL();
         }
-        NUtils.getGameUI().msg("Found " + leafPilesList.size() + " leaf piles.");
 
         // Находим область для хербалист столов
         NArea herbTableArea = NArea.findSpec(Specialisation.SpecName.htable.toString());
@@ -44,7 +48,6 @@ public class LeafsHerb implements Action {
             NUtils.getGameUI().msg("No herbalist tables found!");
             return Results.FAIL();
         }
-        NUtils.getGameUI().msg("Found " + herbTables.size() + " herbalist tables.");
 
         // Создаем контейнеры для каждого стола хербалиста
         ArrayList<Container> containers = new ArrayList<>();
@@ -56,7 +59,7 @@ public class LeafsHerb implements Action {
             containers.add(container);
         }
 
-        new FreeContainers(containers).run(gui);
+        new FreeContainers(containers, teaLeaves).run(gui);
 
         // Проверяем свободное место на столах
         boolean allContainersFull = true;
@@ -72,12 +75,6 @@ public class LeafsHerb implements Action {
         if (allContainersFull) {
             NUtils.getGameUI().msg("All herbalist tables are full!");
             return Results.SUCCESS();
-        }
-
-        // Собираем листья из каждого стокпайла
-        for (Gob pile : leafPilesList) {
-            NUtils.getGameUI().msg("Collecting leaves from a pile...");
-            new CollectFromGob(pile, "Take", "gfx/terobjs/stockpile-leaf", new Coord(1, 1), teaLeaves, null).run(gui);
         }
 
         // Теперь раскладываем листья на столы хербалиста

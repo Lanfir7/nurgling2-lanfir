@@ -29,6 +29,21 @@ public class NAlias {
         exceptions = new ArrayList<String> ();
         this.keys.addAll ( keys );
     }
+    public boolean check(String name) {
+        // Проверяем, соответствует ли имя одному из ключей
+        for (String key : keys) {
+            if (name.contains(key)) {
+                // Если имя соответствует исключению, пропускаем его
+                for (String exception : exceptions) {
+                    if (name.contains(exception)) {
+                        return false;
+                    }
+                }
+                return true; // Имя найдено в ключах и не является исключением
+            }
+        }
+        return false; // Имя не соответствует ни одному ключу
+    }
 
     public NAlias(
             ArrayList<String> keys,

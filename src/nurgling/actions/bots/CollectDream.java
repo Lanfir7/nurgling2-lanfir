@@ -4,6 +4,7 @@ import haven.*;
 import nurgling.NGameUI;
 import nurgling.NUtils;
 import nurgling.actions.*;
+import nurgling.areas.NArea;
 import nurgling.tools.Container;
 import nurgling.tools.Finder;
 import nurgling.tools.NAlias;
@@ -16,6 +17,7 @@ import java.util.TimerTask;
 public class CollectDream implements Action {
 
     private DreamCollector dreamCollectorWindow;
+    private static final NAlias dream = new NAlias("Dream", "dream");
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
@@ -34,10 +36,8 @@ public class CollectDream implements Action {
                 if (dreamCollectorWindow.isRunning()) {
                     try {
                         dreamCollectorWindow.updateStatus("Collecting dreams");
-                        NUtils.getGameUI().msg("Запуск сбора дримов...");
                         performDreamCollection(gui, initialPosition);
 
-                        dreamCollectorWindow.updateStatus("Returning to initial position");
                         dreamCollectorWindow.updateCycleCount(); // Увеличиваем количество циклов
                     } catch (Exception e) {
                         e.printStackTrace(); // Обработка исключений
@@ -54,13 +54,6 @@ public class CollectDream implements Action {
 
     private void performDreamCollection(NGameUI gui, Coord2d initialPosition) throws InterruptedException {
 
-        // Находим ближайший шкаф и перемещаем ресурсы
-        ArrayList<Gob> cupboards = Finder.findNearbyObjects(new NAlias("gfx/terobjs/cupboard"), 100); // Ищем ближайшие шкафы
-        if (cupboards == null || cupboards.isEmpty()) {
-            dreamCollectorWindow.updateStatus("No cupboards found!");
-            return;
-        }
-
         ArrayList<Gob> drecaObjects = Finder.findNearbyObjects(new NAlias("gfx/terobjs/dreca"), 100); // Ищем ближайшие Dreca
         if (drecaObjects == null || drecaObjects.isEmpty()) {
             dreamCollectorWindow.updateStatus("No Dreca objects found!");
@@ -70,12 +63,12 @@ public class CollectDream implements Action {
 
         // Собираем ресурс "Dream" из каждого объекта Dreca
         for (Gob dreca : drecaObjects) {
-            int initialDreamCount = gui.getInventory().getTotalAmountItems(new NAlias("Dream")); // Количество дримов перед сбором
+            int initialDreamCount = gui.getInventory().getTotalAmountItems(dream); // Количество дримов перед сбором
 
             // Выполняем сбор
-            new CollectFromGob(dreca, "Harvest", null, new Coord(1, 1), new NAlias("Dream", "dream"), null).run(gui);
+            new CollectFromGob(dreca, "Harvest", null, new Coord(1, 1), dream, null).run(gui);
 
-            int newDreamCount = gui.getInventory().getTotalAmountItems(new NAlias("Dream"));
+            int newDreamCount = gui.getInventory().getTotalAmountItems(dream);
             int collected = newDreamCount - initialDreamCount; // Считаем только реально добавленные дримы
 
             if (collected > 0) {
@@ -84,23 +77,36 @@ public class CollectDream implements Action {
         }
 
         // Переносим все мечты в шкафы
-        while (!gui.getInventory().getItems(new NAlias("Dream", "dream")).isEmpty()) {
-            for (Gob cupboard : cupboards) {
-                new TransferToContainer(cupboard, "Cupboard", new NAlias("Dream", "dream")).run(gui);
-
-                // Проверяем, остались ли еще дримы в инвентаре
-                if (gui.getInventory().getItems(new NAlias("Dream", "dream")).isEmpty()) {
-                    dreamCollectorWindow.updateStatus("Successfully transferred all dreams to cupboards.");
-                    break; // Все перемещено, выходим
-                } else {
-                    dreamCollectorWindow.updateStatus("Still some dreams left in inventory.");
-                }
-            }
-        }
+        storeDreamsInCupboards(gui);
 
         // Возвращаемся в исходную точку
         dreamCollectorWindow.updateStatus("Returned to the initial position.");
         new PathFinder(initialPosition).run(gui);
         dreamCollectorWindow.updateStatus("Waiting for the next cycle");
+    }
+    private void storeDreamsInCupboards(NGameUI gui) throws InterruptedException {
+        while (!gui.getInventory().getItems(dream).isEmpty()) {
+            if (NArea.findOuts(dream).isEmpty()) {
+                ArrayList<Gob> cupboards = Finder.findNearbyObjects(new NAlias("gfx/terobjs/cupboard"), 100); // Ищем ближайшие шкафы
+                if (cupboards == null || cupboards.isEmpty()) {
+                    dreamCollectorWindow.updateStatus("No cupboards found!");
+                    return;
+                }
+                for (Gob cupboard : cupboards) {
+                    new TransferToContainer(cupboard, "Cupboard", dream).run(gui);
+
+                    // Проверяем, остались ли еще дримы в инвентаре
+                    if (gui.getInventory().getItems(dream).isEmpty()) {
+                        NUtils.getGameUI().msg("Successfully transferred all dreams to cupboards.");
+                        break; // Все перемещено, выходим
+                    } else {
+                        NUtils.getGameUI().msg("Still some dreams left in inventory.");
+                    }
+                }
+            } else {
+                new FreeInventory().run(gui);
+                break;
+            }
+        }
     }
 }
