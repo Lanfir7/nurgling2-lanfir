@@ -23,6 +23,13 @@ public class TransferToContainer implements Action{
     Container container;
     Context context;
 
+    public TransferToContainer(Gob gob, String cap, NAlias items) {
+        Container container = new Container();
+        container.gob = gob;
+        container.cap = cap;
+        this.container = container;
+        this.items = items;
+    }
     Integer th = -1;
     public TransferToContainer(Context context, Container container, NAlias items) {
         this.container = container;
