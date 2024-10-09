@@ -34,6 +34,29 @@ public class Finder
         result.sort(Comparator.comparingDouble(gob -> gob.rc.dist(playerPos)));
         return result;
     }
+    public static ArrayList<Gob> findSortedGobsInArea(Pair<Coord2d, Coord2d> space, NAlias name) throws InterruptedException {
+        ArrayList<Gob> result = new ArrayList<>();
+        Coord2d playerPos = NUtils.player().rc; // Позиция игрока
+
+        synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
+            for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+                if (!(gob instanceof OCache.Virtual || gob.attr.isEmpty() || gob.getClass().getName().contains("GlobEffector"))) {
+                    // Проверяем, что объект находится в пределах заданной зоны
+                    if (gob.rc.x >= space.a.x && gob.rc.y >= space.a.y && gob.rc.x <= space.b.x && gob.rc.y <= space.b.y) {
+                        // Проверяем, соответствует ли объект переданному имени
+                        if (NParser.isIt(gob, name)) {
+                            result.add(gob); // Добавляем объект в список
+                        }
+                    }
+                }
+            }
+        }
+
+        // Сортируем объекты по расстоянию до игрока (сначала ближайшие)
+        result.sort(Comparator.comparingDouble(gob -> gob.rc.dist(playerPos)));
+
+        return result; // Возвращаем отсортированный список объектов
+    }
     static final Comparator<Gob> x_comp = new Comparator<Gob> () {
         @Override
         public int compare(

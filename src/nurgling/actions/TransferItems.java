@@ -42,7 +42,7 @@ public class TransferItems implements Action
                 for (Context.Output output : cnt.getOutputs(item, th)) {
                     if (output instanceof Context.Pile) {
                         if (((Context.OutputPile) output).getArea() != null)
-                            new TransferToPiles(((Context.OutputPile) output).getArea().getRCArea(), new NAlias(item)).run(gui);
+                            new TransferToPiles(((Context.OutputPile) output).getArea().getRCArea(), new NAlias(item), th).run(gui);
                     }
                     if (output instanceof Container) {
                         if (((Context.OutputContainer) output).getArea() != null)
