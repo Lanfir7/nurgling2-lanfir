@@ -27,6 +27,8 @@ public class Context {
         contcaps.put("gfx/terobjs/birchbasket", "Birch Basket");
         contcaps.put("gfx/terobjs/wbasket", "Basket");
         contcaps.put("gfx/terobjs/exquisitechest", "Exquisite Chest");
+//        contcaps.put("gfx/terobjs/stockpile-leaf", "Stockpile");
+
     }
 
     public static class Workstation

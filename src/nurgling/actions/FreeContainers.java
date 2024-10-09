@@ -3,6 +3,7 @@ package nurgling.actions;
 import haven.WItem;
 import nurgling.NGItem;
 import nurgling.NGameUI;
+import nurgling.NUtils;
 import nurgling.areas.NArea;
 import nurgling.tools.Container;
 import nurgling.tools.Context;
@@ -37,28 +38,37 @@ public class FreeContainers implements Action {
                     continue;
             }
             new PathFinder(container.gob).run(gui);
-            new OpenTargetContainer(container).run(gui);
 
-            for (WItem item : gui.getInventory(container.cap).getItems()) {
-                String name = ((NGItem) item.item).name();
 
-                // Если предмет соответствует исключенному имени, пропускаем его
-                if (excludedItemAlias != null && excludedItemAlias.check(name)) {
-                    continue;
+            if (container.cap == "Stockpile"){
+                while (!container.gob.getloc().isEmpty()) {
+                    new OpenTargetContainer("Stockpile", container.gob).run(gui);
+                    new TakeItemsFromPile(container.gob, gui.getStockpile()).run(gui);
+                    new FreeInventory().run(gui);
+                    new PathFinder(container.gob).run(gui);
                 }
-
-                NArea area = NArea.findOut(name, ((NGItem) item.item).quality != null ? ((NGItem) item.item).quality : 1);
-                if (area != null) {
-                    targets.add(name);
-                }
-            }
-
-            while (!new TakeItemsFromContainer(container, targets).run(gui).isSuccess) {
-                for (String name : targets) {
-                    new TransferItems(context, name).run(gui);
-                }
-                new PathFinder(container.gob).run(gui);
+            }else {
                 new OpenTargetContainer(container).run(gui);
+                for (WItem item : gui.getInventory(container.cap).getItems()) {
+                    String name = ((NGItem) item.item).name();
+
+                    // Если предмет соответствует исключенному имени, пропускаем его
+                    if (excludedItemAlias != null && excludedItemAlias.check(name)) {
+                        continue;
+                    }
+
+                    NArea area = NArea.findOut(name, ((NGItem) item.item).quality != null ? ((NGItem) item.item).quality : 1);
+                    if (area != null) {
+                        targets.add(name);
+                    }
+                }
+                while (!new TakeItemsFromContainer(container, targets).run(gui).isSuccess) {
+                    for (String name : targets) {
+                        new TransferItems(context, name).run(gui);
+                    }
+                    new PathFinder(container.gob).run(gui);
+                    new OpenTargetContainer(container).run(gui);
+                }
             }
             new CloseTargetContainer(container).run(gui);
         }

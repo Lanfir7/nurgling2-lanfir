@@ -42,6 +42,13 @@ public class FreeContainersInArea implements Action {
                 cand.initattr(Container.Space.class);
                 containers.add(cand);
             }
+            for (Gob sm : Finder.findGobs(area, new NAlias("gfx/terobjs/stockpile"))) {
+                Container cand = new Container();
+                cand.gob = sm;
+                cand.cap = "Stockpile";
+                cand.initattr(Container.Space.class);
+                containers.add(cand);
+            }
             if (containers.isEmpty())
                 return Results.ERROR("No containers in area");
         }
