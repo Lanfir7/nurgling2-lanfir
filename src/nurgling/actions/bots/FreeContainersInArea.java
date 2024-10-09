@@ -8,10 +8,7 @@ import nurgling.NGItem;
 import nurgling.NGameUI;
 import nurgling.NInventory;
 import nurgling.NUtils;
-import nurgling.actions.Action;
-import nurgling.actions.FreeContainers;
-import nurgling.actions.PathFinder;
-import nurgling.actions.Results;
+import nurgling.actions.*;
 import nurgling.areas.NArea;
 import nurgling.tasks.HandIsFree;
 import nurgling.tasks.WaitItemContent;
@@ -28,6 +25,8 @@ public class FreeContainersInArea implements Action {
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
+        if(!new StackOff().run(gui).IsSuccess())
+            return Results.ERROR("Не получилось выключить стаки");
 
         SelectArea insa;
         NUtils.getGameUI().msg("Please, select input area");

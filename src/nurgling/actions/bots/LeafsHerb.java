@@ -32,12 +32,7 @@ public class LeafsHerb implements Action {
         NUtils.getGameUI().msg("Starting leaf collection...");
         NArea leafArea = NArea.findIn("Fresh Tea Leaves");
 
-        // Находим стокпайлы с листьями
-        ArrayList<Gob> leafPilesList = Finder.findGobs(leafArea, leafPiles);
-        if (leafPilesList.isEmpty()) {
-            NUtils.getGameUI().msg("No leaf piles found!");
-            return Results.FAIL();
-        }
+
 
         // Находим область для хербалист столов
         NArea herbTableArea = NArea.findSpec(Specialisation.SpecName.htable.toString());
@@ -70,7 +65,12 @@ public class LeafsHerb implements Action {
                 break; // Найдено свободное место
             }
         }
-
+        // Находим стокпайлы с листьями
+        ArrayList<Gob> leafPilesList = Finder.findGobs(leafArea, leafPiles);
+        if (leafPilesList.isEmpty()) {
+            NUtils.getGameUI().msg("No leaf piles found!");
+            return Results.FAIL();
+        }
         // Если все контейнеры заполнены, бот завершает работу
         if (allContainersFull) {
             NUtils.getGameUI().msg("All herbalist tables are full!");
