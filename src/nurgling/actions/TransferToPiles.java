@@ -71,7 +71,7 @@ public class TransferToPiles implements Action {
             while(!getItems(gui, th).isEmpty()) {
                 PileMaker pm;
 
-                (pm = new PileMaker(out, items, pileName)).run(gui);
+                (pm = new PileMaker(out, items, getStockpileName(items))).run(gui);
                 Gob pile = pm.getPile();
                 witems = getItems(gui, th);
                 int size = witems.size();
@@ -108,6 +108,8 @@ public class TransferToPiles implements Action {
             return new NAlias("gfx/terobjs/stockpile-cloth");
         } else if (NParser.checkName(items.getDefault(), new NAlias("Linen Cloth"))) {
             return new NAlias("gfx/terobjs/stockpile-cloth");
+        } else if (NParser.checkName(items.getDefault(), new NAlias("Flax Fibres"))) {
+            return new NAlias("gfx/terobjs/stockpile-flaxfibre");
         } else {
             return new NAlias("stockpile");
         }

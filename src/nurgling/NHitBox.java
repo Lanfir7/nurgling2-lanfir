@@ -125,6 +125,8 @@ public class NHitBox
             return new NHitBox(new Coord(-5,-5),new Coord(5,5));
         else if(name.toLowerCase().startsWith("bar of"))
             return new NHitBox(new Coord(-5,-7),new Coord(5,7));
+        else if(name.toLowerCase().endsWith("flaxfibre"))
+            return new NHitBox(new Coord(-3,-3),new Coord(3,3));
         else if(name.toLowerCase().endsWith("leaf"))
             return new NHitBox(new Coord(-5,-5),new Coord(5,5));
         return null;
