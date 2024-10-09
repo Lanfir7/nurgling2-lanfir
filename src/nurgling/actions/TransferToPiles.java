@@ -68,35 +68,22 @@ public class TransferToPiles implements Action {
                     }
                 }
             }
+            while(!getItems(gui, th).isEmpty()) {
+                PileMaker pm;
 
-            // Создаем новый стокпайл и продолжаем перемещать предметы, пока они остаются в инвентаре
-            while (!getItems(gui, th).isEmpty()) {
-                PileMaker pm = new PileMaker(out, items, pileName);
-                pm.run(gui);
-
-                witems = getItems(gui, th);
-
+                (pm = new PileMaker(out, items, pileName)).run(gui);
                 Gob pile = pm.getPile();
-                while (!getItems(gui, th).isEmpty() ) {
-                    // Обновляем предметы и фильтруем по качеству
-                    int size = witems.size();
-
-                    new OpenTargetContainer("Stockpile", pile).run(gui);
-                    int target_size = Math.min(size, gui.getStockpile().getFreeSpace());
-
-                    if (target_size > 0 || !getItems(gui, th).isEmpty()) {
-                        int fullSize = gui.getInventory().getItems().size();
-
-                        // Перемещаем предметы в новый стокпайл
-                        for (int i = 0; i < target_size; i++) {
-                            witems.get(i).item.wdgmsg("transfer", Coord.z);
-                        }
-
-                        NUtils.getUI().core.addTask(new FilledPile(pile, items, target_size, size, th));
-                        NUtils.getUI().core.addTask(new WaitAnotherSize(NUtils.getGameUI().getInventory(), fullSize));
-                    } else {
-                        break; // Выход из цикла, если нет свободного места
+                witems = getItems(gui, th);
+                int size = witems.size();
+                new OpenTargetContainer("Stockpile", pile).run(gui);
+                int target_size = Math.min(size, gui.getStockpile().getFreeSpace());
+                if(target_size>0 || !getItems(gui, th).isEmpty()) {
+                    int fullSize = gui.getInventory().getItems().size();
+                    for (int i = 0; i < target_size; i++) {
+                        witems.get(i).item.wdgmsg("transfer", Coord.z);
                     }
+                    NUtils.getUI().core.addTask(new FilledPile(pile, items, target_size, size, th));
+                    NUtils.getUI().core.addTask(new WaitAnotherSize(NUtils.getGameUI().getInventory(), fullSize));
                 }
             }
         }
