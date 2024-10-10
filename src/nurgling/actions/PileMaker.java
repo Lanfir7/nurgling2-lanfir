@@ -36,7 +36,6 @@ public class PileMaker implements Action{
         NHitBox hb = NHitBox.findCustom(items.getDefault());
         if(hb == null) {
             hb = NHitBox.findCustom(pileName.getDefault());
-            NUtils.getGameUI().msg("хитбокс кастом" + hb.toString());
         }
         if(hb == null)
             return Results.ERROR("Hit box not found");
@@ -48,10 +47,7 @@ public class PileMaker implements Action{
                 
                 return Results.FAIL();
         }
-        NUtils.getGameUI().msg("Иду ставить стокпайл");
         new PathFinder( NGob.getDummy(pos, 0, hb),true).run(gui);
-
-        NUtils.getGameUI().msg("Дошел ставить стокпайл");
         NUtils.activateItem(pos);
         NUtils.getUI().core.addTask(new WaitPlob());
         NUtils.getGameUI().map.wdgmsg("place", pos.floor(posres), 0, 1, 0);
