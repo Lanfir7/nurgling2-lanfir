@@ -10,13 +10,10 @@ import nurgling.tools.NAlias;
 import nurgling.widgets.bots.StockpileTransferInfo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MoveStockpiles implements Action {
 
     private StockpileTransferInfo transferInfoWindow; // Окно для отображения информации
-    private Map<String, Integer> itemSummary = new HashMap<>(); // Карта для хранения информации о предметах
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
@@ -51,26 +48,17 @@ public class MoveStockpiles implements Action {
                 new TakeItemsFromPile(stockpile, gui.getStockpile()).run(gui);
                 new CloseTargetWindow(NUtils.getGameUI().getWindow("Stockpile")).run(gui);
 
+                ArrayList<String> names = new ArrayList<>();
                 if (NUtils.getGameUI().getInventory().getFreeSpace() == 0) {
-                    ArrayList<WItem> inventoryItems = gui.getInventory().getItems();
-                    ArrayList<String> names = new ArrayList<>();
-
-                    for (WItem item : inventoryItems) {
+                    for (WItem item : gui.getInventory().getItems()) {
                         String itemName = ((NGItem) item.item).name();
                         double itemQuality = ((NGItem) item.item).quality != null ? ((NGItem) item.item).quality : 1.0;
-
-                        // Обновляем информацию о перемещённом предмете
-                        String itemKey = itemName + " - Quality: " + itemQuality;
-                        itemSummary.put(itemKey, itemSummary.getOrDefault(itemKey, 0) + 1);
-
+                        transferInfoWindow.addItem(itemName, itemQuality); // Добавляем предмет через окно
                         names.add(itemName);
-                    }
 
+                    }
                     itemAlias = new NAlias(names);
                     new TransferToPiles(outArea, itemAlias).run(gui);
-
-                    // Обновляем окно с информацией
-                    transferInfoWindow.updateItemInfo(itemSummary);
                 }
             }
         }

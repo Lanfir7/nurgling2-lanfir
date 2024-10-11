@@ -1,5 +1,6 @@
 package nurgling.actions;
 
+import haven.Coord;
 import haven.WItem;
 import nurgling.NGItem;
 import nurgling.NGameUI;
@@ -8,6 +9,7 @@ import nurgling.areas.NArea;
 import nurgling.tools.Container;
 import nurgling.tools.Context;
 import nurgling.tools.NAlias;
+import nurgling.widgets.bots.StockpileTransferInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,8 @@ public class FreeContainers implements Action {
 
     // Карта для хранения информации о перемещённых предметах
     Map<String, Integer> itemSummary = new HashMap<>();
+
+    private StockpileTransferInfo transferInfoWindow; // Окно для отображения информации
 
     public FreeContainers(ArrayList<Container> containers) {
         this.containers = containers;
@@ -35,6 +39,11 @@ public class FreeContainers implements Action {
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
         Context context = new Context();
+
+        // Открываем окно для отображения информации
+        transferInfoWindow = new StockpileTransferInfo();
+        gui.add(transferInfoWindow, new Coord(300, 200));
+
         for (Container container : containers) {
             Container.Space space;
             if ((space = container.getattr(Container.Space.class)).isReady()) {
@@ -48,16 +57,17 @@ public class FreeContainers implements Action {
                     new OpenTargetContainer("Stockpile", container.gob).run(gui);
                     new TakeItemsFromPile(container.gob, gui.getStockpile()).run(gui);
 
-                    // Обновляем информацию о перемещённых предметах
-                    collectItemsSummary(gui);
+
 
                     if (NUtils.getGameUI().getInventory().getFreeSpace() == 0) {
+                        collectItemsSummary(gui);
                         new FreeInventory().run(gui);
                     }
 
                     if (!container.gob.getloc().isEmpty()) {
                         new PathFinder(container.gob).run(gui);
                     }
+
                 }
             } else {
                 new OpenTargetContainer(container).run(gui);
@@ -79,20 +89,18 @@ public class FreeContainers implements Action {
                     for (String name : targets) {
                         new TransferItems(context, name).run(gui);
                     }
-
-                    // Обновляем информацию о перемещённых предметах
                     collectItemsSummary(gui);
-
                     new PathFinder(container.gob).run(gui);
                     new OpenTargetContainer(container).run(gui);
                 }
             }
 
+            transferInfoWindow.updateItemInfo(itemSummary);
             new CloseTargetContainer(container).run(gui);
         }
 
         // Выводим информацию о перемещённых предметах после завершения работы
-        displayItemSummary(gui);
+        transferInfoWindow.updateStatus("Transfer complete.");
         new FreeInventory().run(gui);
 
         return Results.SUCCESS();
@@ -106,25 +114,10 @@ public class FreeContainers implements Action {
             double quality = ngItem.quality != null ? ngItem.quality : 1;
 
             // Формируем ключ с именем предмета и его качеством
-            String itemKey = itemName + " (Q" + quality + ")";
+            String itemKey = itemName + " - Quality: " + quality;
 
             // Увеличиваем количество данного предмета в карте
             itemSummary.put(itemKey, itemSummary.getOrDefault(itemKey, 0) + 1);
         }
-    }
-
-    // Метод для вывода собранной информации в окно
-    private void displayItemSummary(NGameUI gui) {
-        StringBuilder message = new StringBuilder("Перемещённые предметы:\n");
-
-        for (Map.Entry<String, Integer> entry : itemSummary.entrySet()) {
-            message.append(entry.getKey())
-                    .append(" = ")
-                    .append(entry.getValue())
-                    .append(" шт\n");
-        }
-
-        // Выводим сообщение в окне
-        NUtils.getGameUI().msg(message.toString());
     }
 }
