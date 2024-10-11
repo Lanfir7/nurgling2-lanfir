@@ -29,6 +29,7 @@ public class NBotsMenu extends Widget
         resources.elements.add(new NButton("clay", new CollectStone()));
         resources.elements.add(new NButton("bark", new MoveStockpiles()));
         resources.elements.add(new NButton("pboards", new pushArea()));
+        resources.elements.add(new NButton("pboards", new MiningMaster()));
         addLayout(resources);
         NLayout productions = new NLayout("productions");
         productions.elements.add(new NButton("smelter", new SmelterAction()));
