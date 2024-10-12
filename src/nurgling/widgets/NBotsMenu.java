@@ -23,6 +23,7 @@ public class NBotsMenu extends Widget
         resources.elements.add(new NButton("bark", new CollectBark()));
         resources.elements.add(new NButton("bough", new CollectBough()));
         resources.elements.add(new NButton("leaf", new CollectLeaf()));
+        resources.elements.add(new NButton("chipper", new Chipper()));
         resources.elements.add(new NButton("choper", new CollectDream()));
         resources.elements.add(new NButton("choper", new CollectDream()));
         resources.elements.add(new NButton("leaf", new LeafsHerb()));
@@ -35,6 +36,7 @@ public class NBotsMenu extends Widget
         productions.elements.add(new NButton("smelter", new SmelterAction()));
         productions.elements.add(new NButton("backer", new BackerAction()));
         productions.elements.add(new NButton("ugardenpot", new UnGardentPotAction()));
+        productions.elements.add(new NButton("butcher", new Butcher()));
         addLayout(productions);
         NLayout battle = new NLayout("battle");
         battle.elements.add(new NButton("reagro", new Reagro()));
