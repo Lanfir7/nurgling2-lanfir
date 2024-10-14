@@ -14,6 +14,7 @@ public class NMiniMapWnd extends Widget{
     public IButton geoloc;
     public static final KeyBinding kb_claim = KeyBinding.get("ol-claim", KeyMatch.nil);
     public static final KeyBinding kb_vil = KeyBinding.get("ol-vil", KeyMatch.nil);
+    private boolean zonesHighlighted = false;
 
     public static class NMenuCheckBox extends ICheckBox {
         public NMenuCheckBox(String base, KeyBinding gkey, String tooltip) {
@@ -87,7 +88,17 @@ public class NMiniMapWnd extends Widget{
                 NUtils.getUI().core.mappingClient.OpenMap();
             }
         }), (first.sz.x+UI.scale(3))*shift++, 0);
-
+// Добавляем новую иконку для включения подсветки зон
+        IButton highlightZonesButton = toggle_panel.add(new IButton(
+                Resource.loadsimg("nurgling/hud/buttons/toggle_panel/geoloc/d"),
+                Resource.loadsimg("nurgling/hud/buttons/toggle_panel/geoloc/d"),
+                Resource.loadsimg("nurgling/hud/buttons/toggle_panel/geoloc/d"),
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        toggleZoneHighlighting();
+                    }
+                }), (first.sz.x + UI.scale(3)) * shift++, 0);
 //        ACheckBox path = toggle_panel.add(new NMenuCheckBox("lbtn-path", kb_path, "Display objects paths"), (first.sz.x+UI.scale(3))*6, 0).changed(a -> NUtils.getGameUI().mmapw.miniMap.toggleol("path", a));
 //        path.a = NConfiguration.getInstance().isPaths;
 
@@ -103,6 +114,15 @@ public class NMiniMapWnd extends Widget{
         add(toggle_panel);
         swdg = add(new StatusWdg(UI.scale(32,32)), UI.scale(4,4));
         pack();
+    }
+    // Метод для переключения подсветки зон
+    public void toggleZoneHighlighting() {
+        if (zonesHighlighted) {
+            ((NMapView)NUtils.getGameUI().map).destroyDummys();
+        } else {
+            ((NMapView)NUtils.getGameUI().map).initDummys();
+        }
+        zonesHighlighted = !zonesHighlighted; // Переключаем состояние
     }
 
     public void switchStatus(String val, Boolean a) {
