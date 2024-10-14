@@ -18,6 +18,8 @@ public class FreeInventory implements Action
         this.context = context;
     }
 
+    public FreeInventory() {
+    }
     HashSet<String> targets = new HashSet<>();
 
     @Override

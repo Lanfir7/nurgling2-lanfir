@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class FreeContainers implements Action {
+
+    Context context = new Context();
     ArrayList<Container> containers;
     NAlias excludedItemAlias; // Новый NAlias для исключаемых предметов
 
@@ -61,7 +63,7 @@ public class FreeContainers implements Action {
 
                     if (NUtils.getGameUI().getInventory().getFreeSpace() == 0) {
                         collectItemsSummary(gui);
-                        new FreeInventory().run(gui);
+                        new FreeInventory(context).run(gui);
                     }
 
                     if (!container.gob.getloc().isEmpty()) {
@@ -101,7 +103,7 @@ public class FreeContainers implements Action {
 
         // Выводим информацию о перемещённых предметах после завершения работы
         transferInfoWindow.updateStatus("Transfer complete.");
-        new FreeInventory().run(gui);
+        new FreeInventory(context).run(gui);
 
         return Results.SUCCESS();
     }

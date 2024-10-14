@@ -13,6 +13,12 @@ public class TakeItemsFromPile implements Action
     int target_size = Integer.MAX_VALUE;
     int took = 0;
 
+    public TakeItemsFromPile(Gob gob, NISBox pile)
+    {
+        this.pile = pile;
+        this.target_size = target_size;
+        this.gpile = gob;
+    }
 
     public TakeItemsFromPile(Gob gob, NISBox pile, int target_size)
     {
