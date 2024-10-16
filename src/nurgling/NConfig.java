@@ -265,8 +265,7 @@ public class NConfig
         return new ArrayList<>();
     }
 
-    public void read()
-    {
+    public void read() {
         current = this;
         StringBuilder contentBuilder = new StringBuilder();
 
@@ -358,7 +357,7 @@ public class NConfig
         JSONObject main = new JSONObject(prep);
         try
         {
-            FileWriter f = new FileWriter(path);
+            FileWriter f = new FileWriter(path, StandardCharsets.UTF_8);
             main.write(f);
             f.close();
             current.isUpd = false;

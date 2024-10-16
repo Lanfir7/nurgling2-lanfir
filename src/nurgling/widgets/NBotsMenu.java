@@ -41,7 +41,7 @@ public class NBotsMenu extends Widget
         productions.elements.add(new NButton("ugardenpot", new UnGardentPotAction()));
         productions.elements.add(new NButton("butcher", new Butcher()));
         productions.elements.add(new NButton("hides", new DFrameHidesAction()));
-        productions.elements.add(new NButton("hides", new FriedFish()));
+        productions.elements.add(new NButton("fishroast", new FriedFish()));
         addLayout(productions);
         NLayout battle = new NLayout("battle");
         battle.elements.add(new NButton("reagro", new Reagro()));
@@ -61,7 +61,7 @@ public class NBotsMenu extends Widget
         addLayout(farming);
         NLayout utils = new NLayout("utils");
         utils.elements.add(new NButton("shieldsword", new EquipShieldSword()));
-//        utils.elements.add(new NButton("filwater", new FillWaterskins()));
+        utils.elements.add(new NButton("filwater", new FillWaterskins(false)));
         utils.elements.add(new NButton("unbox", new FreeContainersInArea()));
         utils.elements.add(new NButton("water_cheker", new CheckWater()));
         utils.elements.add(new NButton("clay_cheker", new CheckClay()));
@@ -69,6 +69,7 @@ public class NBotsMenu extends Widget
         addLayout(utils);
         NLayout build = new NLayout("build");
         build.elements.add(new NButton("dframe", new BuildDryingFrame()));
+        build.elements.add(new NButton("cellar", new BuildCellar()));
         addLayout(build);
         if(NUtils.getUI().core.debug)
         {
@@ -242,6 +243,11 @@ public class NBotsMenu extends Widget
                             start(path, action);
                         }
                     });
+
+            Resource res = Resource.remote().load(dir_path + path + "/u").get();
+            if(!(res.layers(Resource.Tooltip.class).isEmpty()))
+                btn.settip(Resource.remote().loadwait(dir_path + path + "/u").flayer(Resource.tooltip).t);
+
         }
 
         private NButton()
@@ -253,8 +259,7 @@ public class NBotsMenu extends Widget
                     showLayouts();
                 }
             };
-
-        }
+       }
 
 
 
@@ -286,6 +291,8 @@ public class NBotsMenu extends Widget
             }, path)).start();
             NUtils.getGameUI().biw.addObserve(t);
         }
+
+
     };
 
     class NLayout
