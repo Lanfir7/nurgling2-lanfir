@@ -5,6 +5,8 @@ import nurgling.*;
 import nurgling.pf.*;
 import nurgling.pf.Utils;
 import nurgling.tools.Finder;
+import nurgling.tools.NAlias;
+import nurgling.tools.NParser;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;
@@ -12,7 +14,7 @@ import java.util.concurrent.atomic.*;
 import static nurgling.pf.Graph.getPath;
 
 public class PathFinder implements Action {
-    public static double pfmdelta = 0.1;
+    public static double pfmdelta = 1;
     NPFMap pfmap = null;
     Coord start_pos = null;
     Coord end_pos = null;
@@ -25,6 +27,17 @@ public class PathFinder implements Action {
     public boolean isDynamic = false;
     Gob dummy;
     boolean dn = false;
+    Mode mode = Mode.NEAREST;
+    Gob gobInStartPos = null;
+    double badDir = Double.MAX_VALUE;
+    public enum Mode
+    {
+        NEAREST,
+        Y_MAX,
+        Y_MIN,
+        X_MAX,
+        X_MIN,
+    }
 
     public PathFinder(Coord2d begin, Coord2d end) {
         this.begin = begin;
@@ -38,6 +51,18 @@ public class PathFinder implements Action {
     public PathFinder(Gob target) {
         this(target.rc);
         target_id = target.id;
+        Gob targetg;
+        if((targetg = Finder.findGob(target_id))!=null)
+        {
+            if(NParser.checkName(targetg.ngob.name,new NAlias("primsmelter")))
+            {
+                badDir = targetg.a;
+            }
+        }
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
     }
 
     @Override
@@ -51,17 +76,10 @@ public class PathFinder implements Action {
                 //TODO syntetic points
                 for (Graph.Vertex vert : path) {
                     Coord2d targetCoord = Utils.pfGridToWorld(vert.pos);
-//                    if (vert == path.getFirst()) {
-//                        Coord2d playerrc = NUtils.player().rc;
-//                        double dx, dy;
-//                        if (Math.min(dx = Math.abs(targetCoord.x - playerrc.x), dy = Math.abs(targetCoord.y - playerrc.y)) < MCache.tilehsz.x)
-//
-//                            if (dx < dy) {
-//                                targetCoord.x = playerrc.x;
-//                            } else {
-//                                targetCoord.y = playerrc.y;
-//                            }
-//                    }
+                    if (vert == path.getFirst() && gobInStartPos!=null) {
+                        Coord2d playerrc = NUtils.player().rc;
+
+                    }
 //
 //                    if (target_id == -1 && vert == path.getLast()) {
 //                        if (Math.abs(targetCoord.x - end.x) < Math.abs(targetCoord.y - end.y)) {
@@ -73,16 +91,15 @@ public class PathFinder implements Action {
 //                        if (targetCoord.dist(end) < MCache.tilehsz.x)
 //                            targetCoord = end;
 //                    }
-                    if(dummy!=null && vert == path.getLast()) {
-                        if(Math.abs(targetCoord.x-dummy.rc.x)<4)
-                        {
-                            targetCoord.x=dummy.rc.x;
-                            targetCoord.y+=dummy.rc.y-targetCoord.y>0?-2:2;
+                    if(vert == path.getLast() && isHardMode || dummy!=null) {
+                        Coord2d tcord = dummy != null ? dummy.rc : Finder.findGob(target_id).rc;
+                        if (Math.abs(targetCoord.x - tcord.x) < 4) {
+                            targetCoord.x = tcord.x;
+                            targetCoord.y += tcord.y - targetCoord.y > 0 ? -2 : 2;
                         }
-                        if(Math.abs(targetCoord.y-dummy.rc.y)<4)
-                        {
-                            targetCoord.y=dummy.rc.y;
-                            targetCoord.x+=dummy.rc.x-targetCoord.x>0?-2:2;
+                        if (Math.abs(targetCoord.y - tcord.y) < 4) {
+                            targetCoord.y = tcord.y;
+                            targetCoord.x += tcord.x - targetCoord.x > 0 ? -2 : 2;
                         }
                     }
 
@@ -115,7 +132,14 @@ public class PathFinder implements Action {
         int mul = 1;
         while (path.size() == 0 && mul < 1000) {
             pfmap = new NPFMap(begin, end, mul);
-
+            if(pfmap.bad) {
+                if (test) {
+                    return null;
+                } else {
+                    NUtils.getGameUI().error("Unable to build grid of required size");
+                    throw new InterruptedException();
+                }
+            }
             pfmap.waterMode = waterMode;
             pfmap.build();
             CellsArray dca = null;
@@ -134,39 +158,79 @@ public class PathFinder implements Action {
             if (dca != null)
                 pfmap.setCellArray(dca);
             NPFMap.print(pfmap.getSize(), pfmap.getCells());
+
+
             Graph res = null;
             if (pfmap.getCells()[end_pos.x][end_pos.y].val == 7) {
                 Thread th = new Thread(res = new Graph(pfmap, start_pos, end_pos));
                 th.start();
                 th.join();
             } else {
-                LinkedList<Graph> graphs = new LinkedList<>();
-                for (Coord ep : end_poses) {
-                    graphs.add(new Graph(pfmap, start_pos, ep));
-                }
-                LinkedList<Thread> threads = new LinkedList<>();
-                for (Graph graph : graphs) {
-                    Thread th;
-                    threads.add(th = new Thread(graph));
-                    th.start();
-                }
-                for (Thread t : threads) {
-                    t.join();
-                }
+                switch (mode) {
+                    case NEAREST:
+                    {
+                        LinkedList<Graph> graphs = new LinkedList<>();
+                        for (Coord ep : end_poses) {
+                            graphs.add(new Graph(pfmap, start_pos, ep));
+                        }
+                        LinkedList<Thread> threads = new LinkedList<>();
+                        for (Graph graph : graphs) {
+                            Thread th;
+                            threads.add(th = new Thread(graph));
+                            th.start();
+                        }
+                        for (Thread t : threads) {
+                            t.join();
+                        }
 
-                graphs.sort(new Comparator<Graph>() {
-                    @Override
-                    public int compare(Graph o1, Graph o2) {
-                        return (Integer.compare(o1.getPathLen(), o2.getPathLen()));
+                        graphs.sort(new Comparator<Graph>() {
+                            @Override
+                            public int compare(Graph o1, Graph o2) {
+                                return (Integer.compare(o1.getPathLen(), o2.getPathLen()));
+                            }
+                        });
+                        if (!graphs.isEmpty())
+                            res = graphs.get(0);
+                        break;
                     }
-                });
-                if (!graphs.isEmpty())
-                    res = graphs.get(0);
+                    case Y_MAX:
+                    case Y_MIN:
+                    case X_MAX:
+                    case X_MIN:
+                    {
+
+                        Comparator comp = new Comparator<Coord>() {
+                            @Override
+                            public int compare(Coord o1, Coord o2) {
+                                Coord2d t01 = Utils.pfGridToWorld(pfmap.cells[o1.x][o1.y].pos);
+                                Coord2d t02 = Utils.pfGridToWorld(pfmap.cells[o2.x][o2.y].pos);
+                                switch (mode)
+                                {
+                                    case Y_MAX:
+                                        return Double.compare(t02.y, t01.y);
+                                    case Y_MIN:
+                                        return Double.compare(t01.y, t02.y);
+                                    case X_MAX:
+                                        return Double.compare(t02.x, t01.x);
+                                    case X_MIN:
+                                        return Double.compare(t01.x, t02.x);
+                                }
+                                return 0;
+                            }
+                        };
+
+                        end_poses.sort(comp);
+                        Thread th = new Thread(res = new Graph(pfmap, start_pos, end_poses.get(0)));
+                        th.start();
+                        th.join();
+                    }
+                }
+            }
 //                for (Graph g: graphs)
 //                {
 //                    NPFMap.print(pfmap.getSize(), g.getVert());
 //                }
-            }
+
 
             if (res != null) {
                 if (!isDynamic)
@@ -191,6 +255,14 @@ public class PathFinder implements Action {
             ArrayList<Coord> st_poses = findFreeNear(start_pos, true);
             if (st_poses.isEmpty())
                 return false;
+            if(cells[start_pos.x][start_pos.y].content.size()==1 || (cells[start_pos.x][start_pos.y].content.size()==2 && cells[start_pos.x][start_pos.y].content.contains((long)-1)))
+                for(Long id: cells[start_pos.x][start_pos.y].content)
+                {
+                    if(id!=-1)
+                    {
+                        gobInStartPos = Finder.findGob(id);
+                    }
+                }
             start_pos = st_poses.get(0);
         }
         if (start_pos.equals(end_pos) && dummy==null) {
@@ -200,18 +272,33 @@ public class PathFinder implements Action {
 //        cells[start_pos.x][start_pos.y].val = 7;
         if (cells[end_pos.x][end_pos.y].val != 0) {
             end_poses = findFreeNear(end_pos, false);
-            if(dummy!=null)
+            if(dummy!=null || (isHardMode&&target_id!=-2 && Finder.findGob(target_id)!=null))
             {
+                Coord2d tcoord = (dummy!=null)?dummy.rc:Finder.findGob(target_id).rc;
                 ArrayList<Coord> best_poses = new ArrayList<>();
                 for(Coord coord : end_poses)
                 {
                     Coord2d coord2d = Utils.pfGridToWorld(cells[coord.x][coord.y].pos);
-                    if(coord2d.x+MCache.tileqsz.x > dummy.rc.x && coord2d.x-MCache.tileqsz.x< dummy.rc.x ||
-                            coord2d.y+MCache.tileqsz.y > dummy.rc.y && coord2d.y-MCache.tileqsz.y< dummy.rc.y)
+                    if(coord2d.x+MCache.tileqsz.x > tcoord.x && coord2d.x-MCache.tileqsz.x< tcoord.x ||
+                            coord2d.y+MCache.tileqsz.y > tcoord.y && coord2d.y-MCache.tileqsz.y< tcoord.y)
                         best_poses.add(coord);
                 }
                 if(!best_poses.isEmpty())
                     end_poses = best_poses;
+            }
+
+            if(badDir!=Double.MAX_VALUE && target_id>0)
+            {
+                Coord2d orientation = new Coord2d(1,0).rot(badDir);
+                Coord2d tcoord = Finder.findGob(target_id).rc;
+                ArrayList<Coord> best_poses = new ArrayList<>();
+                for(Coord coord : end_poses)
+                {
+                    Coord2d coord2d = Utils.pfGridToWorld(cells[coord.x][coord.y].pos).sub(tcoord).norm();
+                    if(coord2d.dot(orientation)<0)
+                        best_poses.add(coord);
+                }
+                end_poses = best_poses;
             }
             for (Coord coord : end_poses) {
                 if (start_pos.equals(coord) && target_id >= 0)
@@ -224,14 +311,6 @@ public class PathFinder implements Action {
         }
         return true;
     }
-
-
-    public static Comparator<Coord> c_comp = new Comparator<Coord>() {
-        @Override
-        public int compare(Coord o1, Coord o2) {
-            return Double.compare(Utils.pfGridToWorld(o1).dist(NUtils.getGameUI().map.player().rc), Utils.pfGridToWorld(o2).dist(NUtils.getGameUI().map.player().rc));
-        }
-    };
 
     private ArrayList<Coord> findFreeNear(Coord pos, boolean start) {
         if (!start) {
@@ -300,7 +379,7 @@ public class PathFinder implements Action {
 
     public static boolean isAvailable(Gob target) throws InterruptedException {
         PathFinder pf = new PathFinder(target);
-        LinkedList<Graph.Vertex> res = pf.construct();
+        LinkedList<Graph.Vertex> res = pf.construct(true);
         return res != null || pf.dn;
     }
 
@@ -365,20 +444,23 @@ public class PathFinder implements Action {
 
         if(isStart) {
             Coord2d player = NUtils.player().rc;
-            Coord2d targerc = (dummy == null) ? Finder.findGob(target_id).rc : dummy.rc;
-            Coord2d playerdir = player.sub(targerc).norm();
+            if(Finder.findGob(target_id)!=null) {
+                Coord2d targerc = Finder.findGob(target_id).rc;
+                Coord2d playerdir = player.sub(targerc).norm();
 
-            Comparator comp = new Comparator<Coord>() {
-                @Override
-                public int compare(Coord o1, Coord o2) {
-                    Coord2d t01 = Utils.pfGridToWorld(pfmap.cells[o1.x][o1.y].pos).sub(targerc).norm();
-                    Coord2d t02 = Utils.pfGridToWorld(pfmap.cells[o2.x][o2.y].pos).sub(targerc).norm();
 
-                    return Double.compare(t02.dot(playerdir), t01.dot(playerdir));
-                }
-            };
+                Comparator comp = new Comparator<Coord>() {
+                    @Override
+                    public int compare(Coord o1, Coord o2) {
+                        Coord2d t01 = Utils.pfGridToWorld(pfmap.cells[o1.x][o1.y].pos).sub(targerc).norm();
+                        Coord2d t02 = Utils.pfGridToWorld(pfmap.cells[o2.x][o2.y].pos).sub(targerc).norm();
 
-            res.sort(comp);
+                        return Double.compare(t02.dot(playerdir), t01.dot(playerdir));
+                    }
+                };
+
+                res.sort(comp);
+            }
 //            Gob target = (dummy==null|| target_id!=-1)?Finder.findGob(target_id):dummy;
 //            System.out.println("+++++++++++++++++++++++");
 //            System.out.println("Target" + ((target!=dummy)?target.ngob.name:"") + "rc" + target.rc.toString() + " id " + target.id);

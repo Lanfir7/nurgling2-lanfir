@@ -16,6 +16,7 @@ public class NBotsMenu extends Widget
     {
         NLayout resources = new NLayout("resources");
         resources.elements.add(new NButton("choper", new Chopper()));
+        resources.elements.add(new NButton("chipper", new Chipper()));
         resources.elements.add(new NButton("pblocks", new PrepareBlocks()));
         resources.elements.add(new NButton("pboards", new PrepareBoards()));
         resources.elements.add(new NButton("log", new TransferLog()));
@@ -37,6 +38,7 @@ public class NBotsMenu extends Widget
         productions.elements.add(new NButton("ugardenpot", new UnGardentPotAction()));
         productions.elements.add(new NButton("butcher", new Butcher()));
         productions.elements.add(new NButton("hides", new DFrameHidesAction()));
+        productions.elements.add(new NButton("hides", new FriedFish()));
         addLayout(productions);
         NLayout battle = new NLayout("battle");
         battle.elements.add(new NButton("reagro", new Reagro()));
@@ -318,7 +320,7 @@ public class NBotsMenu extends Widget
             for (NButton element : elements)
             {
                 element.btn.move(new Coord(w * UI.scale(34), h * UI.scale(34)));
-                if (h > 8)
+                if (h > 7)
                 {
                     w += 1;
                     h = 0;
