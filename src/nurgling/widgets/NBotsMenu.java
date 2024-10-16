@@ -31,6 +31,9 @@ public class NBotsMenu extends Widget
         resources.elements.add(new NButton("bark", new MoveStockpiles()));
         resources.elements.add(new NButton("pboards", new pushArea()));
         resources.elements.add(new NButton("pboards", new MiningMaster()));
+        resources.elements.add(new NButton("log", new LiftAndMoveObjects()));
+        resources.elements.add(new NButton("hides", new CartOut()));
+        resources.elements.add(new NButton("smelter", new CartIn()));
         addLayout(resources);
         NLayout productions = new NLayout("productions");
         productions.elements.add(new NButton("smelter", new SmelterAction()));
@@ -58,7 +61,7 @@ public class NBotsMenu extends Widget
         addLayout(farming);
         NLayout utils = new NLayout("utils");
         utils.elements.add(new NButton("shieldsword", new EquipShieldSword()));
-        utils.elements.add(new NButton("filwater", new FillWaterskins()));
+//        utils.elements.add(new NButton("filwater", new FillWaterskins()));
         utils.elements.add(new NButton("unbox", new FreeContainersInArea()));
         utils.elements.add(new NButton("water_cheker", new CheckWater()));
         utils.elements.add(new NButton("clay_cheker", new CheckClay()));

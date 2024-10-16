@@ -34,6 +34,28 @@ public class Finder
         result.sort(Comparator.comparingDouble(gob -> gob.rc.dist(playerPos)));
         return result;
     }
+    public static Gob findNearestObject(NAlias objectName, double radius) throws InterruptedException {
+        Gob nearestGob = null;
+        Coord2d playerPos = NUtils.player().rc;
+        double minDistance = radius;
+
+        synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
+            for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+                if (!(gob instanceof OCache.Virtual || gob.attr.isEmpty() || gob.getClass().getName().contains("GlobEffector"))) {
+                    // Проверяем, что объект соответствует переданному названию
+                    if (NParser.isIt(gob, objectName)) {
+                        double dist = gob.rc.dist(playerPos);
+                        if (dist <= minDistance) {
+                            nearestGob = gob;
+                            minDistance = dist; // обновляем минимальное расстояние
+                        }
+                    }
+                }
+            }
+        }
+
+        return nearestGob;
+    }
     public static ArrayList<Gob> findSortedGobsInArea(Pair<Coord2d, Coord2d> space, NAlias name) throws InterruptedException {
         ArrayList<Gob> result = new ArrayList<>();
         Coord2d playerPos = NUtils.player().rc; // Позиция игрока

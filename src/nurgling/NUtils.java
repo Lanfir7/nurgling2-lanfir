@@ -163,7 +163,10 @@ public class NUtils
     public static void activateItem(Gob gob, boolean shift) {
         getGameUI().map.wdgmsg("itemact", Coord.z, gob.rc.floor(posres), shift ? 1 : 0, 0, (int) gob.id, gob.rc.floor(posres), 0, -1);
     }
-
+    public static void activate(Gob gob, int flag) {
+        getGameUI().map.wdgmsg("click", Coord.z, gob.rc.floor(posres), 3, 0, 0, (int) gob.id, gob.rc.floor(posres),
+                0, flag);
+    }
     public static void activateItem(Coord2d pos) {
         getGameUI().map.wdgmsg("itemact", Coord.z, pos.floor(posres),0);
     }
