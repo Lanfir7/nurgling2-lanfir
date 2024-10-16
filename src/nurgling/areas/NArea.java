@@ -416,11 +416,116 @@ public class NArea
     {
         this.name = name;
     }
+    public void updateFromJSON(JSONObject obj) {
+        try {
+             // Если id передается как Integer
+
+            if (obj.has("name")) {
+                this.name = obj.getString("name");
+            }
+
+            if (obj.has("uuid")) {
+                this.uuid = obj.getString("uuid");
+            }
+
+            this.dir = obj.has("dir") ? obj.getString("dir") : this.dir;
+
+            if (obj.has("color")) {
+                JSONObject color = obj.getJSONObject("color");
+                this.color = new Color(color.getInt("r"), color.getInt("g"), color.getInt("b"), color.getInt("a"));
+            }
+
+            if (obj.has("space")) {
+                JSONArray jareas = obj.getJSONArray("space");
+                space.space.clear();
+                grids_id.clear();
+
+                for (int i = 0; i < jareas.length(); i++) {
+                    JSONObject jarea = jareas.getJSONObject(i);
+                    Long gridId = jarea.get("id") instanceof Integer ? ((Integer) jarea.get("id")).longValue() : jarea.getLong("id");
+                    Coord begin = new Coord(jarea.getInt("begin_x"), jarea.getInt("begin_y"));
+                    Coord end = new Coord(jarea.getInt("end_x"), jarea.getInt("end_y"));
+                    space.space.put(gridId, new VArea(new Area(begin, end)));
+                    grids_id.add(gridId);
+                }
+            }
+
+            if (obj.has("in")) {
+                jin = obj.getJSONArray("in");
+            }
+
+            if (obj.has("out")) {
+                jout = obj.getJSONArray("out");
+            }
+
+            if (obj.has("spec")) {
+                jspec = obj.getJSONArray("spec");
+                spec.clear();
+                for (int i = 0; i < jspec.length(); i++) {
+                    JSONObject specObj = jspec.getJSONObject(i);
+                    String name = specObj.getString("name");
+                    String subtype = specObj.has("subtype") ? specObj.getString("subtype") : null;
+                    spec.add(new Specialisation(name, subtype));
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public NArea(JSONObject obj, int localId) {
+        try {
+            this.id = localId;  // Присваиваем новый локальный ID
+            this.uuid = obj.getString("uuid");  // Получаем UUID зоны
+            this.name = obj.getString("name");  // Получаем имя зоны
+            this.dir = obj.has("dir") ? obj.getString("dir") : "DefaultFolder";
+
+            if (obj.has("color")) {
+                JSONObject color = obj.getJSONObject("color");
+                this.color = new Color(color.getInt("r"), color.getInt("g"), color.getInt("b"), color.getInt("a"));
+            }
+
+            space = new Space();
+            JSONArray jareas = obj.getJSONArray("space");
+            for (int i = 0; i < jareas.length(); i++) {
+                JSONObject jarea = jareas.getJSONObject(i);
+
+                // Приведение типа id к Long
+                Long areaId = jarea.get("id") instanceof Integer ? ((Integer) jarea.get("id")).longValue() : jarea.getLong("id");
+
+                Coord begin = new Coord(jarea.getInt("begin_x"), jarea.getInt("begin_y"));
+                Coord end = new Coord(jarea.getInt("end_x"), jarea.getInt("end_y"));
+                space.space.put(areaId, new VArea(new Area(begin, end)));
+                grids_id.add(areaId);
+            }
+
+            if (obj.has("in")) {
+                jin = obj.getJSONArray("in");
+            }
+            if (obj.has("out")) {
+                jout = obj.getJSONArray("out");
+            }
+            if (obj.has("spec")) {
+                jspec = obj.getJSONArray("spec");
+                for (int i = 0; i < jspec.length(); i++) {
+                    JSONObject specObj = jspec.getJSONObject(i);
+                    String specName = specObj.getString("name");
+                    String subtype = specObj.has("subtype") ? specObj.getString("subtype") : null;
+                    spec.add(new Specialisation(specName, subtype));
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();  // Обрабатываем ошибки парсинга JSON
+        }
+    }
 
     public NArea(JSONObject obj)
     {
         this.name = (String) obj.get("name");
         this.id = (Integer) obj.get("id");
+        if(obj.has("uuid")){
+            this.uuid = obj.getString("uuid");
+        }
         this.dir = obj.has("dir") ? obj.getString("dir") : "DefaultFolder";
         if(obj.has("color"))
         {
@@ -466,6 +571,7 @@ public class NArea
     public String name;
     public int id;
     public String dir;
+    public String uuid = null;
     public Color color = new Color(194,194,65,56);
     public final ArrayList<Long> grids_id = new ArrayList<>();
 
@@ -537,6 +643,7 @@ public class NArea
         JSONObject res = new JSONObject();
         res.put("name", name);
         res.put("id", id);
+        res.put("uuid", uuid);
         res.put("dir", dir);
         JSONObject jcolor = new JSONObject();
         jcolor.put("r", color.getRed());

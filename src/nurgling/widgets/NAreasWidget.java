@@ -4,15 +4,14 @@ import haven.*;
 import haven.Frame;
 import haven.Label;
 import haven.Window;
-import haven.render.*;
 import nurgling.*;
 import nurgling.actions.bots.*;
 import nurgling.areas.*;
+import nurgling.conf.LZoneSync;
 import nurgling.overlays.map.*;
 import nurgling.tools.*;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Comparator;
 import javax.swing.*;
 import javax.swing.colorchooser.*;
 import java.awt.*;
@@ -35,24 +34,36 @@ public class NAreasWidget extends Window
     {
         super(UI.scale(new Coord(700,500)), "Areas Settings");
         IButton create;
+        IButton syncWithCloud;
         prev = add(create = new IButton(NStyle.addarea[0].back,NStyle.addarea[1].back,NStyle.addarea[2].back){
             @Override
             public void click()
             {
                 super.click();
                 NUtils.getGameUI().msg("Please, select area");
-                String selectedDir = null;
-                if (groupBy.sel != null && !groupBy.sel.equals("All Folders") && !groupBy.sel.equals("DefaultFolder")) {
-                    selectedDir = groupBy.sel;
-                }
-                new Thread(new NAreaSelector(NAreaSelector.Mode.CREATE, selectedDir)).start();
+                new Thread(new NAreaSelector(NAreaSelector.Mode.CREATE, "DefaultFolder")).start();
             }
         },new Coord(5,UI.scale(5)));
-
+        add(syncWithCloud = new IButton(NStyle.cloud[0].back, NStyle.cloud[1].back, NStyle.cloud[2].back){
+            @Override
+            public void click() {
+                super.click();
+                NUtils.getGameUI().msg("Synchronizing with cloud...");
+                new Thread(() -> {
+                        // Запуск действия синхронизации зон с сервером
+                        new LZoneSync().start();
+                        NConfig.needAreasUpdate();
+                        initAreas();
+                        updateFolderItems();
+                        NUtils.getGameUI().msg("Sync completed successfully!");
+                }).start();
+            }
+        }, create.pos("ur").add(5, 0));
         initAreas();
         updateFolderItems();
 
         create.settip("Create new area");
+        syncWithCloud.settip("Sync with cloud");
         prev = add(al = new AreaList(UI.scale(new Coord(400,270))), prev.pos("bl").adds(0, 10));
         Widget lab = add(new Label("Specialisation",NStyle.areastitle), prev.pos("bl").add(UI.scale(0,5)));
 
@@ -177,7 +188,7 @@ public class NAreasWidget extends Window
                     ((NMapView)NUtils.getGameUI().map).removeArea(AreaItem.this.text.text());
                     NConfig.needAreasUpdate();
                 }
-            },new Coord(al.sz.x - NStyle.removei[0].sz().x+5, 0).sub(UI.scale(0),UI.scale(1) ));
+            },new Coord(al.sz.x - NStyle.removei[0].sz().x-3, 0).sub(UI.scale(0),UI.scale(1) ));
             remove.settip(Resource.remote().loadwait("nurgling/hud/buttons/removeItem/u").flayer(Resource.tooltip).t);
 
             pack();

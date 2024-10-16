@@ -42,6 +42,11 @@ public class NStyle {
             new TexI(Resource.loadsimg("nurgling/hud/buttons/lock/h")),
             new TexI(Resource.loadsimg("nurgling/hud/buttons/lock/dh"))};
 
+    public static final TexI[] cloud = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/cloud/u")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/cloud/d")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/cloud/h"))};
+
     public static final TexI[] visi = new TexI[]{
             new TexI(Resource.loadsimg("nurgling/hud/buttons/vis/u")),
             new TexI(Resource.loadsimg("nurgling/hud/buttons/vis/d")),

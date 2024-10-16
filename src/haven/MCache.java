@@ -37,6 +37,7 @@ import java.util.stream.*;
 import haven.render.*;
 import nurgling.*;
 import nurgling.areas.*;
+import nurgling.conf.LZoneSync;
 import nurgling.overlays.map.*;
 import nurgling.tasks.GridsFilled;
 import org.json.*;
@@ -99,7 +100,23 @@ public class MCache implements MapSource {
 		}
 	}
 
-    public static class LoadingMap extends Loading {
+	public NArea findAreaByUUID(String uuid) {
+		for (NArea area : areas.values()) {
+			if (uuid.equals(area.uuid)) {
+				return area;
+			}
+		}
+		return null;
+	}
+	public void addArea(NArea area) {
+		areas.put(area.id, area);
+	}
+	public int generateNextZoneId() {
+		int maxId = areas.keySet().stream().max(Integer::compareTo).orElse(0);
+		return maxId + 1;
+	}
+
+	public static class LoadingMap extends Loading {
 	public final Coord gc;
 	private transient final MCache map;
 
