@@ -41,7 +41,10 @@ public class NAreasWidget extends Window
             {
                 super.click();
                 NUtils.getGameUI().msg("Please, select area");
-                new Thread(new NAreaSelector(NAreaSelector.Mode.CREATE, "DefaultFolder")).start();
+
+                String selectedDir = al.currentFolder;
+                new Thread(new NAreaSelector(NAreaSelector.Mode.CREATE, selectedDir)).start();
+//                new Thread(new NAreaSelector(NAreaSelector.Mode.CREATE, "DefaultFolder")).start();
             }
         },new Coord(5,UI.scale(5)));
         add(syncWithCloud = new IButton(NStyle.cloud[0].back, NStyle.cloud[1].back, NStyle.cloud[2].back){
