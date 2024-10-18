@@ -17,26 +17,26 @@ public class TransferToPiles implements Action{
     NAlias items;
 
     Pair<Coord2d,Coord2d> out;
-    Integer th = -1; // Для фильтрации по качеству
+
+    int th = 0;
 
     public TransferToPiles(Pair<Coord2d,Coord2d> out, NAlias items) {
         this.out = out;
         this.items = items;
     }
 
-    // Конструктор с фильтром по качеству ДОРАБОТАТЬ
-
-    public TransferToPiles(Pair<Coord2d, Coord2d> out, NAlias items, Integer th) {
+    public TransferToPiles(Pair<Coord2d,Coord2d> out, NAlias items, int th) {
         this.out = out;
         this.items = items;
         this.th = th;
     }
 
+
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
         ArrayList<WItem> witems;
         NAlias pileName;
-        if (!(witems = gui.getInventory().getItems(items)).isEmpty() ) {
+        if (!(witems = gui.getInventory().getItems(items,th)).isEmpty() ) {
                 Gob target = null;
                 for (Gob gob : Finder.findGobs(out, pileName = getStockpileName(items))) {
                     if (gob.ngob.getModelAttribute() != 31) {
@@ -54,7 +54,7 @@ public class TransferToPiles implements Action{
                                     }
                                 });
                             }
-                            witems = gui.getInventory().getItems(items);
+                            witems = gui.getInventory().getItems(items,th);
                             int size = witems.size();
                             new OpenTargetContainer("Stockpile", target).run(gui);
                             int target_size = Math.min(size,gui.getStockpile().getFreeSpace());
@@ -63,21 +63,20 @@ public class TransferToPiles implements Action{
                             {
                                 witems.get(i).item.wdgmsg("transfer", Coord.z);
                             }
-                            NUtils.getUI().core.addTask(new FilledPile(target, items, target_size, size));
                             NUtils.getUI().core.addTask(new WaitTargetSize(NUtils.getGameUI().getInventory(), fullSize - target_size));
-                            if((witems = gui.getInventory().getItems(items)).isEmpty())
+                            if((witems = gui.getInventory().getItems(items,th)).isEmpty())
                                 return Results.SUCCESS();
                         }
                     }
                 }
 
-                while(!(gui.getInventory().getItems(items)).isEmpty()) {
+                while(!(gui.getInventory().getItems(items,th)).isEmpty()) {
                     PileMaker pm;
 
                     if(!(pm = new PileMaker(out, items, pileName)).run(gui).IsSuccess())
                         return Results.FAIL();
                     Gob pile = pm.getPile();
-                    witems = gui.getInventory().getItems(items);
+                    witems = gui.getInventory().getItems(items,th);
                     int size = witems.size();
                     new OpenTargetContainer("Stockpile", pile).run(gui);
                     int target_size = Math.min(size, gui.getStockpile().getFreeSpace());
@@ -86,8 +85,7 @@ public class TransferToPiles implements Action{
                         for (int i = 0; i < target_size; i++) {
                             witems.get(i).item.wdgmsg("transfer", Coord.z);
                         }
-                        NUtils.getUI().core.addTask(new FilledPile(pile, items, target_size, size));
-                        NUtils.getUI().core.addTask(new WaitAnotherSize(NUtils.getGameUI().getInventory(), fullSize));
+                        NUtils.getUI().core.addTask(new WaitTargetSize(NUtils.getGameUI().getInventory(), fullSize - target_size));
                     }
                 }
             }
