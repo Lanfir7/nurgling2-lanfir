@@ -26,8 +26,6 @@ public class LeafsHerb implements Action {
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
-        if(!new StackOff().run(gui).IsSuccess())
-            return Results.ERROR("Не получилось выключить стаки");
 
         NUtils.getGameUI().msg("Starting leaf collection...");
         NArea leafArea = NArea.findIn("Fresh Tea Leaves");
@@ -54,7 +52,7 @@ public class LeafsHerb implements Action {
             containers.add(container);
         }
 
-        new FreeContainers(containers, teaLeaves).run(gui);
+        new FreeContainers(containers).run(gui);
 
         // Проверяем свободное место на столах
         boolean allContainersFull = true;

@@ -50,7 +50,6 @@ public class Butcher implements Action {
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
-        boolean status = new StackOff(false).run(gui);
         NArea.Specialisation kritter_corpse = new NArea.Specialisation(Specialisation.SpecName.deadkritter.toString());
         NArea area = NArea.findSpec(kritter_corpse);
         ArrayList<NArea.Specialisation> req = new ArrayList<>();
@@ -133,7 +132,6 @@ public class Butcher implements Action {
             new FreeInventory(context).run(gui);
             new TransferToPiles(NArea.findSpec(Specialisation.SpecName.rawhides.toString()).getRCArea(),new NAlias("Fresh")).run(gui);
         }
-        new StackOff(status).run(gui);
         return Results.SUCCESS();
     }
 

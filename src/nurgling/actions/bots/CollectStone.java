@@ -79,7 +79,6 @@ public class CollectStone implements Action {
         "Rhyolite");
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
-        boolean status = new StackOff(false).run(gui);
 
         SelectArea insa;
         NUtils.getGameUI().msg("Please select area with bumlings");
@@ -98,7 +97,6 @@ public class CollectStone implements Action {
         }
         new TransferToPiles(outsa.getRCArea(), stones ).run(gui);
 
-        new StackOff(status).run(gui);
         return Results.SUCCESS();
     }
 }

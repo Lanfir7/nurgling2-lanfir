@@ -17,7 +17,6 @@ public class MoveStockpiles implements Action {
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
-        new StackOff().run(gui);
         transferInfoWindow = new StockpileTransferInfo();
         gui.add(transferInfoWindow, new Coord(300, 200)); // Открываем окно
 

@@ -6,13 +6,11 @@ import nurgling.NUtils;
 import nurgling.actions.Action;
 import nurgling.actions.Build;
 import nurgling.actions.Results;
-import nurgling.actions.StackOff;
 import nurgling.tools.NAlias;
 
 public class BuildDryingFrame implements Action {
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
-        boolean status = new StackOff(false).run(gui);
         Build.Command command = new Build.Command();
         command.name = "Drying Frame";
 
@@ -36,7 +34,6 @@ public class BuildDryingFrame implements Action {
         command.ingredients.add(new Build.Ingredient(new Coord(1,1),stringarea.getRCArea(),new NAlias("Flax Fibres", "Hemp Fibres", "Spindly Taproot", "Cattail Fibres", "Stinging Nettle", "Hide Strap", "Straw Twine", "Bark Cordage"),2));
 
         new Build(command, buildarea.getRCArea()).run(gui);
-        new StackOff(status).run(gui);
         return Results.SUCCESS();
     }
 }
