@@ -17,12 +17,20 @@ public class TransferToPiles implements Action{
     NAlias items;
 
     Pair<Coord2d,Coord2d> out;
+    Integer th = -1; // Для фильтрации по качеству
 
     public TransferToPiles(Pair<Coord2d,Coord2d> out, NAlias items) {
         this.out = out;
         this.items = items;
     }
 
+    // Конструктор с фильтром по качеству ДОРАБОТАТЬ
+
+    public TransferToPiles(Pair<Coord2d, Coord2d> out, NAlias items, Integer th) {
+        this.out = out;
+        this.items = items;
+        this.th = th;
+    }
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {

@@ -91,9 +91,11 @@ public class NHitBox
             put("gfx/kritter/pig/sow", new NHitBox(new Coord(-6,-3),new Coord(6,3)));
             put("gfx/kritter/pig/hog", new NHitBox(new Coord(-6,-3),new Coord(6,3)));
             put("gfx/kritter/sheep/lamb", new NHitBox(new Coord(-5,-2),new Coord(5,2)));
-            put("gfx/kritter/sheep/sheep", new NHitBox(new Coord(-5,-2),new Coord(5,2)));
+            put("gfx/kritter/sheep/sheep", new NHitBox(new Coord(-6,-2),new Coord(6,2)));
             put("gfx/kritter/goat/billy", new NHitBox(new Coord(-5,-2),new Coord(5,2)));
             put("gfx/kritter/goat/nanny", new NHitBox(new Coord(-4,-2),new Coord(5,2)));
+            put("gfx/kritter/boar/boar", new NHitBox(new Coord(-10,-4),new Coord(7,4)));
+            put("gfx/kritter/reindeer/reindeer", new NHitBox(new Coord(-12,-2),new Coord(6,2)));
             put("gfx/kritter/goat/kid", new NHitBox(new Coord(-5,-2),new Coord(5,2)));
             put("gfx/kritter/reindeer/teimdeercow", new NHitBox(new Coord(-12,-2),new Coord(6,2)));
             put("gfx/kritter/reindeer/teimdeerbull", new NHitBox(new Coord(-12,-2),new Coord(6,2)));

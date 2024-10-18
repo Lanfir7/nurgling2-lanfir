@@ -56,6 +56,24 @@ public class Finder
 
         return nearestGob;
     }
+    public static Gob findNearestObject(Coord2d targetPos, double radius) throws InterruptedException {
+        Gob nearestGob = null;
+        double minDistance = radius;
+
+        synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
+            for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+                if (!(gob instanceof OCache.Virtual || gob.attr.isEmpty() || gob.getClass().getName().contains("GlobEffector"))) {
+                    double dist = gob.rc.dist(targetPos);
+                    if (dist <= minDistance) {
+                        nearestGob = gob;
+                        minDistance = dist; // обновляем минимальное расстояние
+                    }
+                }
+            }
+        }
+
+        return nearestGob;
+    }
     public static ArrayList<Gob> findSortedGobsInArea(Pair<Coord2d, Coord2d> space, NAlias name) throws InterruptedException {
         ArrayList<Gob> result = new ArrayList<>();
         Coord2d playerPos = NUtils.player().rc; // Позиция игрока
@@ -476,7 +494,32 @@ public class Finder
     }
 
     public static Coord2d getFreePlace(Pair<Coord2d,Coord2d> area, Gob placed) {
-        return getFreePlace(area,placed.ngob.hitBox);
+        NHitBox hitBox = placed.ngob.hitBox;
+
+        // Список имен объектов, для которых нужно изменять хитбокс
+        NAlias targetNames = new NAlias("kritter");
+
+        // Проверяем, соответствует ли объект одному из имен
+        try {
+            if (NParser.isIt(placed, targetNames)) {
+                double width = hitBox.end.y - hitBox.begin.y; // ширина хитбокса
+
+                // Если ширина хитбокса меньше 6, увеличиваем ширину до 6 тайлов
+                if (width < 6) {
+                    double offset = (6 - width) ;
+                    Coord2d newBegin = new Coord2d(hitBox.begin.x, hitBox.begin.y - offset);
+                    Coord2d newEnd = new Coord2d(hitBox.end.x, hitBox.end.y + offset);
+
+                    // Создаем новый хитбокс с увеличенной шириной
+                    hitBox = new NHitBox(newBegin, newEnd);
+                }
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Вызываем метод с возможной модификацией хитбокса
+        return getFreePlaceMod(area, hitBox);
     }
 
     public static Coord2d getFreePlace(Pair<Coord2d,Coord2d> area, NHitBox hitBox) {
@@ -519,6 +562,70 @@ public class Finder
         }
         return pos;
     }
+    public static Coord2d getFreePlaceMod(Pair<Coord2d, Coord2d> area, NHitBox hitBox) {
+        Coord2d pos = null;
+
+        ArrayList<NHitBoxD> significantGobs = new ArrayList<>();
+        NHitBoxD chekerOfArea = new NHitBoxD(area.a, area.b);
+
+        NHitBoxD temporalGobBox = new NHitBoxD(hitBox.begin, hitBox.end, Coord2d.of(0), 0);
+        if (chekerOfArea.c[2].sub(chekerOfArea.c[0]).x < temporalGobBox.getCircumscribedBR().sub(temporalGobBox.getCircumscribedUL()).x ||
+                chekerOfArea.c[2].sub(chekerOfArea.c[0]).y < temporalGobBox.getCircumscribedBR().sub(temporalGobBox.getCircumscribedUL()).y)
+            return null;
+
+        // Список имен объектов, для которых нужно изменять хитбокс
+        NAlias targetNames = new NAlias("kritter");
+
+        // Проверяем объекты в зоне и увеличиваем их хитбоксы, если они соответствуют целевым
+        synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
+            for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+                if (!(gob instanceof OCache.Virtual || gob.attr.isEmpty() || gob.getClass().getName().contains("GlobEffector"))) {
+                    if (gob.ngob.hitBox != null && gob.getattr(Following.class) == null && gob.id != NUtils.player().id) {
+                        NHitBox hitBoxOfGob = gob.ngob.hitBox;
+
+                        // Если объект соответствует целевому имени и ширина его хитбокса меньше 6, увеличиваем его хитбокс
+                        try {
+                            if (NParser.isIt(gob, targetNames)) {
+                                double width = hitBoxOfGob.end.y - hitBoxOfGob.begin.y; // ширина хитбокса
+
+                                // Если ширина хитбокса меньше 6, увеличиваем ширину до 6 тайлов
+                                if (width < 6) {
+                                    double offset = (6 - width);
+                                    Coord2d newBegin = new Coord2d(hitBoxOfGob.begin.x, hitBoxOfGob.begin.y - offset);
+                                    Coord2d newEnd = new Coord2d(hitBoxOfGob.end.x, hitBoxOfGob.end.y + offset);
+
+                                    // Создаем новый хитбокс с увеличенной шириной
+                                    hitBoxOfGob = new NHitBox(newBegin, newEnd);
+                                }
+                            }
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        NHitBoxD gobBox = new NHitBoxD(hitBoxOfGob.begin, hitBoxOfGob.end, gob.rc, 0);
+                        if (gobBox.intersects(chekerOfArea, true))
+                            significantGobs.add(gobBox);
+                    }
+                }
+            }
+        }
+
+        Coord inchMax = area.b.sub(area.a).floor();
+        Coord margin = hitBox.end.sub(hitBox.begin).floor(2, 2);
+        for (int i = margin.x; i <= inchMax.x - margin.x; i++) {
+            for (int j = margin.y; j <= inchMax.y - margin.y; j++) {
+                boolean passed = true;
+                NHitBoxD testGobBox = new NHitBoxD(hitBox.begin, hitBox.end, area.a.add(i, j), 0);
+                for (NHitBoxD significantHitbox : significantGobs)
+                    if (significantHitbox.intersects(testGobBox, false))
+                        passed = false;
+                if (passed)
+                    return Coord2d.of(testGobBox.rc.x, testGobBox.rc.y);
+            }
+        }
+        return pos;
+    }
+
 
     public static ArrayList<Gob> findGobByPatterns(ArrayList<Pattern> qaPatterns, double dist) {
         ArrayList<Gob> result = new ArrayList<>();

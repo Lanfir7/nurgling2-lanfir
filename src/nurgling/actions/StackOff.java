@@ -16,25 +16,29 @@ import nurgling.widgets.NEquipory;
 
 import java.util.HashSet;
 
-public class StackOff implements Action {
+public class StackOff {
+    boolean status;
+    public StackOff(boolean status) {
+        this.status = status;
+    }
 
-    public StackOff() {}
-
-    @Override
-    public Results run(NGameUI gui) throws InterruptedException {
-
+    public boolean run(NGameUI gui) throws InterruptedException {
         NInventory inv = (NInventory) NUtils.getGameUI().maininv;
-        if (inv.bundle.a) {
+        boolean old =inv.bundle.a;
+        if (inv.bundle.a && !status) {
             NUtils.getGameUI().msg("Выключаю стаки");
             MenuGrid.PagButton but = inv.pagBundle;
             if (but != null) {
                 but.use(new MenuGrid.Interaction(1, 0));
             }
-        } else {
-            NUtils.getGameUI().msg("Стаки и так выключены");
+        } else if (!inv.bundle.a && status){
+            NUtils.getGameUI().msg("Включаю стаки");
+            MenuGrid.PagButton but = inv.pagBundle;
+            if (but != null) {
+                but.use(new MenuGrid.Interaction(1, 0));
+            }
         }
-
-        return Results.SUCCESS();
+        return old;
     }
 
 }

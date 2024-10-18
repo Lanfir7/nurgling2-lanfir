@@ -79,8 +79,7 @@ public class CollectStone implements Action {
         "Rhyolite");
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
-        if(!new StackOff().run(gui).IsSuccess())
-            return Results.ERROR("Не получилось выключить стаки");
+        boolean status = new StackOff(false).run(gui);
 
         SelectArea insa;
         NUtils.getGameUI().msg("Please select area with bumlings");
@@ -98,6 +97,8 @@ public class CollectStone implements Action {
             new CollectFromGob(tree,"Chip stone", "gfx/borka/chipping" ,new Coord(1,1), stones, outsa.getRCArea()).run(gui);
         }
         new TransferToPiles(outsa.getRCArea(), stones ).run(gui);
+
+        new StackOff(status).run(gui);
         return Results.SUCCESS();
     }
 }
