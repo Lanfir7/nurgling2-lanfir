@@ -3,6 +3,7 @@ package nurgling;
 import haven.*;
 import mapv4.NMappingClient;
 import nurgling.conf.LZoneSync;
+import nurgling.actions.AutoDrink;
 import nurgling.tasks.*;
 
 import java.util.*;
@@ -13,6 +14,7 @@ public class NCore extends Widget
     public boolean debug = false;
     boolean isinspect = false;
     public NMappingClient mappingClient;
+    public AutoDrink autoDrink = null;
     public boolean isInspectMode()
     {
         if(debug)
@@ -149,6 +151,25 @@ public class NCore extends Widget
     @Override
     public void tick(double dt)
     {
+        if(autoDrink == null && (Boolean)NConfig.get(NConfig.Key.autoDrink))
+        {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        (autoDrink = new AutoDrink()).run(NUtils.getGameUI());
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+            }).start();
+        }
+        else
+        {
+            if(autoDrink != null && !(Boolean)NConfig.get(NConfig.Key.autoDrink))
+            {
+                AutoDrink.stop.set(true);
+            }
+        }
         super.tick(dt);
         if (config.isUpdated())
         {

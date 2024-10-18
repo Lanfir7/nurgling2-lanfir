@@ -15,71 +15,65 @@ public class NBotsMenu extends Widget
     public NBotsMenu()
     {
         NLayout resources = new NLayout("resources");
-        resources.elements.add(new NButton("choper", new Chopper(), true));
-        resources.elements.add(new NButton("chipper", new Chipper(), true));
-        resources.elements.add(new NButton("pblocks", new PrepareBlocks(), true));
+        resources.elements.add(new NButton("choper", new Chopper()));
+        resources.elements.add(new NButton("chipper", new Chipper()));
+        resources.elements.add(new NButton("pblocks", new PrepareBlocks()));
         resources.elements.add(new NButton("pboards", new PrepareBoards()));
         resources.elements.add(new NButton("log", new TransferLog()));
-        resources.elements.add(new NButton("clay", new ClayDigger(), true));
-        resources.elements.add(new NButton("bark", new CollectBark(), true));
-        resources.elements.add(new NButton("bough", new CollectBough(), true));
-        resources.elements.add(new NButton("leaf", new CollectLeaf(), true));
-        resources.elements.add(new NButton("choper", new CollectDream()));
-        resources.elements.add(new NButton("leaf", new LeafsHerb(), true));
-        resources.elements.add(new NButton("bark", new MoveStockpiles(), true));
-        resources.elements.add(new NButton("pboards", new MiningMaster(), true));
-        resources.elements.add(new NButton("log", new LiftAndMoveObjects()));
-        resources.elements.add(new NButton("hides", new CartOut()));
-        resources.elements.add(new NButton("smelter", new CartIn()));
+        resources.elements.add(new NButton("clay", new ClayDigger()));
+        resources.elements.add(new NButton("bark", new CollectBark()));
+        resources.elements.add(new NButton("bough", new CollectBough()));
+        resources.elements.add(new NButton("leaf", new CollectLeaf()));
         addLayout(resources);
-        NLayout productions = new NLayout("productions");
-        productions.elements.add(new NButton("smelter", new SmelterAction(), true));
-        productions.elements.add(new NButton("backer", new BackerAction(), true));
-        productions.elements.add(new NButton("ugardenpot", new UnGardentPotAction()));
-        productions.elements.add(new NButton("butcher", new Butcher(), true));
-        productions.elements.add(new NButton("hides", new DFrameHidesAction(), true));
-        productions.elements.add(new NButton("fishroast", new FriedFish(), true));
-        addLayout(productions);
-        NLayout battle = new NLayout("battle");
-        battle.elements.add(new NButton("reagro", new Reagro()));
-        battle.elements.add(new NButton("attacknearcurs", new AggroNearCurs()));
-        battle.elements.add(new NButton("attacknear", new AggroNearest()));
-        battle.elements.add(new NButton("attacknearborka", new AggroNearestBorka()));
-        battle.elements.add(new NButton("attackall", new AttackAll()));
-        addLayout(battle);
-        NLayout farming = new NLayout("farming");
-        farming.elements.add(new NButton("turnip", new TurnipsFarmer(), true));
-        //farming.elements.add(new NButton("turnip", new TurnipsLFarmer(), true));
-        farming.elements.add(new NButton("hemp", new HempFarmer(), true));
-        farming.elements.add(new NButton("flax", new FlaxFarmer(), true));
-        farming.elements.add(new NButton("goats", new GoatsAction()));
-        farming.elements.add(new NButton("sheeps", new SheepsAction()));
-        farming.elements.add(new NButton("pigs", new PigsAction()));
-        farming.elements.add(new NButton("cows", new nurgling.actions.bots.CowsAction()));
-        addLayout(farming);
-        NLayout utils = new NLayout("utils");
-        utils.elements.add(new NButton("shieldsword", new EquipShieldSword()));
-        utils.elements.add(new NButton("filwater", new FillWaterskins(false)));
-        utils.elements.add(new NButton("unbox", new FreeContainersInArea(), true));
-        utils.elements.add(new NButton("water_cheker", new CheckWater()));
-        utils.elements.add(new NButton("clay_cheker", new CheckClay()));
-        utils.elements.add(new NButton("clover", new FeedClover()));
-        addLayout(utils);
-        NLayout build = new NLayout("build");
-        build.elements.add(new NButton("dframe", new BuildDryingFrame(), true));
-        build.elements.add(new NButton("cellar", new BuildCellar(), true));
-        addLayout(build);
-        if(NUtils.getUI().core.debug)
-        {
-            NLayout tests = new NLayout("tools");
-            tests.elements.add(new NButton("test1", new TESTLiftDrop()));
-            tests.elements.add(new NButton("test4", new TESTbranchinvtransferpacks()));
-            tests.elements.add(new NButton("test5", new TESTfreeStockpilesAndTransfer()));
-            tests.elements.add(new NButton("test7", new TESTselectfloweraction()));
-            tests.elements.add(new NButton("test8", new TESTpf()));
+
+        if((Boolean)NConfig.get(NConfig.Key.debug)) {
+            NLayout productions = new NLayout("productions");
+            productions.elements.add(new NButton("smelter", new SmelterAction()));
+            productions.elements.add(new NButton("backer", new BackerAction()));
+            productions.elements.add(new NButton("ugardenpot", new UnGardentPotAction()));
+            productions.elements.add(new NButton("butcher", new Butcher()));
+            productions.elements.add(new NButton("hides", new DFrameHidesAction()));
+            productions.elements.add(new NButton("fishroast", new FriedFish()));
+            addLayout(productions);
+            NLayout battle = new NLayout("battle");
+            battle.elements.add(new NButton("reagro", new Reagro()));
+            battle.elements.add(new NButton("attacknearcurs", new AggroNearCurs()));
+            battle.elements.add(new NButton("attacknear", new AggroNearest()));
+            battle.elements.add(new NButton("attacknearborka", new AggroNearestBorka()));
+            battle.elements.add(new NButton("attackall", new AttackAll()));
+            addLayout(battle);
+            NLayout farming = new NLayout("farming");
+            farming.elements.add(new NButton("turnip", new TurnipsFarmer()));
+            farming.elements.add(new NButton("hemp", new HempFarmer()));
+            farming.elements.add(new NButton("flax", new FlaxFarmer()));
+            farming.elements.add(new NButton("goats", new GoatsAction()));
+            farming.elements.add(new NButton("sheeps", new SheepsAction()));
+            farming.elements.add(new NButton("pigs", new PigsAction()));
+            farming.elements.add(new NButton("cows", new nurgling.actions.bots.CowsAction()));
+            addLayout(farming);
+            NLayout utils = new NLayout("utils");
+            utils.elements.add(new NButton("shieldsword", new EquipShieldSword()));
+            utils.elements.add(new NButton("filwater", new FillWaterskins(false)));
+            utils.elements.add(new NButton("unbox", new FreeContainersInArea()));
+            utils.elements.add(new NButton("water_cheker", new CheckWater()));
+            utils.elements.add(new NButton("clay_cheker", new CheckClay()));
+            utils.elements.add(new NButton("clover", new FeedClover()));
+            addLayout(utils);
+            NLayout build = new NLayout("build");
+            build.elements.add(new NButton("dframe", new BuildDryingFrame()));
+            build.elements.add(new NButton("cellar", new BuildCellar()));
+            addLayout(build);
+            if (NUtils.getUI().core.debug) {
+                NLayout tests = new NLayout("tools");
+                tests.elements.add(new NButton("test1", new TESTLiftDrop()));
+                tests.elements.add(new NButton("test4", new TESTbranchinvtransferpacks()));
+                tests.elements.add(new NButton("test5", new TESTfreeStockpilesAndTransfer()));
+                tests.elements.add(new NButton("test7", new TESTselectfloweraction()));
+                tests.elements.add(new NButton("test8", new TESTpf()));
 //            tests.elements.add(new NButton("chop", new TESTfindallchest()));
-            tests.elements.add(new NButton("test9", new TESTAvalaible()));
-            addLayout(tests);
+                tests.elements.add(new NButton("test9", new TESTAvalaible()));
+                addLayout(tests);
+            }
         }
         showLayouts();
         pack();
@@ -229,6 +223,7 @@ public class NBotsMenu extends Widget
     {
         public final IButton btn;
         public String path;
+        public boolean disStacks;
         NButton(String path, Action action)
         {
             this.path = path;
@@ -238,7 +233,7 @@ public class NBotsMenu extends Widget
                         @Override
                         public void run()
                         {
-                            start(path, action, false);
+                            start(path, action);
                         }
                     });
 
@@ -247,24 +242,13 @@ public class NBotsMenu extends Widget
                 btn.settip(Resource.remote().loadwait(dir_path + path + "/u").flayer(Resource.tooltip).t);
 
         }
-        NButton(String path, Action action, boolean stack)
+
+        NButton(String path, Action action, Boolean disStacks)
         {
-            this.path = path;
-            btn = new IButton(Resource.loadsimg(dir_path + path + "/u"), Resource.loadsimg(dir_path + path + "/d"), Resource.loadsimg(dir_path + path + "/h")).action(
-                    new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            start(path, action, stack);
-                        }
-                    });
-
-            Resource res = Resource.remote().load(dir_path + path + "/u").get();
-            if(!(res.layers(Resource.Tooltip.class).isEmpty()))
-                btn.settip(Resource.remote().loadwait(dir_path + path + "/u").flayer(Resource.tooltip).t);
-
+            this(path, action);
+            this.disStacks = disStacks;
         }
+
         private NButton()
         {
             btn = new IButton(Resource.loadsimg(dir_path + "back" + "/u"), Resource.loadsimg(dir_path +  "back" + "/d"), Resource.loadsimg(dir_path +  "back" + "/h")){
@@ -278,10 +262,10 @@ public class NBotsMenu extends Widget
 
 
 
-        void start(String path, Action action, boolean stack)
+        void start(String path, Action action)
         {
             Thread t;
-            (t = new Thread(new Runnable()
+            t = new Thread(new Runnable()
             {
                 @Override
                 public void run()
@@ -289,13 +273,7 @@ public class NBotsMenu extends Widget
                     try
                     {
                         showLayouts();
-                        boolean status = false;
-                        if (stack) status = new StackOff(false).run();
-
                         action.run(NUtils.getGameUI());
-
-                        if (stack) new StackOff(status).run();
-
                     }
                     catch (InterruptedException e)
                     {
@@ -309,8 +287,12 @@ public class NBotsMenu extends Widget
                         }
                     }
                 }
-            }, path)).start();
-            NUtils.getGameUI().biw.addObserve(t);
+            }, path);
+            if(disStacks)
+                NUtils.getGameUI().biw.addObserve(t, true);
+            else
+                NUtils.getGameUI().biw.addObserve(t);
+            t.start();
         }
 
 

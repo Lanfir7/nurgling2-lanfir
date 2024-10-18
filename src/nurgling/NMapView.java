@@ -325,29 +325,33 @@ public class NMapView extends MapView
     }
 
 
-    public String addArea(NArea.Space result, String dir) {
+    public String addArea(NArea.Space result)
+    {
         String key;
         synchronized (glob.map.areas) {
             HashSet<String> names = new HashSet<String>();
             int id = 1;
-            for (NArea area : glob.map.areas.values()) {
-                if (area.id >= id) {
+            for(NArea area : glob.map.areas.values())
+            {
+                if(area.id >= id)
+                {
                     id = area.id + 1;
                 }
                 names.add(area.name);
             }
             key = ("New Area" + String.valueOf(glob.map.areas.size()));
-            while (names.contains(key)) {
-                key = key + "(1)";
+            while(names.contains(key))
+            {
+                key = key+"(1)";
             }
             NArea newArea = new NArea(key);
             newArea.id = id;
             newArea.space = result;
             newArea.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
             newArea.grids_id.addAll(newArea.space.space.keySet());
-            newArea.dir = dir; // Устанавливаем dir для новой зоны
+            newArea.path = NUtils.getGameUI().areas.currentPath;
             glob.map.areas.put(id, newArea);
-            NUtils.getGameUI().areas.addArea(id, newArea.name, newArea);
+//            NUtils.getGameUI().areas.addArea(id, newArea.name, newArea);
             createAreaLabel(id);
         }
         return key;

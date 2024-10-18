@@ -16,6 +16,7 @@ import java.util.*;
 public class NArea
 {
     public long gid = Long.MIN_VALUE;
+    public String path = "";
     public static class Specialisation
     {
         public String name;
@@ -461,7 +462,14 @@ public class NArea
                 this.uuid = obj.getString("uuid");
             }
 
-            this.dir = obj.has("dir") ? obj.getString("dir") : "DefaultFolder";
+            if(obj.has("path"))
+            {
+                this.path = obj.getString("path");
+            }
+            else if(obj.has("dir"))
+            {
+                this.path = "/" + obj.getString("path");
+            }
 
             if (obj.has("color")) {
                 JSONObject color = obj.getJSONObject("color");
@@ -511,7 +519,14 @@ public class NArea
             this.id = localId;  // Присваиваем новый локальный ID
             this.uuid = obj.getString("uuid");  // Получаем UUID зоны
             this.name = obj.getString("name");  // Получаем имя зоны
-            this.dir = obj.has("dir") ? obj.getString("dir") : "DefaultFolder";
+            if(obj.has("path"))
+            {
+                this.path = obj.getString("path");
+            }
+            else if(obj.has("dir"))
+            {
+                this.path = "/" + obj.getString("path");
+            }
             if (obj.has("last_updated")) {
                 this.lastUpdated = LocalDateTime.parse(obj.getString("last_updated"));
             } else {
@@ -571,7 +586,14 @@ public class NArea
             // Если времени обновления нет, устанавливаем текущее время
             this.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
         }
-        this.dir = obj.has("dir") ? obj.getString("dir") : "DefaultFolder";
+        if(obj.has("path"))
+        {
+            this.path = obj.getString("path");
+        }
+        else if(obj.has("dir"))
+        {
+            this.path = "/" + obj.getString("path");
+        }
         if(obj.has("color"))
         {
             JSONObject color = (JSONObject) obj.get("color");
@@ -615,7 +637,6 @@ public class NArea
     public Space space;
     public String name;
     public int id;
-    public String dir;
 
     public LocalDateTime lastUpdated;
     public String uuid = null;
@@ -691,6 +712,7 @@ public class NArea
         }
         return false;
     }
+
     public JSONObject toJson()
     {
         JSONObject res = new JSONObject();
@@ -698,7 +720,7 @@ public class NArea
         res.put("id", id);
         res.put("uuid", uuid);
         res.put("last_updated", lastUpdated);
-        res.put("dir", dir);
+        res.put("path", path);
         JSONObject jcolor = new JSONObject();
         jcolor.put("r", color.getRed());
         jcolor.put("g", color.getGreen());
