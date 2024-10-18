@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import nurgling.areas.NArea;
@@ -58,37 +59,76 @@ public class LZoneSync {
     }
 
     // Метод для синхронизации зон с сервером
+    // Метод для синхронизации зон с сервером
     public static void syncZones(JSONArray serverZones) {
         Map<Integer, NArea> localZones = NUtils.getGameUI().map.glob.map.areas;
-
 
         for (int i = 0; i < serverZones.length(); i++) {
             JSONObject jsonZone = serverZones.getJSONObject(i);
             String uuid = jsonZone.getString("uuid");
 
-            // Проверка, есть ли зона с этим UUID локально
-            boolean foundLocally = false;
-            for (NArea localZone : localZones.values()) {
-                if (localZone.uuid != null && localZone.uuid.equals(uuid)) {
-                    // Если зона найдена, обновляем ее данные
-                    localZone.updateFromJSON(jsonZone);
-                    foundLocally = true;
-                    break;
-                }
-            }
+            // Проверяем, помечена ли зона как удаленная на сервере
+            boolean isDeleted = jsonZone.optBoolean("deleted", false);
 
-            // Если зона не найдена локально, создаем новую
-            if (!foundLocally) {
-                NArea newZone = createZoneFromJSON(jsonZone);
-                // Принудительно добавляем зону на карту или в отображение зон
-                if (newZone != null) {
-                    NUtils.getGameUI().areas.addArea(newZone.id, newZone.name, newZone);
-                    NUtils.getGameUI().map.addCustomOverlay(newZone.id);  // Добавляем зону на карту
+            if (isDeleted) {
+                // Если зона помечена как удаленная на сервере, удаляем ее локально
+                NArea localZone = NUtils.getGameUI().map.glob.map.findAreaByUUID(uuid);
+                if (localZone != null) {
+                    System.out.println("Удаление зоны с UUID: " + uuid);
+                    NUtils.getGameUI().map.glob.map.areas.remove(localZone.id);
+                    NUtils.getGameUI().areas.al.updateList();  // Обновляем список зон в UI
+                }
+            } else {
+                // Если зона не удалена, продолжаем обычную синхронизацию
+                boolean foundLocally = false;
+                for (NArea localZone : localZones.values()) {
+                    if (localZone.uuid != null && localZone.uuid.equals(uuid)) {
+                        // Получаем дату обновления зоны с сервера
+                        LocalDateTime serverLastUpdated = LocalDateTime.parse(jsonZone.getString("last_updated"));
+
+                        // Если локальная зона не имеет даты обновления, инициализируем ее
+                        LocalDateTime localLastUpdated = localZone.lastUpdated != null ? localZone.lastUpdated : LocalDateTime.MIN;
+
+                        // Сравнение дат
+                        if (localLastUpdated.isBefore(serverLastUpdated)) {
+                            // Если серверная зона обновлялась позже, обновляем локальную зону
+                            localZone.updateFromJSON(jsonZone);
+                        }
+                        foundLocally = true;
+                        break;
+                    }
+                }
+
+                // Если зона не найдена локально, создаем новую
+                if (!foundLocally) {
+                    NArea newZone = createZoneFromJSON(jsonZone);
+                    if (newZone != null) {
+                        NUtils.getGameUI().areas.addArea(newZone.id, newZone.name, newZone);
+                        NUtils.getGameUI().map.addCustomOverlay(newZone.id);  // Добавляем зону на карту
+                    }
                 }
             }
         }
-
     }
+
+    // Новый метод для удаления зоны с клиента и сервера
+    public static void deleteZone(String uuid) {
+        NArea zone = NUtils.getGameUI().map.glob.map.findAreaByUUID(uuid);
+
+        if (zone != null) {
+            // Удаляем зону локально
+            NUtils.getGameUI().map.glob.map.areas.remove(zone.id);
+
+            // Отправляем запрос на сервер для удаления зоны
+            LZoneServer.deleteZoneFromServer(uuid);
+
+            // Обновляем отображение зон
+            NUtils.getGameUI().areas.al.updateList();
+        } else {
+            System.out.println("Зона с UUID " + uuid + " не найдена.");
+        }
+    }
+
 
     // Генерация нового локального ID для зоны
     private static int generateLocalZoneId() {

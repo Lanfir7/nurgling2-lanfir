@@ -7,6 +7,7 @@ import haven.render.*;
 import nurgling.actions.ActionWithFinal;
 import nurgling.actions.QuickActionBot;
 import nurgling.areas.*;
+import nurgling.conf.LZoneServer;
 import nurgling.overlays.NTexLabel;
 import nurgling.overlays.map.*;
 import nurgling.tools.*;
@@ -523,6 +524,7 @@ public class NMapView extends MapView
                     glob.oc.remove(dummy);
                     dummys.remove(area.gid);
                 }
+                LZoneServer.deleteZoneFromServer(area.uuid);
                 NUtils.getGameUI().areas.removeArea(area.id);
 
                 break;

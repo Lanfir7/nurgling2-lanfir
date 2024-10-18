@@ -9,6 +9,7 @@ import nurgling.widgets.Specialisation;
 import org.json.*;
 
 import java.awt.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class NArea
@@ -419,7 +420,11 @@ public class NArea
     public void updateFromJSON(JSONObject obj) {
         try {
              // Если id передается как Integer
-
+            if (obj.has("last_updated")) {
+                this.lastUpdated = LocalDateTime.parse(obj.getString("last_updated"));
+            } else {
+                this.lastUpdated = LocalDateTime.now();
+            }
             if (obj.has("name")) {
                 this.name = obj.getString("name");
             }
@@ -571,6 +576,8 @@ public class NArea
     public String name;
     public int id;
     public String dir;
+
+    public LocalDateTime lastUpdated;
     public String uuid = null;
     public Color color = new Color(194,194,65,56);
     public final ArrayList<Long> grids_id = new ArrayList<>();
@@ -637,13 +644,16 @@ public class NArea
         }
         return false;
     }
-
+    public LocalDateTime getLastUpdated() {
+        return this.lastUpdated;
+    }
     public JSONObject toJson()
     {
         JSONObject res = new JSONObject();
         res.put("name", name);
         res.put("id", id);
         res.put("uuid", uuid);
+        res.put("last_updated", LocalDateTime.now().toString());
         res.put("dir", dir);
         JSONObject jcolor = new JSONObject();
         jcolor.put("r", color.getRed());

@@ -73,7 +73,24 @@ public class LZoneServer {
         }
         return null;
     }
+    // Удаление зоны с сервера
+    public static void deleteZoneFromServer(String uuid) {
+        try {
+            String serverUrl = SERVER_URL + "/delete_zone/" + uuid;
+            URL url = new URL(serverUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("DELETE");
 
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                System.out.println("Zone deleted successfully!");
+            } else {
+                System.out.println("Failed to delete zone. Response code: " + responseCode);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     // Получение зон, обновленных после определенной даты
     public static JSONArray getUpdatedZones(String lastUpdated) {
         try {

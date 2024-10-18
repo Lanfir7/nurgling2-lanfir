@@ -7,6 +7,7 @@ import haven.Window;
 import nurgling.*;
 import nurgling.actions.bots.*;
 import nurgling.areas.*;
+import nurgling.conf.LZoneServer;
 import nurgling.conf.LZoneSync;
 import nurgling.overlays.map.*;
 import nurgling.tools.*;
