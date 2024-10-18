@@ -5,6 +5,9 @@ import nurgling.areas.*;
 import nurgling.tasks.*;
 import nurgling.widgets.NAreasWidget;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 public class NAreaSelector implements Runnable
 {
     protected NArea.Space result;
@@ -66,6 +69,7 @@ public class NAreaSelector implements Runnable
                         } else if (mode == Mode.CHANGE) {
                             area.space = result;
                             area.grids_id.clear();
+                            area.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
                             area.grids_id.addAll(area.space.space.keySet());
                             for (NArea.VArea space : area.space.space.values())
                                 space.isVis = false;

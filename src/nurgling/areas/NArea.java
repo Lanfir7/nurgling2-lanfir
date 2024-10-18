@@ -10,6 +10,7 @@ import org.json.*;
 
 import java.awt.*;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 public class NArea
@@ -346,6 +347,32 @@ public class NArea
         }
         return res;
     }
+    public static ArrayList<NArea> findAllSpecs(String name, String sub) {
+        ArrayList<NArea> result = new ArrayList<>();
+        double searchRadius = 1000; // Радиус поиска в 1000
+
+        if (NUtils.getGameUI() != null && NUtils.getGameUI().map != null) {
+            Set<Integer> nids = NUtils.getGameUI().map.nols.keySet();
+            for (Integer id : nids) {
+                if (id >= 0) {
+                    NArea area = NUtils.getGameUI().map.glob.map.areas.get(id);
+                    for (NArea.Specialisation s : area.spec) {
+                        if (s.name.equals(name) && s.subtype != null && s.subtype.toLowerCase().equals(sub.toLowerCase())) {
+                            Pair<Coord2d, Coord2d> testrc = area.getRCArea();
+                            if (testrc != null) {
+                                // Проверяем, находится ли зона в пределах радиуса поиска
+                                double distance = (testrc.a.dist(NUtils.player().rc) + testrc.b.dist(NUtils.player().rc)) / 2;
+                                if (distance <= searchRadius) {
+                                    result.add(area); // Добавляем зону в результат
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result; // Возвращаем список зон
+    }
 
     public static class VArea
     {
@@ -423,7 +450,8 @@ public class NArea
             if (obj.has("last_updated")) {
                 this.lastUpdated = LocalDateTime.parse(obj.getString("last_updated"));
             } else {
-                this.lastUpdated = LocalDateTime.now();
+                // Если времени обновления нет, устанавливаем текущее время
+                this.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
             }
             if (obj.has("name")) {
                 this.name = obj.getString("name");
@@ -433,7 +461,7 @@ public class NArea
                 this.uuid = obj.getString("uuid");
             }
 
-            this.dir = obj.has("dir") ? obj.getString("dir") : this.dir;
+            this.dir = obj.has("dir") ? obj.getString("dir") : "DefaultFolder";
 
             if (obj.has("color")) {
                 JSONObject color = obj.getJSONObject("color");
@@ -484,6 +512,12 @@ public class NArea
             this.uuid = obj.getString("uuid");  // Получаем UUID зоны
             this.name = obj.getString("name");  // Получаем имя зоны
             this.dir = obj.has("dir") ? obj.getString("dir") : "DefaultFolder";
+            if (obj.has("last_updated")) {
+                this.lastUpdated = LocalDateTime.parse(obj.getString("last_updated"));
+            } else {
+                // Если времени обновления нет, устанавливаем текущее время
+                this.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
+            }
 
             if (obj.has("color")) {
                 JSONObject color = obj.getJSONObject("color");
@@ -530,6 +564,12 @@ public class NArea
         this.id = (Integer) obj.get("id");
         if(obj.has("uuid")){
             this.uuid = obj.getString("uuid");
+        }
+        if (obj.has("last_updated")) {
+            this.lastUpdated = LocalDateTime.parse(obj.getString("last_updated"));
+        } else {
+            // Если времени обновления нет, устанавливаем текущее время
+            this.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
         }
         this.dir = obj.has("dir") ? obj.getString("dir") : "DefaultFolder";
         if(obj.has("color"))
@@ -579,12 +619,19 @@ public class NArea
 
     public LocalDateTime lastUpdated;
     public String uuid = null;
-    public Color color = new Color(194,194,65,56);
     public final ArrayList<Long> grids_id = new ArrayList<>();
 
     public ArrayList<Specialisation> spec = new ArrayList<>();
     public boolean inWork = false;
-
+    public Color color = generateRandomColor();
+    private Color generateRandomColor() {
+        Random random = new Random();
+        int r = random.nextInt(256);
+        int g = random.nextInt(256);
+        int b = random.nextInt(256);
+        int a = 56;
+        return new Color(r, g, b, a);
+    }
     public Area getArea()
     {
         Coord begin = null;
@@ -644,16 +691,13 @@ public class NArea
         }
         return false;
     }
-    public LocalDateTime getLastUpdated() {
-        return this.lastUpdated;
-    }
     public JSONObject toJson()
     {
         JSONObject res = new JSONObject();
         res.put("name", name);
         res.put("id", id);
         res.put("uuid", uuid);
-        res.put("last_updated", LocalDateTime.now().toString());
+        res.put("last_updated", lastUpdated);
         res.put("dir", dir);
         JSONObject jcolor = new JSONObject();
         jcolor.put("r", color.getRed());

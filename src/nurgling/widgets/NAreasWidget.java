@@ -11,6 +11,9 @@ import nurgling.conf.LZoneServer;
 import nurgling.conf.LZoneSync;
 import nurgling.overlays.map.*;
 import nurgling.tools.*;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Set;
 import java.util.HashSet;
 import javax.swing.*;
@@ -44,6 +47,9 @@ public class NAreasWidget extends Window
                 NUtils.getGameUI().msg("Please, select area");
 
                 String selectedDir = al.currentFolder;
+                if (selectedDir == null){
+                    selectedDir = "DefaultFolder";
+                }
                 new Thread(new NAreaSelector(NAreaSelector.Mode.CREATE, selectedDir)).start();
 //                new Thread(new NAreaSelector(NAreaSelector.Mode.CREATE, "DefaultFolder")).start();
             }
@@ -54,11 +60,7 @@ public class NAreasWidget extends Window
                 super.click();
                 NUtils.getGameUI().msg("Synchronizing with cloud...");
                 new Thread(() -> {
-                        // Запуск действия синхронизации зон с сервером
                         new LZoneSync().start();
-                        NConfig.needAreasUpdate();
-                        initAreas();
-                        updateFolderItems();
                         NUtils.getGameUI().msg("Sync completed successfully!");
                 }).start();
             }
@@ -292,6 +294,7 @@ public class NAreasWidget extends Window
                                             @Override
                                             public void actionPerformed(ActionEvent e) {
                                                 area.color = colorChooser.getColor();
+                                                area.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
                                                 if(NUtils.getGameUI()!=null && NUtils.getGameUI().map!=null)
                                                 {
                                                     NOverlay nol = NUtils.getGameUI().map.nols.get(area.id);
@@ -639,8 +642,8 @@ public class NAreasWidget extends Window
     @Override
     public void hide() {
         super.hide();
-        if(NUtils.getGameUI()!=null && NUtils.getGameUI().map!=null && !createMode)
-            ((NMapView)NUtils.getGameUI().map).destroyDummys();
+//        if(NUtils.getGameUI()!=null && NUtils.getGameUI().map!=null && !createMode)
+//            ((NMapView)NUtils.getGameUI().map).destroyDummys();
         if (groupBy != null) {
             groupBy.destroyDroplist();
         }
@@ -648,10 +651,10 @@ public class NAreasWidget extends Window
 
     @Override
     public boolean show(boolean show) {
-        if(show)
-        {
-            ((NMapView)NUtils.getGameUI().map).initDummys();
-        }
+//        if(show)
+//        {
+//            ((NMapView)NUtils.getGameUI().map).initDummys();
+//        }
         return super.show(show);
     }
 }

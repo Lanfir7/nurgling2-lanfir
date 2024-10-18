@@ -3,6 +3,9 @@ package nurgling.widgets;
 import haven.*;
 import nurgling.*;
 import nurgling.areas.*;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.awt.event.*;
 
@@ -55,6 +58,7 @@ public class NChangeAreaFolder extends Window {
                         } else {
                             area.dir = selectedDir;
                         }
+                        area.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
                         updateAreas();
                         NChangeAreaFolder.this.hide();
                     }

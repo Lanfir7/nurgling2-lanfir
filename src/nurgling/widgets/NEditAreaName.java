@@ -5,6 +5,9 @@ import nurgling.*;
 import nurgling.areas.*;
 import nurgling.overlays.NTexLabel;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 public class NEditAreaName extends Window
 {
     private final TextEntry te;
@@ -23,6 +26,7 @@ public class NEditAreaName extends Window
                 {
                     ((NMapView) NUtils.getGameUI().map).changeAreaName(area.id, te.text());
                     item.text.settext(te.text());
+                    area.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
                     NConfig.needAreasUpdate();
                     Gob dummy = ((NMapView) NUtils.getGameUI().map).dummys.get(area.gid);
                     if(dummy != null) {

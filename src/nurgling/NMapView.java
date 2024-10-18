@@ -14,6 +14,9 @@ import nurgling.tools.*;
 
 import java.awt.event.KeyEvent;
 import java.awt.image.*;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
@@ -340,6 +343,7 @@ public class NMapView extends MapView
             NArea newArea = new NArea(key);
             newArea.id = id;
             newArea.space = result;
+            newArea.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
             newArea.grids_id.addAll(newArea.space.space.keySet());
             newArea.dir = dir; // Устанавливаем dir для новой зоны
             glob.map.areas.put(id, newArea);
@@ -524,7 +528,7 @@ public class NMapView extends MapView
                     glob.oc.remove(dummy);
                     dummys.remove(area.gid);
                 }
-                LZoneServer.deleteZoneFromServer(area.uuid);
+                new Thread(() -> {LZoneServer.deleteZoneFromServer(area.uuid);}).start();
                 NUtils.getGameUI().areas.removeArea(area.id);
 
                 break;

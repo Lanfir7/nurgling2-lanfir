@@ -382,7 +382,7 @@ public class NConfig
             main.put("areas",jareas);
             try
             {
-                FileWriter f = new FileWriter(path_areas);
+                FileWriter f = new FileWriter(path_areas, StandardCharsets.UTF_8);
                 main.write(f);
                 f.close();
                 current.isAreasUpd = false;

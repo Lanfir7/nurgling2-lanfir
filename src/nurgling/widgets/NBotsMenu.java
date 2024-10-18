@@ -49,6 +49,7 @@ public class NBotsMenu extends Widget
         addLayout(battle);
         NLayout farming = new NLayout("farming");
         farming.elements.add(new NButton("turnip", new TurnipsFarmer(), true));
+        //farming.elements.add(new NButton("turnip", new TurnipsLFarmer(), true));
         farming.elements.add(new NButton("hemp", new HempFarmer(), true));
         farming.elements.add(new NButton("flax", new FlaxFarmer(), true));
         farming.elements.add(new NButton("goats", new GoatsAction()));

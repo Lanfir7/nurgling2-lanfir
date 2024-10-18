@@ -2,6 +2,7 @@ package nurgling;
 
 import haven.*;
 import mapv4.NMappingClient;
+import nurgling.conf.LZoneSync;
 import nurgling.tasks.*;
 
 import java.util.*;
@@ -131,10 +132,20 @@ public class NCore extends Widget
     {
         config = new NConfig();
         config.read();
+        startSync();
         mode = (Boolean) NConfig.get(NConfig.Key.show_drag_menu) ? Mode.DRAG : Mode.IDLE;
         mappingClient = new NMappingClient();
     }
-
+    private static boolean isTaskScheduled = false;
+    public void startSync()
+    {
+        if (!isTaskScheduled) {
+            System.out.println("Старт синка ");
+            isTaskScheduled = true;
+            LZoneSync sync = new LZoneSync();
+            sync.scheduleSync();
+        }
+    }
     @Override
     public void tick(double dt)
     {

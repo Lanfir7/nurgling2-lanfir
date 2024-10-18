@@ -87,9 +87,9 @@ public class NMiniMapWnd extends Widget{
             public void run() {
                 NUtils.getUI().core.mappingClient.OpenMap();
             }
-        }), (first.sz.x+UI.scale(3))*shift++, 0);
-// Добавляем новую иконку для включения подсветки зон
-        IButton highlightZonesButton = toggle_panel.add(new IButton(
+                }), (first.sz.x+UI.scale(3))*shift++, 0);
+                // Добавляем новую иконку для включения подсветки зон
+             IButton highlightZonesButton = toggle_panel.add(new IButton(
                 Resource.loadsimg("nurgling/hud/buttons/toggle_panel/geoloc/d"),
                 Resource.loadsimg("nurgling/hud/buttons/toggle_panel/geoloc/d"),
                 Resource.loadsimg("nurgling/hud/buttons/toggle_panel/geoloc/d"),

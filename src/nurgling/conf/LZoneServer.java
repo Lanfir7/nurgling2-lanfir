@@ -32,9 +32,9 @@ public class LZoneServer {
 
             // Проверка ответа от сервера
             int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                System.out.println("Zone sent successfully!");
-            } else {
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+//                System.out.println("Zone sent successfully!");
+//            } else {
                 System.out.println("Failed to send zone. Response code: " + responseCode);
             }
 
