@@ -14,28 +14,19 @@ import java.util.ArrayList;
 public class LiftAndMoveObjects implements Action {
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
-        // Select the first source area
-        SelectArea firstSourceArea;
-        NUtils.getGameUI().msg("Please, select first area.");
-        (firstSourceArea = new SelectArea()).run(gui);
-        Pair<Coord2d, Coord2d> firstSourceZone = firstSourceArea.getRCArea();
+        // Select the source area
+        SelectArea sourceArea;
+        NUtils.getGameUI().msg("Please, select input area.");
+        (sourceArea = new SelectArea()).run(gui);
+        Pair<Coord2d, Coord2d> sourceZone = sourceArea.getRCArea();
 
-        // Select the second area (target area initially)
-        SelectArea secondArea;
-        NUtils.getGameUI().msg("Please, select second area.");
-        (secondArea = new SelectArea()).run(gui);
-        Pair<Coord2d, Coord2d> secondZone = secondArea.getRCArea();
+        // Select the target area
+        SelectArea targetArea;
+        NUtils.getGameUI().msg("Please, select output area.");
+        (targetArea = new SelectArea()).run(gui);
+        Pair<Coord2d, Coord2d> targetZone = targetArea.getRCArea();
 
-        // Infinite loop to keep moving objects back and forth
-        while (true) {
-            // Move objects from the first area to the second area
-            moveObjectsBetweenZones(gui, firstSourceZone, secondZone);
-            // Move objects from the second area back to the first area
-            moveObjectsBetweenZones(gui, secondZone, firstSourceZone);
-        }
-    }
-
-    private void moveObjectsBetweenZones(NGameUI gui, Pair<Coord2d, Coord2d> sourceZone, Pair<Coord2d, Coord2d> targetZone) throws InterruptedException {
+        // Find all objects (Gobs) in the source area
         ArrayList<Gob> objectsToMove;
         while (!(objectsToMove = Finder.findGobs(sourceZone, new NAlias(""))).isEmpty()) {
             // Filter out objects that cannot be reached
@@ -46,10 +37,9 @@ public class LiftAndMoveObjects implements Action {
                 }
             }
 
-            // If no available objects are found, break the loop and switch zones
+            // If no available objects are found, return an error
             if (availableObjects.isEmpty()) {
-                NUtils.getGameUI().msg("No more objects to move in this zone.");
-                break;
+                return Results.ERROR("Cannot reach any object.");
             }
 
             // Sort objects by proximity to the player
@@ -62,11 +52,13 @@ public class LiftAndMoveObjects implements Action {
             // Move to the target area and place the object
             new FindPlaceAndAction(objectToMove, targetZone).run(gui);
 
-            // Step back a bit after placing the object to avoid collision issues
             Coord2d shift = objectToMove.rc.sub(NUtils.player().rc).norm().mul(2);
             new GoTo(NUtils.player().rc.sub(shift)).run(gui);
 
             NUtils.getGameUI().msg("Moved object: " + objectToMove.id);
         }
+
+        NUtils.getGameUI().msg("All objects moved successfully.");
+        return Results.SUCCESS();
     }
 }

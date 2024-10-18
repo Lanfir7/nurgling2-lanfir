@@ -4,10 +4,7 @@ import haven.Coord;
 import haven.Gob;
 import nurgling.NGameUI;
 import nurgling.NUtils;
-import nurgling.actions.Action;
-import nurgling.actions.CollectFromGob;
-import nurgling.actions.Results;
-import nurgling.actions.TransferToPiles;
+import nurgling.actions.*;
 import nurgling.tools.Finder;
 import nurgling.tools.NAlias;
 
@@ -22,6 +19,7 @@ public class CollectLeaf implements Action {
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
+        boolean status = new StackOff(false).run(gui);
         SelectArea insa;
         NUtils.getGameUI().msg("Please select area with trees");
         (insa = new SelectArea()).run(gui);
@@ -38,6 +36,7 @@ public class CollectLeaf implements Action {
             new CollectFromGob(tree,"Pick leaf", pickAction ,new Coord(1,1),new NAlias("Leaf", "leaf", "Leaves", "leaves"),outsa.getRCArea()).run(gui);
         }
         new TransferToPiles(outsa.getRCArea(), new NAlias("Leaf", "leaf", "Leaves", "leaves") ).run(gui);
+        new StackOff(status).run(gui);
         return Results.SUCCESS();
     }
 }

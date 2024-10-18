@@ -19,6 +19,7 @@ public class BackerAction implements Action {
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
+        boolean status = new StackOff(false).run(gui);
         NArea ovens = NArea.findSpec(Specialisation.SpecName.ovens.toString());
 
         ArrayList<Container> containers = new ArrayList<>();
@@ -61,6 +62,7 @@ public class BackerAction implements Action {
             new FuelToContainers(containers).run(gui);
             new LightGob(lighted, 4).run(gui);
         }
+        new StackOff(status).run(gui);
         return Results.SUCCESS();
     }
 }

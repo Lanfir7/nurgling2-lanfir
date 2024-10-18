@@ -27,7 +27,10 @@ public class LiftObject implements Action {
 //            Coord2d newPos = gobPos.add(xDirection * hitboxWidth , yDirection *(hitboxl/2));
 //
 //            new PathFinder ( newPos ).run(gui);
-            new PathFinder(gob).run(gui);
+            PathFinder pf = new PathFinder(gob);
+            pf.isHardMode = true;
+            pf.run(gui);
+//            new PathFinder(gob).run(gui);
             NUtils.lift (gob);
             return Results.SUCCESS();
         }
