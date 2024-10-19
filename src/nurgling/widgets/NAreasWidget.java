@@ -27,9 +27,9 @@ import java.util.concurrent.*;
 
 public class NAreasWidget extends Window
 {
-    SearchableDropbox<String> groupBy;
-    List<String> folderItems = new ArrayList<>();
-    TextEntry folderSearch;
+//    SearchableDropbox<String> groupBy;
+//    List<String> folderItems = new ArrayList<>();
+//    TextEntry folderSearch;
     public IngredientContainer in_items;
     public IngredientContainer out_items;
     CurrentSpecialisationList csl;
@@ -89,8 +89,8 @@ public class NAreasWidget extends Window
                 }).start();
             }
         }, create.pos("ur").add(5, 0));
-        initAreas();
-        updateFolderItems();
+//        initAreas();
+//        updateFolderItems();
 
         create.settip("Create new area");
 
@@ -145,38 +145,7 @@ public class NAreasWidget extends Window
         add(new Label("Put:",NStyle.areastitle),prev.pos("ul").sub(UI.scale(-5,20)));
         pack();
     }
-    // Method to initialize 'areas'
-    private void initAreas() {
-        if(areas.isEmpty() && NUtils.getGameUI() != null && NUtils.getGameUI().map != null) {
-            Map<Integer, NArea> gameAreas = NUtils.getGameUI().map.glob.map.areas;
-            if (!gameAreas.isEmpty()) {
-                for (NArea area : gameAreas.values()) {
-                    addArea(area.id, area.name, area);
-                }
-            }
-        }
-    }
-    // Method to update 'folderItems'
-    private void updateFolderItems() {
-        folderItems.clear();
-        folderItems.add("All Folders"); // Option to display all areas
-        Set<String> dirs = new HashSet<>();
-        for (AreaItem areaItem : areas.values()) {
-            if (areaItem.area.dir != null && !areaItem.area.dir.isEmpty()) {
-                dirs.add(areaItem.area.dir);
-            } else {
-                dirs.add("DefaultFolder");
-            }
-        }
-        folderItems.addAll(dirs);
-    }
-    @Override
-    public void destroy() {
-        if (groupBy != null) {
-            groupBy.destroyDroplist();
-        }
-        super.destroy();
-    }
+
 
     public void removeArea(int id)
     {

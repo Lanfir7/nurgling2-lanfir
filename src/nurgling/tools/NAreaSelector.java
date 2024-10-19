@@ -65,7 +65,7 @@ public class NAreaSelector implements Runnable
                 if (mode != Mode.SELECT) {
                     if (result != null) {
                         if (mode == Mode.CREATE) {
-                            ((NMapView) NUtils.getGameUI().map).addArea(result, dir);
+                            ((NMapView) NUtils.getGameUI().map).addArea(result);
                         } else if (mode == Mode.CHANGE) {
                             area.space = result;
                             area.grids_id.clear();
@@ -77,7 +77,6 @@ public class NAreaSelector implements Runnable
                             area.inWork = false;
                         }
                         NConfig.needAreasUpdate();
-                        NUtils.getGameUI().areas.al.updateList();
                     }
                     NUtils.getGameUI().areas.show();
                 }

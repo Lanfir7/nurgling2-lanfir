@@ -468,7 +468,7 @@ public class NArea
             }
             else if(obj.has("dir"))
             {
-                this.path = "/" + obj.getString("path");
+                this.path = "/" + obj.getString("dir");
             }
 
             if (obj.has("color")) {
@@ -525,7 +525,7 @@ public class NArea
             }
             else if(obj.has("dir"))
             {
-                this.path = "/" + obj.getString("path");
+                this.path = "/" + obj.getString("dir");
             }
             if (obj.has("last_updated")) {
                 this.lastUpdated = LocalDateTime.parse(obj.getString("last_updated"));
@@ -592,7 +592,7 @@ public class NArea
         }
         else if(obj.has("dir"))
         {
-            this.path = "/" + obj.getString("path");
+            this.path = "/" + obj.getString("dir");
         }
         if(obj.has("color"))
         {
