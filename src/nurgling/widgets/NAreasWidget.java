@@ -77,18 +77,18 @@ public class NAreasWidget extends Window
                 new Thread(new NAreaSelector(NAreaSelector.Mode.CREATE)).start();
             }
 
-        },new Coord(5,UI.scale(5)));
-        add(syncWithCloud = new IButton(NStyle.cloud[0].back, NStyle.cloud[1].back, NStyle.cloud[2].back){
-            @Override
-            public void click() {
-                super.click();
-                NUtils.getGameUI().msg("Synchronizing with cloud...");
-                new Thread(() -> {
-                        new LZoneSync().start();
-                        NUtils.getGameUI().msg("Sync completed successfully!");
-                }).start();
-            }
-        }, create.pos("ur").add(5, 0));
+        },new Coord(30,UI.scale(5)));
+//        add(syncWithCloud = new IButton(NStyle.cloud[0].back, NStyle.cloud[1].back, NStyle.cloud[2].back){
+//            @Override
+//            public void click() {
+//                super.click();
+//                NUtils.getGameUI().msg("Synchronizing with cloud...");
+//                new Thread(() -> {
+//                        new LZoneSync().start();
+//                        NUtils.getGameUI().msg("Sync completed successfully!");
+//                }).start();
+//            }
+//        }, create.pos("ur").add(5, 0));
 //        initAreas();
 //        updateFolderItems();
 
@@ -96,12 +96,12 @@ public class NAreasWidget extends Window
 
 
 
-        prev = add(al = new AreaList(UI.scale(new Coord(400,170))), prev.pos("bl").adds(0, 10));
-        syncWithCloud.settip("Sync with cloud");
+        prev = add(al = new AreaList(UI.scale(new Coord(400,270))), prev.pos("bl").adds(0, 10));
+//        syncWithCloud.settip("Sync with cloud");
 
         Widget lab = add(new Label("Specialisation",NStyle.areastitle), prev.pos("bl").add(UI.scale(0,5)));
 
-        add(csl = new CurrentSpecialisationList(UI.scale(164,190)),lab.pos("bl").add(UI.scale(0,5)));
+        add(csl = new CurrentSpecialisationList(UI.scale(164,70)),lab.pos("bl").add(UI.scale(0,5)));
         add(new IButton(NStyle.add[0].back,NStyle.add[1].back,NStyle.add[2].back){
             @Override
             public void click()

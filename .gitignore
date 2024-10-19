@@ -5,4 +5,6 @@
 /build.properties
 /out
 /nurgling2-lanfir.iml
+/resources/compiled/res
+/.idea
 *~

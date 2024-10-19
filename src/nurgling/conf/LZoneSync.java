@@ -27,7 +27,7 @@ public class LZoneSync {
         if (serverZones != null) {
             syncZones(serverZones);
             NConfig.needAreasUpdate();
-            NUtils.getGameUI().areas.show();
+            //NUtils.getGameUI().areas.show();
             ((NMapView)NUtils.getGameUI().map).destroyDummys();
             ((NMapView)NUtils.getGameUI().map).initDummys();
         }
@@ -35,7 +35,11 @@ public class LZoneSync {
     public void scheduleSync() {
             scheduler.scheduleAtFixedRate(() -> {
                 new Thread(() -> {
+                    long startTime = System.currentTimeMillis();
                     start();// Запускаем ваш поток
+                    long endTime = System.currentTimeMillis();  // Конец замера времени
+                    long executionTime = endTime - startTime;  // Разница во времени
+                    System.out.println("Sync time: " + executionTime + " ms");
                 }).start();
             }, 30,30, TimeUnit.SECONDS);  // Задержка в 1 минут
     }

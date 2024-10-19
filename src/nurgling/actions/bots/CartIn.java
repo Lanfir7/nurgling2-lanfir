@@ -7,6 +7,7 @@ import haven.Pair;
 import nurgling.NGameUI;
 import nurgling.NUtils;
 import nurgling.actions.*;
+import nurgling.conf.DatabaseUtils;
 import nurgling.tasks.ChangeModelAtrib;
 import nurgling.tasks.IsMoving;
 import nurgling.tasks.WaitPose;
@@ -22,6 +23,7 @@ public class CartIn implements Action {
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
         // Select the target area
+        DatabaseUtils.addItemsWithTiming(1);
         SelectArea targetArea;
         NUtils.getGameUI().msg("Please, select intput area.");
         (targetArea = new SelectArea()).run(gui);
