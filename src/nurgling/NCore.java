@@ -142,7 +142,6 @@ public class NCore extends Widget
     public void startSync()
     {
         if (!isTaskScheduled) {
-            System.out.println("Старт синка ");
             isTaskScheduled = true;
             LZoneSync sync = new LZoneSync();
             sync.scheduleSync();
