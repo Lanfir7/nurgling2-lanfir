@@ -567,6 +567,7 @@ public class NMapView extends MapView
     public void changeAreaName(Integer id, String new_name)
     {
         glob.map.areas.get(id).name = new_name;
+        glob.map.areas.get(id).lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
         NConfig.needAreasUpdate();
     }
 }

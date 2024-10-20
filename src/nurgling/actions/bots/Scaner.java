@@ -11,6 +11,8 @@ import nurgling.tools.*;
 import nurgling.widgets.*;
 import org.json.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 public class Scaner implements Action
@@ -94,6 +96,8 @@ public class Scaner implements Action
                 }
             }
         }
+
+        area.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
         NConfig.needAreasUpdate();
         NUtils.getGameUI().areas.set(area.id);
 

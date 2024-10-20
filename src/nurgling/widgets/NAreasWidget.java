@@ -134,6 +134,7 @@ public class NAreasWidget extends Window
                             break;
                         }
                     }
+                    al.sel.area.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
                     NConfig.needAreasUpdate();
                 }
             }

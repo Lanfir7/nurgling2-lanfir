@@ -9,6 +9,8 @@ import org.json.*;
 
 import java.awt.*;
 import java.awt.image.*;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 public class IngredientContainer extends Widget implements NDTarget
@@ -107,6 +109,7 @@ public class IngredientContainer extends Widget implements NDTarget
                 res.put("type", NArea.Ingredient.Type.CONTAINER.toString());
                 addIcon(res);
                 data.put(res);
+                NUtils.getArea(id).lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
                 NConfig.needAreasUpdate();
             }
 
@@ -154,6 +157,7 @@ public class IngredientContainer extends Widget implements NDTarget
             if (((JSONObject) data.get(i)).get("name").equals(name))
             {
                 ((JSONObject) data.get(i)).put("th",val);
+                NUtils.getArea(id).lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
                 NConfig.needAreasUpdate();
                 return;
             }
@@ -176,6 +180,7 @@ public class IngredientContainer extends Widget implements NDTarget
             {
                 ((JSONObject) data.get(i)).put("type",val.toString());
                 icons.get(i).type = val;
+                NUtils.getArea(id).lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
                 NConfig.needAreasUpdate();
                 return;
             }
@@ -198,6 +203,7 @@ public class IngredientContainer extends Widget implements NDTarget
             if (((JSONObject) data.get(i)).get("name").equals(name))
             {
                 data.remove(i);
+                NUtils.getArea(id).lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
                 NConfig.needAreasUpdate();
                 load(id);
                 return;
