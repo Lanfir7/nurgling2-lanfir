@@ -1,9 +1,6 @@
 package nurgling.actions.bots;
 
-import haven.Coord;
-import haven.Coord2d;
-import haven.Gob;
-import haven.Pair;
+import haven.*;
 import nurgling.NGameUI;
 import nurgling.NUtils;
 import nurgling.actions.*;
@@ -15,15 +12,45 @@ import nurgling.tools.Finder;
 import nurgling.tools.NAlias;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static haven.OCache.posres;
 
 
 public class CartIn implements Action {
+    private int getPerceptionValue(NGameUI gui) {
+        // Поиск окна с атрибутами в интерфейсе
+        if (gui.chrwdg != null && gui.chrwdg.battr != null) {
+            List<BAttrWnd.Attr> attrs = gui.chrwdg.battr.attrs;
+            for (BAttrWnd.Attr attr : attrs) {
+                if (attr.nm.equals("prc")) {
+                    return attr.attr.comp; // Возвращаем текущее значение Perception
+                }
+            }
+        }
+        return -1; // Возвращаем -1, если не нашли атрибут
+    }
+    private int getExplorationValue(NGameUI gui) {
+        if (gui.chrwdg != null && gui.chrwdg.sattr != null) {
+            List<SAttrWnd.SAttr> attrs = (List<SAttrWnd.SAttr>) gui.chrwdg.sattr.attrs;
+            for (SAttrWnd.SAttr attr : attrs) {
+                if (attr.nm.equals("explore")) {
+                    return attr.attr.comp; // Возвращаем текущее значение Exploration
+                }
+            }
+        }
+        return -1; // Возвращаем -1, если не нашли атрибут
+    }
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
         // Select the target area
-        DatabaseUtils.addItemsWithTiming(1);
+
+        int exploration = getExplorationValue(gui);
+        System.out.println("Exploration: " + exploration);
+        int perception = getPerceptionValue(gui);
+        System.out.println("Perception: " + perception);
+        //DatabaseUtils.addItemsWithTiming(1);
         SelectArea targetArea;
         NUtils.getGameUI().msg("Please, select intput area.");
         (targetArea = new SelectArea()).run(gui);

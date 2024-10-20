@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 
 public class NGItem extends GItem
 {
+    public int hardArmor = 0;  // Жёсткая броня
+    public int softArmor = 0;  // Мягкая броня
     public boolean isSearched = false;
     public boolean isQuested = false;
     int lastQuestUpdate = 0;
@@ -160,6 +162,9 @@ public class NGItem extends GItem
         if (rawinfo != null)
         {
             content = null;
+
+            hardArmor = 0;  // Сбрасываем броню перед обновлением
+            softArmor = 0;
             for (Object o : rawinfo.data)
             {
                 if (o instanceof Object[])
@@ -173,6 +178,13 @@ public class NGItem extends GItem
                                 switch (resName) {
                                     case "ui/tt/q/quality":
                                         if (a.length >= 2) quality = (Float) a[1];
+                                        break;
+                                    // Парсим данные о броне
+                                    case "ui/tt/armor":
+                                        if (a.length >= 3) {
+                                            hardArmor = (Integer) a[1];  // Жесткая броня
+                                            softArmor = (Integer) a[2];  // Мягкая броня
+                                        }
                                         break;
                                     case "ui/tt/cont":
                                         double q = -1;
