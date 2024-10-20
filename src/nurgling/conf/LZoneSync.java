@@ -1,7 +1,9 @@
 package nurgling.conf;
 
+import haven.Gob;
 import nurgling.NConfig;
 import nurgling.NMapView;
+import nurgling.overlays.map.NOverlay;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -82,6 +84,10 @@ public class LZoneSync {
                     NArea localZone = NUtils.getGameUI().map.glob.map.findAreaByUUID(uuid);
                     if (localZone != null) {
                         System.out.println("Удаление зоны с UUID: " + uuid);
+                        NUtils.getGameUI().map.nols.remove(localZone.id);
+                        Gob dummy = ((NMapView) NUtils.getGameUI().map).dummys.get(((NMapView) NUtils.getGameUI().map).glob.map.areas.get(localZone.id).gid);
+                        NUtils.getGameUI().map.glob.oc.remove(dummy);
+                        ((NMapView) NUtils.getGameUI().map).dummys.remove(dummy.id);
                         NUtils.getGameUI().map.glob.map.areas.remove(localZone.id);
                     }
                 } else {
@@ -92,7 +98,11 @@ public class LZoneSync {
                             if (localZone.lastUpdated.isBefore(serverLastUpdated)) {
                                 //System.out.println("ПОЛУЧЕНИЕ:Время сервера: " + serverLastUpdated + " Время локальное: " + localZone.lastUpdated);
                                 System.out.println("Серверная зона новее, получаем локально: " + localZone.name);
+                                NOverlay nol = NUtils.getGameUI().map.nols.get(localZone.id);
+                                nol.remove();
+                                NUtils.getGameUI().map.nols.remove(localZone.id);
                                 localZones.put(localZone.id, new NArea(jsonZone, localZone.id));
+                                NUtils.getGameUI().map.nols.remove(localZone.id);
                             }
                             foundLocally = true;
                             break;
