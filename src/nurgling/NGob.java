@@ -48,12 +48,6 @@ public class NGob {
             isDynamic = true;
         }
 
-        if (a instanceof GobIcon)
-        {
-            GobIcon gi = (GobIcon) a;
-//            String name = gi.icon().name();
-        }
-
         if (a instanceof Drawable) {
             if (((Drawable) a).getres() != null) {
                 name = ((Drawable) a).getres().name;
@@ -117,6 +111,8 @@ public class NGob {
                             parent.setattr(new GobIcon(parent,NStyle.iconMap.get(name),new byte[0]));
                         }
 
+
+
                         if (NParser.checkName(name, new NAlias("borka")) && parent.id!=NUtils.playerID()) {
                             NAlarmWdg.addBorka(parent.id);
                         }
@@ -148,7 +144,7 @@ public class NGob {
                                 parent.addcustomol(new NBarrelOverlay(parent));
                             }
 
-                            if (NUtils.playerID() != -1 && name.equals("gfx/borka/body") && NUtils.playerID() != parent.id) {
+                            if (name.equals("gfx/borka/body")) {
                                 parent.addcustomol(new NKinRing(parent));
                                 parent.setattr(new NKinTex(parent));
                             }
@@ -215,9 +211,17 @@ public class NGob {
         for (NAttrib attrib : nattr.values()) {
             attrib.tick(dt);
         }
+        if(name!=null && name.contains("kritter") && (parent.pose()==null || !NParser.checkName(parent.pose(),"dead","knock")) && parent.findol(NAreaRad.class)==null)
+        {
+            nurgling.conf.NAreaRad rad = nurgling.conf.NAreaRad.get(name);
+            if(rad!=null)
+                parent.addcustomol(new NAreaRange(parent,rad));
+        }
         int nlu = NQuestInfo.lastUpdate.get();
         if (NQuestInfo.lastUpdate.get() > lastUpdate)
         {
+
+
             NQuestInfo.MarkerInfo markerInfo;
             if((markerInfo = NQuestInfo.getMarkerInfo(parent))!=null)
             {
