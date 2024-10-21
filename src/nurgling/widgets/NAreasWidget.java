@@ -13,6 +13,7 @@ import nurgling.conf.LZoneSync;
 import nurgling.overlays.map.*;
 import nurgling.tools.*;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Set;
@@ -172,6 +173,7 @@ public class NAreasWidget extends Window
             if(area.path.startsWith(path))
             {
                 area.path = area.path.replace(path,newpath);
+                area.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
             }
         }
     }

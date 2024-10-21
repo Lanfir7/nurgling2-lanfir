@@ -13,6 +13,8 @@ import nurgling.tools.NAlias;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -20,48 +22,49 @@ import java.util.logging.Logger;
 
 
 public class testingRes implements Action {
-    //private static final Logger logger = Logger.getLogger(ResourceChecker.class.getName());
-    private static final String LOG_FILE = "missing_resources.log";
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
         ArrayList<String> resourcePaths = new ArrayList<>();
-        resourcePaths.add("gfx/invobjs/herbs/buttonmushroom");
-        resourcePaths.add("gfx/invobjs/herbs/chantrelles");
-        // Добавляй сюда остальные ресурсы
+
+        resourcePaths.add("gfx/invobjs/herbs/goosebarnacle");
+        resourcePaths.add("gfx/invobjs/herbs/lakesnail");
+        resourcePaths.add("gfx/invobjs/herbs/oyster");
+        resourcePaths.add("gfx/invobjs/herbs/razorclam");
+        resourcePaths.add("gfx/invobjs/herbs/mussels");
+        resourcePaths.add("gfx/invobjs/roundclam");
+
 
         checkResources(resourcePaths);
         return Results.SUCCESS();
     }
-    public static void checkResources(ArrayList<String> resourcePaths) {
+
+    // Метод для проверки списка ресурсов
+    private void checkResources(ArrayList<String> resourcePaths) {
         for (String path : resourcePaths) {
-            try {
-                // Предполагаемая функция для загрузки ресурса
-                loadResource(path);
-            } catch (ResourceNotFoundException e) {
-                NUtils.getGameUI().msg("Please, select intput area."+ path);
+            if (checkResource(path)) {
+                System.out.println("         Resource found: " + path);
+            } else {
+                System.out.println("missing: " + path);
             }
         }
     }
 
-    private static void loadResource(String path) throws ResourceNotFoundException {
-        // Симуляция загрузки ресурса
-        boolean resourceExists = checkResource(path);
-        if (!resourceExists) {
-            NUtils.getGameUI().msg("Please, select intput area."+ path);
-        }
-    }
+    // Метод для проверки конкретного ресурса по URL
+    private boolean checkResource(String path) {
+        String baseUrl = "http://game.havenandhearth.com/res/";  // Базовый URL ресурса
+        String fullUrl = baseUrl + path + ".res";  // Полный URL ресурса с расширением
 
-    private static boolean checkResource(String path) {
-        // Здесь можно реализовать логику проверки ресурса
-        // Например, проверка наличия файла по пути
-        return false; // Симуляция отсутствующего ресурса
-    }
+        try {
+            URL url = new URL(fullUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("HEAD");  // Используем метод HEAD для минимального ответа
+            int responseCode = connection.getResponseCode();
 
-    private static void logMissingResource(String path) {
-        try (FileWriter writer = new FileWriter(LOG_FILE, true)) {
-            writer.write("Missing resource: " + path + "\n");
+            // Если ответ 200, ресурс существует
+            return responseCode == HttpURLConnection.HTTP_OK;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;  // Возвращаем false, если произошла ошибка
         }
     }
 }
