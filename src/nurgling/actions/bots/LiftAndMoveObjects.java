@@ -10,6 +10,8 @@ import nurgling.tools.Finder;
 import nurgling.tools.NAlias;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class LiftAndMoveObjects implements Action {
     @Override
@@ -28,7 +30,8 @@ public class LiftAndMoveObjects implements Action {
 
         // Find all objects (Gobs) in the source area
         ArrayList<Gob> objectsToMove;
-        while (!(objectsToMove = Finder.findGobs(sourceZone, new NAlias(""))).isEmpty()) {
+        NAlias lifted = new NAlias(new ArrayList<String>(List.of("")),new ArrayList<String>(Arrays.asList("body")));
+        while (!(objectsToMove = Finder.findGobs(sourceZone, lifted)).isEmpty()) {
             // Filter out objects that cannot be reached
             ArrayList<Gob> availableObjects = new ArrayList<>();
             for (Gob currGob : objectsToMove) {
@@ -55,7 +58,7 @@ public class LiftAndMoveObjects implements Action {
             Coord2d shift = objectToMove.rc.sub(NUtils.player().rc).norm().mul(2);
             new GoTo(NUtils.player().rc.sub(shift)).run(gui);
 
-            NUtils.getGameUI().msg("Moved object: " + objectToMove.id);
+            //NUtils.getGameUI().msg("Moved object: " + objectToMove.id);
         }
 
         NUtils.getGameUI().msg("All objects moved successfully.");

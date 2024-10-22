@@ -12,6 +12,7 @@ import nurgling.tools.Finder;
 import nurgling.tools.NAlias;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -46,11 +47,11 @@ public class CartIn implements Action {
     public Results run(NGameUI gui) throws InterruptedException {
         // Select the target area
 
-        int exploration = getExplorationValue(gui);
-        System.out.println("Exploration: " + exploration);
-        int perception = getPerceptionValue(gui);
-        System.out.println("Perception: " + perception);
-        //DatabaseUtils.addItemsWithTiming(1);
+//        int exploration = getExplorationValue(gui);
+//        System.out.println("Exploration: " + exploration);
+//        int perception = getPerceptionValue(gui);
+//        System.out.println("Perception: " + perception);
+//        //DatabaseUtils.addItemsWithTiming(1);
         SelectArea targetArea;
         NUtils.getGameUI().msg("Please, select intput area.");
         (targetArea = new SelectArea()).run(gui);
@@ -65,7 +66,8 @@ public class CartIn implements Action {
         int gobsInCart = 0;
         // Находим все объекты (гобы) в исходной зоне
         ArrayList<Gob> objectsToMove;
-        while (!(objectsToMove = Finder.findGobs(targetZone, new NAlias(""))).isEmpty()) {
+        NAlias lifted = new NAlias(new ArrayList<String>(List.of("")),new ArrayList<String>(Arrays.asList("body")));
+        while (!(objectsToMove = Finder.findGobs(targetZone, lifted)).isEmpty()) {
             if (gobsInCart >= maxGobsInCart) {
                 NUtils.getGameUI().msg("Cart is full (6 objects).");
                 return Results.SUCCESS(); // Завершаем, если телега полная

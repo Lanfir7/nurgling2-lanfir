@@ -38,7 +38,7 @@ public class CollectFromGob implements Action {
         boolean success = false;  // Флаг для успешного сбора
         int attempts = 0;  // Счетчик попыток сборов
 
-        while (attempts < 2) {  // Цикл для двух попыток сбора с одного объекта
+        while (attempts < 3) {  // Цикл для двух попыток сбора с одного объекта
             // Проверяем свободное место в инвентаре перед сбором
             if (NUtils.getGameUI().getInventory().getNumberFreeCoord(targetSize) == 0) {
                 if (withPiles) {
@@ -94,8 +94,8 @@ public class CollectFromGob implements Action {
                 return Results.FAIL();  // Если меню не появилось
             }
 
-            // Если оба ресурса собраны (2 попытки), выходим
-            if (attempts >= 2) {
+            // Если оба ресурса собраны (3 попытки), выходим
+            if (attempts >= 3) {
                 break;
             }
         }

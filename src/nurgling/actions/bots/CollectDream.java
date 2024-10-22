@@ -6,6 +6,7 @@ import nurgling.NUtils;
 import nurgling.actions.*;
 import nurgling.areas.NArea;
 import nurgling.tools.Container;
+import nurgling.tools.Context;
 import nurgling.tools.Finder;
 import nurgling.tools.NAlias;
 import nurgling.widgets.bots.DreamCollector;
@@ -104,7 +105,7 @@ public class CollectDream implements Action {
                     }
                 }
             } else {
-                new FreeInventory().run(gui);
+                new FreeInventory(new Context()).run(gui);
                 break;
             }
         }

@@ -10,6 +10,9 @@ public class VSpec
     public static HashMap<String,ArrayList<JSONObject>> categories = new HashMap<>();
     static {
         ArrayList<JSONObject> spices = new ArrayList<>();
+//        gfx/invobjs/ambergris
+//        gfx/invobjs/blackpepper
+        spices.add(new JSONObject("{\"static\":\"gfx/invobjs/propolis\",\"name\":\"Propolis\"}"));
         spices.add(new JSONObject("{\"static\":\"gfx/invobjs/herbs/kvann\",\"name\":\"Kvann\"}"));
         spices.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-juniper\",\"name\":\"Juniper Berries\"}"));
         spices.add(new JSONObject("{\"static\":\"gfx/invobjs/herbs/chives\",\"name\":\"Chives\"}"));
@@ -68,8 +71,13 @@ public class VSpec
         maltedGrains.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-wheatmalt\",\"name\":\"Malted Wheat\"}"));
         categories.put("Malted Grains", maltedGrains);
 
+        ArrayList<JSONObject> millableSeed = new ArrayList<>();
+        millableSeed.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-barley\",\"name\":\"Barley Seed\"}"));
+        millableSeed.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-wheat\",\"name\":\"Wheat Seed\"}"));
+        millableSeed.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-millet\",\"name\":\"Millet Seed\"}"));
+        categories.put("Millable Seed", millableSeed);
+
         ArrayList<JSONObject> seeds = new ArrayList<>();
-        seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-barley\",\"name\":\"Barley Seed\"}"));
         seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-carrot\",\"name\":\"Carrot Seed\"}"));
         seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-cucumber\",\"name\":\"Cucumber Seed\"}"));
         seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-flax\",\"name\":\"Flax Seed\"}"));
@@ -77,13 +85,12 @@ public class VSpec
         seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-hemp\",\"name\":\"Hemp Seed\"}"));
         seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-leek\",\"name\":\"Leek Seed\"}"));
         seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-lettuce\",\"name\":\"Lettuce Seed\"}"));
-        seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-millet\",\"name\":\"Millet Seed\"}"));
         seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-pipeweed\",\"name\":\"Pipeweed Seed\"}"));
         seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-poppy\",\"name\":\"Poppy Seed\"}"));
         seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-pumpkin\",\"name\":\"Pumpkin Seed\"}"));
         seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-turnip\",\"name\":\"Turnip Seed\"}"));
-        seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-wheat\",\"name\":\"Wheat Seed\"}"));
         seeds.addAll(maltedGrains);
+        seeds.addAll(millableSeed);
         seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-wheatgerm\",\"name\":\"Sprouted Wheat\"}"));
         seeds.add(new JSONObject("{\"static\":\"gfx/invobjs/seed-barleygerm\",\"name\":\"Sprouted Barley\"}"));
         categories.put("Crop Seeds", seeds);
@@ -898,7 +905,7 @@ public class VSpec
         stones.add(new JSONObject("{\"static\":\"gfx/invobjs/batrock\",\"name\":\"Bat Rock\"}"));
         stones.add(new JSONObject("{\"static\":\"gfx/invobjs/blackcoal\",\"name\":\"Black Coal\"}"));
         stones.add(new JSONObject("{\"static\":\"gfx/invobjs/magnetite\",\"name\":\"Magnetite\"}"));
-//        stones.add(new JSONObject("{\"static\":\"gfx/invobjs/bloodore\",\"name\":\"Blood Ore\"}"));
+        stones.add(new JSONObject("{\"static\":\"gfx/invobjs/hematite\",\"name\":\"Blood Ore\"}"));
         stones.add(new JSONObject("{\"static\":\"gfx/invobjs/breccia\",\"name\":\"Breccia\"}"));
         stones.add(new JSONObject("{\"static\":\"gfx/invobjs/cassiterite\",\"name\":\"Cassiterite\"}"));
         stones.add(new JSONObject("{\"static\":\"gfx/invobjs/catgold\",\"name\":\"Cat Gold\"}"));
