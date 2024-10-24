@@ -34,8 +34,8 @@ public class Specialisation extends Window
         gardenpot, barrel,
         leafs, htable,
         rawhides, dframe,
-        ttub, tanning, readyHides
-
+        ttub, tanning, readyHides,
+        logs, smokshed
     }
 
     private static ArrayList<SpecialisationItem> specialisation = new ArrayList<>();
