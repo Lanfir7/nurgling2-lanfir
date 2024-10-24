@@ -6,6 +6,8 @@ import haven.Label;
 import haven.Window;
 import haven.render.*;
 import nurgling.*;
+import nurgling.actions.GoTo;
+import nurgling.actions.PathFinder;
 import nurgling.actions.bots.*;
 import nurgling.areas.*;
 import nurgling.conf.LZoneServer;
@@ -26,6 +28,8 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
+
+import static haven.OCache.posres;
 
 public class NAreasWidget extends Window
 {
@@ -146,17 +150,37 @@ public class NAreasWidget extends Window
         add(new Label("Take:",NStyle.areastitle),prev.pos("ul").sub(UI.scale(-5,20)));
         prev = add(Frame.with(out_items = new IngredientContainer("out"),true), prev.pos("ur").adds(UI.scale(5, 0)));
         add(new Label("Put:",NStyle.areastitle),prev.pos("ul").sub(UI.scale(-5,20)));
-        IButton openCategoryWindow;
-        add(openCategoryWindow = new IButton(NStyle.addfolder[0].back, NStyle.addfolder[1].back, NStyle.addfolder[2].back) {
+        IButton openCategoryWindowIn;
+
+        IButton openCategoryWindowOut;
+        add(openCategoryWindowOut = new IButton(NStyle.addarea[0].back,NStyle.addarea[1].back,NStyle.addarea[2].back) {
             @Override
             public void click() {
                 super.click();
-                NCategorySelectionWindow categoryWindow = new NCategorySelectionWindow(al.sel.area.id);
-                ui.root.add(categoryWindow, new Coord(200,200));
-                categoryWindow.show();
+                if (al.sel != null && al.sel.area != null) {
+                    NCategorySelectionWindow categoryWindow = new NCategorySelectionWindow(al.sel.area.id, "out");
+                    ui.root.add(categoryWindow, new Coord(600,200));
+                    categoryWindow.show();
+                } else {
+                    NUtils.getGameUI().msg("Please select an area first."); // Сообщение, если зона не выбрана
+                }
             }
-        }, new Coord(60, UI.scale(5)));
-        openCategoryWindow.settip("Open Category Selection for PUT");
+        }, new Coord(540, UI.scale(10)));
+        openCategoryWindowOut.settip("Open Category Selection for TAKE");
+        add(openCategoryWindowIn = new IButton(NStyle.addarea[0].back,NStyle.addarea[1].back,NStyle.addarea[2].back) {
+            @Override
+            public void click() {
+                super.click();
+                if (al.sel != null && al.sel.area != null) {
+                    NCategorySelectionWindow categoryWindow = new NCategorySelectionWindow(al.sel.area.id, "in");
+                    ui.root.add(categoryWindow, new Coord(600,200));
+                    categoryWindow.show();
+                } else {
+                    NUtils.getGameUI().msg("Please select an area first."); // Сообщение, если зона не выбрана
+                }
+            }
+        }, new Coord(340, UI.scale(10)));
+        openCategoryWindowIn.settip("Open Category Selection for PUT");
         pack();
     }
 
@@ -321,6 +345,13 @@ public class NAreasWidget extends Window
         @Override
         public boolean mousedown(Coord c, int button)
         {
+            boolean shiftPressed = ui.modflags() == UI.MOD_SHIFT; // Проверяем, нажата ли клавиша Shift
+
+            if (shiftPressed) {
+                // Если Shift нажат, вызываем метод для перемещения к зоне
+                goToArea(this.area);
+                return true;
+            }
             if (button == 3)
             {
                 opts(c);
@@ -344,6 +375,40 @@ public class NAreasWidget extends Window
 
         }
 
+        private void goToArea(NArea area) {
+            if (area != null) {
+                // Получаем пару координат зоны (начало и конец зоны) в игровом мире
+                Pair<Coord2d, Coord2d> areaCoords = area.getRCArea();
+
+                if (areaCoords != null) {
+                    Coord2d areaPos = areaCoords.a; // Начальная точка зоны (верхний левый угол)
+
+                    // Получаем текущие координаты игрока
+                    Coord playerPos = NUtils.player().rc.floor();
+
+                    if (playerPos != null) {
+                        // Вычисляем расстояние между игроком и зоной в тайлах
+                        double distance = playerPos.dist(areaPos.floor());
+
+                        // Проверяем, что расстояние меньше 1000 тайлов
+                        if (distance <= 3000) {
+                            moveToArea(areaPos);
+                        } else {
+                            NUtils.getGameUI().msg("Area " + area.name + " is too far: " + (int)distance + " tiles.");
+                        }
+                    }
+                } else {
+                    NUtils.getGameUI().msg("Unable to find coordinates for area: " + area.name);
+                }
+            }
+        }
+
+        // Метод для перемещения персонажа к определённой позиции с использованием патфайдинга
+        private void moveToArea(Coord2d targetPos) {
+            if (targetPos != null) {
+                NUtils.getGameUI().map.wdgmsg("click", Coord.z, targetPos.floor(posres), 1, 0);
+            }
+        }
 
 
         NFlowerMenu menu;

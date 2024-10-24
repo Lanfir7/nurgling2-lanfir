@@ -729,7 +729,7 @@ public class VSpec
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/bathide\",\"name\":\"Bat Hide\"}"));
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/bearhide\",\"name\":\"Bear Hide\"}"));
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/beaverhide\",\"name\":\"Beaver Hide\"}"));
-        preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/boarhide\",\"name\":\"Boar Hide\"}"));
+        preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/boarhide\",\"name\":\"Boarhide\"}"));
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/borewormhide\",\"name\":\"Boreworm Hide\"}"));
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/cowhide\",\"name\":\"Cattle Hide\"}"));  // Missing resource
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/caveanglerscales\",\"name\":\"Cave Angler Scales\"}"));

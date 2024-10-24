@@ -24,15 +24,11 @@ public class Specialisation extends Window
     public enum SpecName
     {
         smelter, ore, fuel,
-        kiln,
+        kiln, toFire,
         water,
         boiler,
         swill, trough, crop, seed,
-
-        cows,
-        sheeps,
-        pigs,
-        goats,
+        cows,sheeps,pigs,goats,
         deadkritter,
         ovens,
         gardenpot, barrel,
