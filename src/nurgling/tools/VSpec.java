@@ -677,6 +677,51 @@ public class VSpec
         clays.add(new JSONObject("{\"static\":\"gfx/invobjs/clay-potters\",\"name\":\"Potter's Clay\"}"));
         categories.put("Clay", clays);
 
+        ArrayList<JSONObject> glass = new ArrayList<>();
+        glass.add(new JSONObject("{\"static\":\"gfx/invobjs/moltenglass\",\"name\":\"Molten Glass\"}"));
+        glass.add(new JSONObject("{\"static\":\"gfx/invobjs/rawglass\",\"name\":\"Raw Glass\"}"));
+        categories.put("Glass", glass);
+
+        ArrayList<JSONObject> hidesFresh = new ArrayList<>();
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/adderhide-blood\",\"name\":\"Fresh Adder Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/aurochshide-blood\",\"name\":\"Fresh Aurochs Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/badgerhide-blood\",\"name\":\"Fresh Badger Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/bathide-blood\",\"name\":\"Fresh Bat Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/bearhide-blood\",\"name\":\"Fresh Bear Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/beaverhide-blood\",\"name\":\"Fresh Beaver Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/boarhide-blood\",\"name\":\"Fresh Boarhide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/borewormhide-blood\",\"name\":\"Fresh Boreworm Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/cowhide-blood\",\"name\":\"Fresh Cattle Hide\"}"));  // отсутствует
+//        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/caveanglerscales-blood\",\"name\":\"Fresh Cave Angler Scales\"}"));  // отсутствует
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/caverathide-blood\",\"name\":\"Fresh Caverat Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/stoathide-winter-blood\",\"name\":\"Fresh Winter Stoat Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/goathide-blood\",\"name\":\"Fresh Goat Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/greysealhide-blood\",\"name\":\"Fresh Grey Seal Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/hedgehoghide-blood\",\"name\":\"Fresh Hedgehog Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/horsehide-blood\",\"name\":\"Fresh Horse Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/lynxhide-blood\",\"name\":\"Fresh Lynx Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/mammothhide-blood\",\"name\":\"Fresh Mammoth Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/molehide-blood\",\"name\":\"Fresh Mole Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/moosehide-blood\",\"name\":\"Fresh Moose Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/mouflonhide-blood\",\"name\":\"Fresh Mouflon Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/otterhide-blood\",\"name\":\"Fresh Otter Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/pighide-blood\",\"name\":\"Fresh Pig Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/rabbithide-blood\",\"name\":\"Fresh Rabbit Fur\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/reddeerhide-blood\",\"name\":\"Fresh Red Deer Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/reindeerhide-blood\",\"name\":\"Fresh Reindeer Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/roedeerhide-blood\",\"name\":\"Fresh Roe Deer Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/sheephide-blood\",\"name\":\"Fresh Sheepskin\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/squirrelhide-blood\",\"name\":\"Fresh Squirrel Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/squirreltail-blood\",\"name\":\"Fresh Squirrel Tail\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/stoathide-blood\",\"name\":\"Fresh Stoat Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/trollhide-blood\",\"name\":\"Fresh Troll Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/walrushide-blood\",\"name\":\"Fresh Walrus Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/wildgoathide-blood\",\"name\":\"Fresh Wildgoat Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/wildhorsehide-blood\",\"name\":\"Fresh Wildhorse Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/wolfhide-blood\",\"name\":\"Fresh Wolf Hide\"}"));
+        hidesFresh.add(new JSONObject("{\"static\":\"gfx/invobjs/wolverinehide-blood\",\"name\":\"Fresh Wolverine Hide\"}"));
+        categories.put("Hide Fresh", hidesFresh);
+
         ArrayList<JSONObject> preparedAnimalHides = new ArrayList<>();
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/adderhide\",\"name\":\"Adder Hide\"}"));
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/aurochshide\",\"name\":\"Aurochs Hide\"}"));
@@ -686,10 +731,10 @@ public class VSpec
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/beaverhide\",\"name\":\"Beaver Hide\"}"));
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/boarhide\",\"name\":\"Boar Hide\"}"));
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/borewormhide\",\"name\":\"Boreworm Hide\"}"));
-//        preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/cattlehide\",\"name\":\"Cattle Hide\"}"));  // Missing resource
+        preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/cowhide\",\"name\":\"Cattle Hide\"}"));  // Missing resource
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/caveanglerscales\",\"name\":\"Cave Angler Scales\"}"));
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/caverathide\",\"name\":\"Caverat Hide\"}"));
-//        preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/erminehide\",\"name\":\"Ermine\"}"));  // Missing resource
+        preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/stoathide-winter\",\"name\":\"Ermine\"}"));  // Missing resource
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/foxhide\",\"name\":\"Fox Hide\"}"));
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/goathide\",\"name\":\"Goat Hide\"}"));
         preparedAnimalHides.add(new JSONObject("{\"static\":\"gfx/invobjs/greysealhide\",\"name\":\"Grey Seal Hide\"}"));

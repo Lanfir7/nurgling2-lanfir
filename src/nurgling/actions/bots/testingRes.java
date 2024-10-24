@@ -25,16 +25,44 @@ public class testingRes implements Action {
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
         ArrayList<String> resourcePaths = new ArrayList<>();
-        resourcePaths.add("gfx/invobjs/ambergris");
-        resourcePaths.add("gfx/invobjs/blackpepper");
-        resourcePaths.add("gfx/invobjs/herbs/chives");
-        resourcePaths.add("gfx/invobjs/herbs/dill");
-        resourcePaths.add("gfx/invobjs/juniperberries");
-        resourcePaths.add("gfx/invobjs/kvann");
-        resourcePaths.add("gfx/invobjs/leaf-laurel");
-        resourcePaths.add("gfx/invobjs/propolis");
-        resourcePaths.add("gfx/invobjs/sage");
-        resourcePaths.add("gfx/invobjs/herbs/thyme");
+        resourcePaths.add("gfx/invobjs/adderhide-blood");
+        resourcePaths.add("gfx/invobjs/aurochshide-blood");
+        resourcePaths.add("gfx/invobjs/badgerhide-blood");
+        resourcePaths.add("gfx/invobjs/bathide-blood");
+        resourcePaths.add("gfx/invobjs/bearhide-blood");
+        resourcePaths.add("gfx/invobjs/beaverhide-blood");
+        resourcePaths.add("gfx/invobjs/boarhide-blood");
+        resourcePaths.add("gfx/invobjs/borewormhide-blood");
+        resourcePaths.add("gfx/invobjs/cattlehide-blood");
+        resourcePaths.add("gfx/invobjs/caveanglerscales-blood");
+        resourcePaths.add("gfx/invobjs/caverathide-blood");
+        resourcePaths.add("gfx/invobjs/stoathide-winter-blood");
+        resourcePaths.add("gfx/invobjs/goathide-blood");
+        resourcePaths.add("gfx/invobjs/greysealhide-blood");
+        resourcePaths.add("gfx/invobjs/hedgehoghide-blood");
+        resourcePaths.add("gfx/invobjs/horsehide-blood");
+        resourcePaths.add("gfx/invobjs/lynxhide-blood");
+        resourcePaths.add("gfx/invobjs/mammothhide-blood");
+        resourcePaths.add("gfx/invobjs/molehide-blood");
+        resourcePaths.add("gfx/invobjs/moosehide-blood");
+        resourcePaths.add("gfx/invobjs/mouflonhide-blood");
+        resourcePaths.add("gfx/invobjs/otterhide-blood");
+        resourcePaths.add("gfx/invobjs/pighide-blood");
+        resourcePaths.add("gfx/invobjs/rabbithide-blood");
+        resourcePaths.add("gfx/invobjs/reddeerhide-blood");
+        resourcePaths.add("gfx/invobjs/reindeerhide-blood");
+        resourcePaths.add("gfx/invobjs/roedeerhide-blood");
+        resourcePaths.add("gfx/invobjs/sheephide-blood");
+        resourcePaths.add("gfx/invobjs/squirrelhide-blood");
+        resourcePaths.add("gfx/invobjs/squirreltail-blood");
+        resourcePaths.add("gfx/invobjs/stoathide-blood");
+        resourcePaths.add("gfx/invobjs/trollhide-blood");
+        resourcePaths.add("gfx/invobjs/walrushide-blood");
+        resourcePaths.add("gfx/invobjs/wildgoathide-blood");
+        resourcePaths.add("gfx/invobjs/wildhorsehide-blood");
+        resourcePaths.add("gfx/invobjs/wolfhide-blood");
+        resourcePaths.add("gfx/invobjs/wolverinehide-blood");
+
 
 
 
@@ -73,10 +101,5 @@ public class testingRes implements Action {
             e.printStackTrace();
             return false;  // Возвращаем false, если произошла ошибка
         }
-    }
-}
-class ResourceNotFoundException extends Exception {
-    public ResourceNotFoundException(String message) {
-        super(message);
     }
 }

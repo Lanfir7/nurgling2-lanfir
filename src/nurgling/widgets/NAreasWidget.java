@@ -12,6 +12,7 @@ import nurgling.conf.LZoneServer;
 import nurgling.conf.LZoneSync;
 import nurgling.overlays.map.*;
 import nurgling.tools.*;
+import nurgling.widgets.bots.NCategorySelectionWindow;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -145,6 +146,17 @@ public class NAreasWidget extends Window
         add(new Label("Take:",NStyle.areastitle),prev.pos("ul").sub(UI.scale(-5,20)));
         prev = add(Frame.with(out_items = new IngredientContainer("out"),true), prev.pos("ur").adds(UI.scale(5, 0)));
         add(new Label("Put:",NStyle.areastitle),prev.pos("ul").sub(UI.scale(-5,20)));
+        IButton openCategoryWindow;
+        add(openCategoryWindow = new IButton(NStyle.addfolder[0].back, NStyle.addfolder[1].back, NStyle.addfolder[2].back) {
+            @Override
+            public void click() {
+                super.click();
+                NCategorySelectionWindow categoryWindow = new NCategorySelectionWindow(al.sel.area.id);
+                ui.root.add(categoryWindow, new Coord(200,200));
+                categoryWindow.show();
+            }
+        }, new Coord(60, UI.scale(5)));
+        openCategoryWindow.settip("Open Category Selection for PUT");
         pack();
     }
 

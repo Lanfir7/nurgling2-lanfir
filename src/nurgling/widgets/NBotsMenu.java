@@ -69,6 +69,10 @@ public class NBotsMenu extends Widget
         build.elements.add(new NButton("dframe", new BuildDryingFrame(), true));
         build.elements.add(new NButton("cellar", new BuildCellar()));
         build.elements.add(new NButton("ttub", new BuildTtub()));
+        build.elements.add(new NButton("clover", new BuildBarrel()));
+        build.elements.add(new NButton("unbox", new BuildChest()));
+        build.elements.add(new NButton("water_cheker", new BuildCupboard()));
+        build.elements.add(new NButton("filwater", new BuildCrate()));
         addLayout(build);
         if (NUtils.getUI().core.debug) {
             NLayout tests = new NLayout("tools");
