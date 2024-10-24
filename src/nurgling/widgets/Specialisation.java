@@ -23,26 +23,23 @@ public class Specialisation extends Window
     }
     public enum SpecName
     {
-        smelter,
+        smelter, ore, fuel,
         kiln,
         water,
         boiler,
-        swill,
-        trough,
-        crop,
-        seed,
+        swill, trough, crop, seed,
+
         cows,
         sheeps,
         pigs,
         goats,
         deadkritter,
-        ore,
-        fuel,
         ovens,
         gardenpot, barrel,
         leafs, htable,
         rawhides, dframe,
         ttub, tanning, readyHides
+
     }
 
     private static ArrayList<SpecialisationItem> specialisation = new ArrayList<>();
