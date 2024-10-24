@@ -41,31 +41,9 @@ public class Specialisation extends Window
     private static ArrayList<SpecialisationItem> specialisation = new ArrayList<>();
 
     static {
-        specialisation.add(new SpecialisationItem(SpecName.smelter.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.kiln.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.water.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.boiler.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.swill.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.trough.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.crop.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.seed.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.cows.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.goats.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.sheeps.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.deadkritter.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.pigs.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.ore.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.fuel.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.barrel.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.ovens.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.gardenpot.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.leafs.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.htable.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.dframe.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.rawhides.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.readyHides.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.ttub.toString()));
-        specialisation.add(new SpecialisationItem(SpecName.tanning.toString()));
+        for (SpecName spec : SpecName.values()) {
+            specialisation.add(new SpecialisationItem(spec.toString()));
+        }
     }
 
     public class SpecialisationList extends SListBox<SpecialisationItem, Widget> {
