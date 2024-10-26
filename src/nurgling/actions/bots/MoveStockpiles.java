@@ -61,7 +61,11 @@ public class MoveStockpiles implements Action {
                 }
             }
         }
-
+        for (WItem item : gui.getInventory().getItems()) {
+            String itemName = ((NGItem) item.item).name();
+            double itemQuality = ((NGItem) item.item).quality != null ? ((NGItem) item.item).quality : 1.0;
+            transferInfoWindow.addItem(itemName, itemQuality); // Добавляем предмет через окно
+        }
         // Завершаем работу и обновляем окно
         new TransferToPiles(outArea, itemAlias).run(gui);
         transferInfoWindow.updateStatus("Transfer complete.");

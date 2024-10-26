@@ -14,7 +14,7 @@ public class TransferToBarrel implements Action{
     Gob barrel;
     NAlias items;
 
-    int th = 9000;
+    int th = 9500;
 
     double total = 0;
     public TransferToBarrel(Gob barrel, NAlias items) {
@@ -37,9 +37,16 @@ public class TransferToBarrel implements Action{
         if ( !(new OpenTargetContainer (  "Barrel",barrel ).run ( gui ).isSuccess) ) {
             return Results.ERROR("OPEN FAIL");
         }
-        double barrelCont = gui.getBarrelContent();
+        Pair<Double, String> barrelConts= gui.getBarrelContentMod(new NAlias(""));
+        double barrelCont;
+        if (barrelConts.b.equals("kg")){
+            barrelCont = barrelConts.a * 100;
+        }else{
+            barrelCont = barrelConts.a;
+        }
+        NUtils.getGameUI().msg("В бочке: " + barrelCont + " из: " + th);
         total+=barrelCont;
-        if(barrelCont>-1 && barrelCont < th) {
+        if (barrelCont > -1 && barrelCont < th) {
 
             ArrayList<WItem> witems = gui.getInventory().getItems(items);
             ArrayList<WItem> targetItems = new ArrayList<>();
@@ -48,14 +55,28 @@ public class TransferToBarrel implements Action{
                 if (sum + barrelCont > th) {
                     break;
                 }
-                for (ItemInfo inf : item.item.info)
+
+                boolean added = false;
+                for (ItemInfo inf : item.item.info) {
                     if (inf instanceof GItem.Amount) {
                         sum += ((GItem.Amount) inf).itemnum();
+                        targetItems.add(item);
+                        added = true;
+                        if (sum + barrelCont > th) {
+                            break;
+                        }
+                    }
+                }
+                if (!added) {
+                    double pileAmount = ((NGItem) item.item).getPileAmount();
+                    if (pileAmount > 0) {
+                        sum += pileAmount * 100;
                         targetItems.add(item);
                         if (sum + barrelCont > th) {
                             break;
                         }
                     }
+                }
             }
             total+=sum;
 

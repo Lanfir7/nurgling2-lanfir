@@ -87,6 +87,10 @@ public class TransferItems implements Action
 
                 if (cnt.getOutputs(item, th) != null) {
                     for (Context.Output output : cnt.getOutputs(item, th)) {
+                        if (output instanceof Context.OutputBarrel) {
+                            if (((Context.OutputBarrel) output).getArea() != null)
+                                new TransferToBarrels(((Context.OutputBarrel) output).getArea().getRCArea(), new NAlias(item), th).run(gui);
+                        }
                         if (output instanceof Context.Pile) {
                             if (((Context.OutputPile) output).getArea() != null)
                                 new TransferToPiles(((Context.OutputPile) output).getArea().getRCArea(), new NAlias(item), th).run(gui);

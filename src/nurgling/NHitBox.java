@@ -44,7 +44,7 @@ public class NHitBox
             put("gfx/terobjs/lanternpost", new NHitBox(new Coord(-2,-2),new Coord(2,2)));
             put("gfx/terobjs/cistern", new NHitBox(new Coord(-9,-9),new Coord(9,9)));
             put("gfx/terobjs/oven", new NHitBox(new Coord(-9,-9),new Coord(9,9)));
-            put("gfx/terobjs/kiln", new NHitBox(new Coord(-9,-9),new Coord(9,9)));
+            put("gfx/terobjs/kiln", new NHitBox(new Coord(-10,-10),new Coord(10,10)));
             put("gfx/terobjs/leanto", new NHitBox(new Coord(-9,-9),new Coord(9,9)));
             put("gfx/terobjs/stonepillar", new NHitBox(new Coord(-12,-12),new Coord(12,12)));
 //            put("gfx/terobjs/fineryforge", new NHitBox(new Coord(-9,-9),new Coord(9,9)));

@@ -151,7 +151,26 @@ public class Context {
             this.pile = gob;
         }
     }
+    public static class OutputBarrel  implements Output {
+        private final NArea area;
+        private final int th;
 
+        public OutputBarrel(Gob gob, NArea area, int th) {
+            super();
+            this.area = area;
+            this.th = th;
+        }
+
+        @Override
+        public NArea getArea() {
+            return area;
+        }
+
+        @Override
+        public int getTh() {
+            return th;
+        }
+    }
     public static ArrayList<Output> GetOutput(String item, NArea area)  throws InterruptedException
     {
 
@@ -173,6 +192,9 @@ public class Context {
                     container.initattr(Container.Space.class);
                     outputs.add(container);
                 }
+                for (Gob gob : Finder.findGobs(area, new NAlias("barrel"))) {
+                outputs.add(new OutputBarrel(gob, area, ingredient.th)); // Добавляем OutputBarrel
+                }
                 for(Gob gob: Finder.findGobs(area, new NAlias ("stockpile")))
                 {
                     outputs.add(new OutputPile(gob, area, ingredient.th));
@@ -182,6 +204,12 @@ public class Context {
                     outputs.add(new OutputPile(null, area, ingredient.th));
                 }
 
+            }
+            case BARREL:
+            {
+            for (Gob gob : Finder.findGobs(area, new NAlias("barrel"))) {
+                outputs.add(new OutputBarrel(gob, area, ingredient.th)); // Добавляем OutputBarrel
+            }
             }
         }
         return outputs;

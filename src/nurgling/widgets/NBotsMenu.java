@@ -5,6 +5,7 @@ import nurgling.*;
 import nurgling.actions.*;
 import nurgling.actions.bots.*;
 import nurgling.actions.test.*;
+import nurgling.tools.Context;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -29,6 +30,8 @@ public class NBotsMenu extends Widget
         resources.elements.add(new NButton("smelter", new LiftAndMoveObjects()));
         resources.elements.add(new NButton("backer", new CartIn()));
         resources.elements.add(new NButton("ugardenpot", new CartOut()));
+        resources.elements.add(new NButton("reagro", new MoveStockpiles(), true));
+        resources.elements.add(new NButton("reagro", new FreeInventory(new Context()), true));
         addLayout(resources);
 
         NLayout productions = new NLayout("productions");

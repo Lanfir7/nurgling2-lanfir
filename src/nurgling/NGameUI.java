@@ -16,6 +16,8 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static haven.Inventory.invsq;
 
@@ -294,6 +296,7 @@ public class NGameUI extends GameUI
                                 for (ItemInfo inf : (Collection<ItemInfo>) (pair.a.getClass().getField("info").get(pair.a))) {
                                     if (inf instanceof ItemInfo.Name) {
                                         String name = ((ItemInfo.Name) inf).str.text;
+                                        NUtils.getGameUI().msg("В 2: " +name);
                                         if (NParser.checkName(name.toLowerCase(), content))
                                             return Double.parseDouble(name.substring(0, name.indexOf(' ')));
                                     } else if (inf instanceof ItemInfo.AdHoc) {
@@ -313,7 +316,52 @@ public class NGameUI extends GameUI
         }
         return -1;
     }
+    public Pair<Double, String> extractAmountAndUnit(String input) {
+        // Регулярное выражение для поиска числа и единицы измерения
+        Pattern pattern = Pattern.compile("(\\d+(\\.\\d+)?)\\s+(\\w+)");
+        Matcher matcher = pattern.matcher(input);
 
+        if (matcher.find()) {
+            // Извлекаем значение (число) и единицу измерения (например, kg, seeds)
+            double amount = Double.parseDouble(matcher.group(1)); // Извлекаем число
+            String unit = matcher.group(3); // Извлекаем единицу измерения
+            return new Pair<>(amount, unit);
+        }
+        // Возвращаем -1 и пустую строку, если ничего не найдено
+        return new Pair<>(-1.0, "");
+    }
+    public Pair<Double, String> getBarrelContentMod(NAlias content){
+        Window spwnd = getWindow ( "Barrel" );
+        if(spwnd!=null) {
+            for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
+                if (sp instanceof RelCont) {
+                    for(Pair<Widget, Supplier<Coord>> pair:((RelCont) sp).childpos) {
+                        if (pair.a.getClass().getName().contains("TipLabel")) {
+                            try {
+                                for (ItemInfo inf : (Collection<ItemInfo>) (pair.a.getClass().getField("info").get(pair.a))) {
+                                    if (inf instanceof ItemInfo.Name) {
+                                        String name = ((ItemInfo.Name) inf).str.text;
+                                        if (NParser.checkName(name.toLowerCase(), content)) {
+                                            Pair<Double, String> result = extractAmountAndUnit(name);
+                                            return result;
+                                        }
+                                    } else if (inf instanceof ItemInfo.AdHoc) {
+                                        if (NParser.checkName(((ItemInfo.AdHoc) inf).str.text, "Empty")) {
+                                            return new Pair<>(0.0, "");
+                                        }
+                                    }
+                                }
+                            } catch (NoSuchFieldException | IllegalAccessException e) {
+                                e.printStackTrace();
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return new Pair<>(-1.0, "");
+    }
 
     public void msgToDiscord(NDiscordNotification settings, String message)
     {

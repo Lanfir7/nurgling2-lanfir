@@ -89,7 +89,18 @@ public class NUtils
         getUI().core.addTask(tith);
         return getGameUI().vhand;
     }
-
+    public static boolean checkGobName(Gob gob, NAlias alias) {
+        try {
+            Resource res = gob.getres();
+            if (res != null) {
+                String resName = res.name;
+                return NParser.checkName(resName, alias);
+            }
+        } catch (Loading e) {
+            return false;
+        }
+        return false;
+    }
     public static NFlowerMenu getFlowerMenu() throws InterruptedException
     {
         FindNFlowerMenu fnf = new FindNFlowerMenu();

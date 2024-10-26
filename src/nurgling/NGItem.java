@@ -58,7 +58,20 @@ public class NGItem extends GItem
     public NContent content(){
         return content;
     }
+    public double getPileAmount() {
+            for (ItemInfo info : info) {
+                if (info instanceof ItemInfo.Name) {
+                    ItemInfo.Name nameInfo = (ItemInfo.Name) info;
+                    String name = nameInfo.str.text;
+                    Matcher matcher = Pattern.compile("\\d+(\\.\\d+)?").matcher(name);
 
+                    if (matcher.find()) {
+                        return Double.parseDouble(matcher.group());
+                    }
+                }
+            }
+        return -1.0;
+    }
     public static class NContent
     {
         private double quality = -1;

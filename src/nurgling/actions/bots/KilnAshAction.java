@@ -19,24 +19,74 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class KilnAshAction implements Action {
+    private static final NAlias Piles = new NAlias("gfx/terobjs/stockpile", "gfx/terobjs/chest");
     private static final NAlias blockPiles = new NAlias("gfx/terobjs/stockpile-wblock");
+    private static final NAlias boardPiles = new NAlias("gfx/terobjs/stockpile-board");
+    private static final NAlias clayPiles = new NAlias("gfx/terobjs/stockpile-clay");
+    private static final NAlias bonePiles = new NAlias("gfx/terobjs/stockpile-bone");
+    private static final NAlias chests = new NAlias("gfx/terobjs/chest");
+
     private static final NAlias kilnsAlias = new NAlias("gfx/terobjs/kiln");
     private static final NAlias blockItems = new NAlias(new ArrayList<>(Arrays.asList("Block")));
+    private static final NAlias boardItems = new NAlias(new ArrayList<>(Arrays.asList("Board")));
+    private static final NAlias clayItems = new NAlias(new ArrayList<>(Arrays.asList("Clay")));
+    private static final NAlias boneItems = new NAlias(new ArrayList<>(Arrays.asList("Bone")));
+    private static final NAlias chestItems = new NAlias(new ArrayList<>(Arrays.asList("Fishwrap", "Fruitroast","Burst Glutton","Nutjerky","Stuffed Bird","Hand Impression","Toy Chariot")));
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
         NUtils.getGameUI().msg("Starting kiln ash collection...");
 
-        // Находим зону с печами (Kilns)
+        NArea blockPileArea = NArea.findSpec(Specialisation.SpecName.toFire.toString());
+        ArrayList<Gob> stockpiles = Finder.findGobs(blockPileArea, Piles);
+        if (stockpiles.isEmpty()) {
+            NUtils.getGameUI().msg("No piles found!");
+            return Results.FAIL();
+        }
+
+        NAlias selectedItemsAlias = null;
+        ArrayList<Coord> coords = new ArrayList<>();
+        int maxFuelLvl = 0;
+        boolean stockpileBool = true;
+
+
+        // Проходим по стокпайлам и выбираем нужные параметры в зависимости от их типа
+
+            if (NUtils.checkGobName(stockpiles.get(0), blockPiles)) {
+                NUtils.getGameUI().msg("Found block stockpile.");
+                selectedItemsAlias = blockItems;
+                coords = new ArrayList<>(Arrays.asList(new Coord(1, 2)));
+                maxFuelLvl = 8;
+            } else if (NUtils.checkGobName(stockpiles.get(0), boardPiles)) {
+                NUtils.getGameUI().msg("Found board stockpile.");
+                selectedItemsAlias = boardItems;
+                coords = new ArrayList<>(Arrays.asList(new Coord(4, 1)));
+                maxFuelLvl = 3;
+            } else if (NUtils.checkGobName(stockpiles.get(0), clayPiles)) {
+                NUtils.getGameUI().msg("Found clay stockpile.");
+                selectedItemsAlias = clayItems;
+                coords = new ArrayList<>(Arrays.asList(new Coord(1, 1)));
+                maxFuelLvl = 2;
+            } else if (NUtils.checkGobName(stockpiles.get(0), bonePiles)) {
+                NUtils.getGameUI().msg("Found bone stockpile.");
+                selectedItemsAlias = boneItems;
+                coords = new ArrayList<>(Arrays.asList(new Coord(1, 1)));
+                maxFuelLvl = 6;
+            } else if (NUtils.checkGobName(stockpiles.get(0), chests)) {
+                NUtils.getGameUI().msg("Found chests.");
+                selectedItemsAlias = chestItems;
+                coords = new ArrayList<>(Arrays.asList(new Coord(1, 1)));
+                maxFuelLvl = 5;
+                stockpileBool = false;
+            }
+
         NArea kilnArea = NArea.findSpec(Specialisation.SpecName.kiln.toString());
-        // Находим печи (Kilns) в этой зоне
         ArrayList<Gob> kilns = Finder.findGobs(kilnArea, kilnsAlias);
         if (kilns.isEmpty()) {
             NUtils.getGameUI().msg("No kilns found!");
             return Results.FAIL();
         }
-
-        // Создаем контейнеры для каждой печи
+        //Context icontext = new Context();
         ArrayList<Container> containers = new ArrayList<>();
         for (Gob kiln : kilns) {
             Container container = new Container();
@@ -44,74 +94,84 @@ public class KilnAshAction implements Action {
             container.cap = "Kiln";
             container.initattr(Container.Space.class);
             container.initattr(Container.FuelLvl.class);
-            container.getattr(Container.FuelLvl.class).setMaxlvl(8);
+            container.getattr(Container.FuelLvl.class).setMaxlvl(maxFuelLvl);
             container.getattr(Container.FuelLvl.class).setFueltype("branch");
-            container.initattr(Container.Tetris.class);
-            Container.Tetris tetris = container.getattr(Container.Tetris.class);
-            ArrayList<Coord> coords = new ArrayList<>();
-            coords.add(new Coord(2, 1));
+            //container.initattr(Container.Tetris.class);
+            //Container.Tetris tetris = container.getattr(Container.Tetris.class);
+//            if (!stockpileBool){
+//
+//                container.initattr(Container.TargetItems.class);
+//                container.getattr(Container.TargetItems.class).addTarget("Fishwrap");
+//                container.getattr(Container.TargetItems.class).addTarget("Fruitroast");
+//                container.getattr(Container.TargetItems.class).addTarget("Burst Glutton");
+//                container.getattr(Container.TargetItems.class).addTarget("Nutjerky");
+//                container.getattr(Container.TargetItems.class).addTarget("Stuffed Bird");
+//                container.getattr(Container.TargetItems.class).addTarget("Hand Impression");
+//                container.getattr(Container.TargetItems.class).addTarget("Toy Chariot");
+//            }
 
-            tetris.getRes().put(Container.Tetris.TARGET_COORD, coords);
+            //tetris.getRes().put(Container.Tetris.TARGET_COORD, coords);
 
             containers.add(container);
+            //icontext.icontainers.add(container);
         }
-
-        // Освобождаем печи от золы или других предметов, если необходимо
-        new FreeContainers(containers).run(gui);
-
-        // Проверяем свободное место в печах
-        boolean allContainersFull = true;
-        for (Container container : containers) {
-            Container.Space space = container.getattr(Container.Space.class);
-            if ((Integer) space.getRes().get(Container.Space.FREESPACE) > 0) {
-                allContainersFull = false;
-                break; // Найдено свободное место
+        Context icontext = new Context();
+        //for(NArea area : NArea.findAllIn(new NAlias("Dough", "Unbaked"))) {
+            for (Gob sm : stockpiles) {
+                Container cand = new Container();
+                cand.gob = sm;
+                cand.cap = Context.contcaps.get(cand.gob.ngob.name);
+                cand.initattr(Container.Space.class);
+                cand.initattr(Container.TargetItems.class);
+                cand.getattr(Container.TargetItems.class).addTarget("Fishwrap");
+                cand.getattr(Container.TargetItems.class).addTarget("Fruitroast");
+                cand.getattr(Container.TargetItems.class).addTarget("Burst Glutton");
+                cand.getattr(Container.TargetItems.class).addTarget("Nutjerky");
+                cand.getattr(Container.TargetItems.class).addTarget("Stuffed Bird");
+                cand.getattr(Container.TargetItems.class).addTarget("Hand Impression");
+                cand.getattr(Container.TargetItems.class).addTarget("Toy Chariot");
+                icontext.icontainers.add(cand);
             }
+        //}
+        ArrayList<Gob> lighted = new ArrayList<>();
+        for (Container cont : containers) {
+            lighted.add(cont.gob);
         }
 
-        // Находим стокпайлы с блоками в указанной зоне
-        NArea blockPileArea = NArea.findSpec(Specialisation.SpecName.toFire.toString());
-        ArrayList<Gob> blockPilesList = Finder.findGobs(blockPileArea, blockPiles);
-        if (blockPilesList.isEmpty()) {
-            NUtils.getGameUI().msg("No block piles found!");
-            return Results.FAIL();
-        }
-
-        // Если все печи заполнены, завершаем работу
-        if (allContainersFull) {
-            NUtils.getGameUI().msg("All kilns are full!");
-            return Results.SUCCESS();
-        }
-
-        // Теперь раскладываем блоки из стокпайлов в печи
         Results res = null;
         while (res == null || res.IsSuccess()) {
-            NUtils.getGameUI().msg("Transferring blocks to kilns...");
-            res = new FillContainersFromPiles(containers, blockPileArea, blockItems).run(gui);
+            NUtils.getUI().core.addTask(new WaitForBurnout(lighted, 1));
+            new FreeContainers(containers).run(gui);
 
-            if (res == null || !res.IsSuccess()) {
-                NUtils.getGameUI().msg("Failed to transfer blocks to kilns.");
-                return Results.FAIL();
+            NUtils.getGameUI().msg("Transferring items to kilns...");
+            if (stockpileBool){
+                res = new FillContainersFromPiles(containers, blockPileArea, selectedItemsAlias).run(gui);
+            }else{
+                res = new FillContainersFromAreas(containers, selectedItemsAlias, icontext).run(gui);
             }
 
-            // Проверяем свободное место в печах после перемещения блоков
-//            allContainersFull = true;
-//            for (Container container : containers) {
-//                Container.Space space = container.getattr(Container.Space.class);
-//                if ((Integer) space.getRes().get(Container.Space.FREESPACE) > 0) {
-//                    allContainersFull = false;
-//                    break; // Найдено свободное место
-//                }
-//            }
-//
-//            // Если все печи заполнены, завершаем работу
-//            if (allContainersFull) {
-//                NUtils.getGameUI().msg("All kilns are full!");
-//                break;
-//            }
+            if (res == null || !res.IsSuccess()) {
+                NUtils.getGameUI().msg("Failed to transfer items to kilns.");
+                //return Results.FAIL();
+            }
+            ArrayList<Container> forFuel = new ArrayList<>();
+            for(Container container: containers) {
+                Container.Space space = container.getattr(Container.Space.class);
+                if(!space.isEmpty())
+                    forFuel.add(container);
+            }
+            new FuelToContainers(forFuel).run(gui);
+
+            ArrayList<Gob> flighted = new ArrayList<>();
+            for (Container cont : forFuel) {
+                flighted.add(cont.gob);
+            }
+            if (!new LightGob(flighted, 1).run(gui).IsSuccess())
+                return Results.ERROR("I can't start a fire");
+
         }
 
-        NUtils.getGameUI().msg("Successfully transferred blocks to kilns.");
+        NUtils.getGameUI().msg("Successfully kilns.");
         return Results.SUCCESS();
     }
 }

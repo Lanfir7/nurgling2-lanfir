@@ -75,7 +75,7 @@ public class CartIn implements Action {
             // Фильтруем объекты, до которых можно дойти
             ArrayList<Gob> availableObjects = new ArrayList<>();
             for (Gob currGob : objectsToMove) {
-                if (PathFinder.isAvailable(currGob)) {
+                if (PathFinder.isAvailable(currGob) && currGob.ngob.isLiftable()) {
                     availableObjects.add(currGob);
                 }
             }
@@ -83,7 +83,7 @@ public class CartIn implements Action {
             // Если не осталось доступных объектов, выводим сообщение об ошибке
             if (availableObjects.isEmpty()) {
                 NUtils.getGameUI().msg("No reachable objects found.");
-                return Results.ERROR("Cannot reach any object.");
+                return Results.ERROR("Cannot reach object.");
             }
 
             // Сортируем объекты по близости к игроку

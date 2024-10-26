@@ -105,6 +105,7 @@ public class IconItem extends Widget
             add("Threshold");
             add("Delete");
             add("Mark as barter");
+            add("Mark as Barrel");
         }
     };
 
@@ -157,6 +158,9 @@ public class IconItem extends Widget
                         else if(option.name.equals("Mark as barter"))
                         {
                             ((IngredientContainer)IconItem.this.parent).setType(IconItem.this.name, NArea.Ingredient.Type.BARTER);
+                        }
+                        else if (option.name.equals("Mark as Barrel")) {
+                            ((IngredientContainer)IconItem.this.parent).setType(IconItem.this.name, NArea.Ingredient.Type.BARREL);
                         }
                         else if(option.name.equals("Unmark"))
                         {

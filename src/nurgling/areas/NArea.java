@@ -774,7 +774,8 @@ public class NArea
         {
             BARTER,
             CONTAINER,
-            PILE
+            PILE,
+            BARREL
         }
 
         public Type type;

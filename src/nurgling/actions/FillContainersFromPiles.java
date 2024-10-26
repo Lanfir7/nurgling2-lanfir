@@ -116,17 +116,17 @@ public class FillContainersFromPiles implements Action {
         for (Container cont : containers) {
             Container.Tetris tetris;
             if((tetris = cont.getattr(Container.Tetris.class)) != null) {
-               if(!(Boolean)tetris.getRes().get(Container.Tetris.DONE)) {
-                   result.add(cont);
-               }
+                if(!(Boolean)tetris.getRes().get(Container.Tetris.DONE)) {
+                    result.add(cont);
+                }
             }
             else
             {
                 Container.Space space = cont.getattr(Container.Space.class);
                 if(space != null) {
-                   if((Integer)space.getRes().get(Container.Space.FREESPACE) != 0) {
-                       result.add(cont);
-                   }
+                    if((Integer)space.getRes().get(Container.Space.FREESPACE) != 0) {
+                        result.add(cont);
+                    }
                 }
             }
         }

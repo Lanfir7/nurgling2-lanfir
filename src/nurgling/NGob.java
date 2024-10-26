@@ -278,7 +278,33 @@ public class NGob {
 
     HashMap<MaterialFactory.Status,Materials> altMats = new HashMap<>();
 
+    public boolean isLiftable() {
+        // Получаем Drawable (ресурсное представление гоба)
+        Drawable d = parent.getattr(Drawable.class);
+        if (d != null && d.getres() != null) {
+            Resource res = d.getres();
 
+            String resName = res.name;
+            if (resName != null) {
+                if (resName.contains("borka") || resName.contains("box") || resName.contains("barrel") || resName.contains("crate") || resName.contains("stockpile")) {
+                    return true; // Пример: объекты с такими именами подъемные
+                }
+            }
+
+            // Можно добавить дополнительные проверки на основе слоев ресурса
+            for (Resource.Layer layer : res.getLayers()) {
+                // Здесь можно проверять специфические слои, если известно, что они связаны с подъемом
+                if (layer instanceof Resource.Neg) {
+                    Resource.Neg neg = (Resource.Neg) layer;
+                    // Некоторые объекты с отрицательной областью могут быть подъемными
+                    if (neg.ac != null && neg.bc != null) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     public void addol(Gob.Overlay ol) {
         if (name != null)
             if (name.equals("gfx/terobjs/dframe") || name.equals("gfx/terobjs/barrel")) {
