@@ -1,6 +1,8 @@
 package nurgling.widgets;
 
 import haven.*;
+import haven.res.ui.tt.gast.Gast;
+import haven.res.ui.tt.wear.Wear;
 import nurgling.*;
 import nurgling.tasks.GetItem;
 import nurgling.tasks.WaitItemSpr;
@@ -8,19 +10,25 @@ import nurgling.tools.NAlias;
 import nurgling.tools.NParser;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.*;
-import java.util.List;
 
 public class NEquipory extends Equipory
 {
+    public static Text.Furnace fnd = new PUtils.BlurFurn(new Text.Foundry(Text.sans.deriveFont(java.awt.Font.BOLD), 12).aa(true), UI.scale(1), UI.scale(1), Color.BLACK);
+    final TexI eye = new TexI(Resource.loadsimg("nurgling/hud/eye"));
+    final TexI armor = new TexI(Resource.loadsimg("nurgling/hud/armor"));
+    int percExp = -1;
+    int hardArmor = -1;
+    int softArmor = -1;
     public NEquipory(long gobid)
     {
         super(gobid);
     }
 
-    private Text percExpText;
-    private int perceptionValue = 0;
-    private int explorationValue = 0;
+    BufferedImage percExpText = null;
+    BufferedImage hardSoft = null;
+
     public enum Slots {
         HEAD(0),       //00: Headgear
         ACCESSORY(1),  //01: Main Accessory
@@ -49,11 +57,12 @@ public class NEquipory extends Equipory
     }
 
     public WItem[] quickslots = new NWItem[ecoords.length];
+
     private void updatePercExpText() {
-        // Получаем значение Perception и Exploration из окна BAttrWnd и SAttrWnd
+        int perceptionValue = 0;
+        int explorationValue = 0;
         GameUI gui = getparent(GameUI.class);
         if (gui != null && gui.chrwdg != null) {
-            // Получаем Perception
             if (gui.chrwdg.battr != null) {
                 for (BAttrWnd.Attr attr : gui.chrwdg.battr.attrs) {
                     if (attr.nm.equals("prc")) {
@@ -62,8 +71,6 @@ public class NEquipory extends Equipory
                     }
                 }
             }
-
-            // Получаем Exploration
             if (gui.chrwdg.sattr != null) {
                 for (SAttrWnd.SAttr attr : gui.chrwdg.sattr.attrs) {
                     if (attr.nm.equals("explore")) {
@@ -73,27 +80,39 @@ public class NEquipory extends Equipory
                 }
             }
 
-            // Обновляем текст Perc*Exp
             int percExp = perceptionValue * explorationValue;
-            percExpText = Text.render("Perc*Exp: " + percExp, Color.WHITE);
+            if(this.percExp!=percExp) {
+                this.percExp = percExp;
+                percExpText = fnd.render(String.valueOf(percExp)).img;
+            }
         }
     }
-    public int[] getTotalArmor() {
+
+    public void updateTotalArmor() {
         int hardArmor = 0;
         int softArmor = 0;
 
-        // Проход по слотам экипировки
         for (Slots slot : Slots.values()) {
-            WItem item = quickslots[slot.idx];  // Получаем предмет в слоте
+            WItem item = quickslots[slot.idx];
             if (item != null) {
-                NGItem gitem = (NGItem) item.item;  // Используем наш класс NGItem
-                hardArmor += gitem.hardArmor;  // Суммируем жёсткую броню
-                softArmor += gitem.softArmor;  // Суммируем мягкую броню
+                NGItem gitem = (NGItem) item.item;
+                Wear wear = gitem.getInfo(Wear.class);
+                if(wear!=null) {
+                    if(wear.d!=wear.m) {
+                        hardArmor += gitem.hardArmor;
+                        softArmor += gitem.softArmor;
+                    }
+                }
             }
         }
-
-        return new int[] {hardArmor, softArmor};
+        if(hardArmor!=this.hardArmor || softArmor!=this.softArmor) {
+            this.hardArmor = hardArmor;
+            this.softArmor = softArmor;
+            hardSoft = fnd.render(String.format("%d/%d",hardArmor,softArmor)).img;
+        }
     }
+
+
     @Override
     public void addchild (
             Widget child,
@@ -131,6 +150,30 @@ public class NEquipory extends Equipory
         }
     }
 
+
+    @Override
+    public void tick(double dt) {
+        super.tick(dt);
+        updatePercExpText();
+        updateTotalArmor();
+    }
+
+    @Override
+    public void draw(GOut g) {
+        super.draw(g);
+        Coord textCoord = new Coord(sz.x - percExpText.getWidth() - UI.scale(65), UI.scale(3));
+        if (percExpText != null) {
+
+            g.image(eye, textCoord, UI.scale(20,20));
+            g.image(percExpText, textCoord.add(UI.scale(21, -1)));
+        }
+        if(hardSoft!=null) {
+            textCoord = textCoord.add(UI.scale(0, 18));
+            g.image(armor, textCoord, UI.scale(20, 20));
+            g.image(hardSoft, textCoord.add(UI.scale(21, -1)));
+        }
+    }
+
     public WItem findItem(int id) throws InterruptedException {
         if (quickslots[id] != null) {
             NUtils.getUI().core.addTask(new WaitItemSpr(quickslots[id]));
@@ -154,25 +197,5 @@ public class NEquipory extends Equipory
             }
         }
         return null;
-    }
-    @Override
-    public void draw(GOut g) {
-        // Вызов базовой отрисовки (элементы из Equipory)
-        super.draw(g);
-        // Обновляем текст Perc*Exp при каждой отрисовке
-            updatePercExpText();
-
-        // Получаем итоговые значения брони (жесткой и мягкой)
-        int[] totalArmor = getTotalArmor();
-        int hardArmor = totalArmor[0];
-        int softArmor = totalArmor[1];
-        // Рисуем текст с Perc*Exp внизу окна NEquipory
-        if (percExpText != null) {
-            Coord textCoord = new Coord(sz.x - percExpText.sz().x - 50, sz.y - percExpText.sz().y -5);
-            g.image(percExpText.tex(), textCoord);
-        }
-
-        // Рисуем итоговые значения брони чуть выше текста Perc*Exp
-        g.atext(String.format("Armor Class: %d/%d", hardArmor, softArmor), new Coord(sz.x - 50, sz.y - 30), 1, 0);
     }
 }

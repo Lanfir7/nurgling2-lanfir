@@ -8,6 +8,7 @@ import haven.res.ui.rbuff.*;
 import haven.res.ui.relcnt.RelCont;
 import nurgling.conf.*;
 import nurgling.notifications.*;
+import nurgling.overlays.QualityOl;
 import nurgling.tools.*;
 import nurgling.widgets.*;
 
@@ -661,5 +662,24 @@ public class NGameUI extends GameUI
         }
 
 
+    }
+
+    @Override
+    public void msg(String msg, Color color, Color logcol) {
+        if (msg.contains("Quality")) {
+            if(map.clickedGob!=null)
+            {
+                Matcher m = Pattern.compile("Quality: (\\d+)").matcher(msg);
+                if(m.matches()) {
+                    try {
+                        map.clickedGob.addcustomol(new QualityOl(map.clickedGob, Integer.parseInt(m.group(1))));
+                    } catch (NumberFormatException ignored) {
+                    } finally {
+                        map.clickedGob = null;
+                    }
+                }
+            }
+        }
+        super.msg(msg, color, logcol);
     }
 }
