@@ -25,44 +25,16 @@ public class testingRes implements Action {
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
         ArrayList<String> resourcePaths = new ArrayList<>();
-        resourcePaths.add("gfx/invobjs/adderhide-blood");
-        resourcePaths.add("gfx/invobjs/aurochshide-blood");
-        resourcePaths.add("gfx/invobjs/badgerhide-blood");
-        resourcePaths.add("gfx/invobjs/bathide-blood");
-        resourcePaths.add("gfx/invobjs/bearhide-blood");
-        resourcePaths.add("gfx/invobjs/beaverhide-blood");
-        resourcePaths.add("gfx/invobjs/boarhide-blood");
-        resourcePaths.add("gfx/invobjs/borewormhide-blood");
-        resourcePaths.add("gfx/invobjs/cattlehide-blood");
-        resourcePaths.add("gfx/invobjs/caveanglerscales-blood");
-        resourcePaths.add("gfx/invobjs/caverathide-blood");
-        resourcePaths.add("gfx/invobjs/stoathide-winter-blood");
-        resourcePaths.add("gfx/invobjs/goathide-blood");
-        resourcePaths.add("gfx/invobjs/greysealhide-blood");
-        resourcePaths.add("gfx/invobjs/hedgehoghide-blood");
-        resourcePaths.add("gfx/invobjs/horsehide-blood");
-        resourcePaths.add("gfx/invobjs/lynxhide-blood");
-        resourcePaths.add("gfx/invobjs/mammothhide-blood");
-        resourcePaths.add("gfx/invobjs/molehide-blood");
-        resourcePaths.add("gfx/invobjs/moosehide-blood");
-        resourcePaths.add("gfx/invobjs/mouflonhide-blood");
-        resourcePaths.add("gfx/invobjs/otterhide-blood");
-        resourcePaths.add("gfx/invobjs/pighide-blood");
-        resourcePaths.add("gfx/invobjs/rabbithide-blood");
-        resourcePaths.add("gfx/invobjs/reddeerhide-blood");
-        resourcePaths.add("gfx/invobjs/reindeerhide-blood");
-        resourcePaths.add("gfx/invobjs/roedeerhide-blood");
-        resourcePaths.add("gfx/invobjs/sheephide-blood");
-        resourcePaths.add("gfx/invobjs/squirrelhide-blood");
-        resourcePaths.add("gfx/invobjs/squirreltail-blood");
-        resourcePaths.add("gfx/invobjs/stoathide-blood");
-        resourcePaths.add("gfx/invobjs/trollhide-blood");
-        resourcePaths.add("gfx/invobjs/walrushide-blood");
-        resourcePaths.add("gfx/invobjs/wildgoathide-blood");
-        resourcePaths.add("gfx/invobjs/wildhorsehide-blood");
-        resourcePaths.add("gfx/invobjs/wolfhide-blood");
-        resourcePaths.add("gfx/invobjs/wolverinehide-blood");
+        resourcePaths.add("gfx/invobjs/beetroot");
+        resourcePaths.add("gfx/invobjs/pickledbeetroot");
+        resourcePaths.add("gfx/invobjs/boiledegg");
+        resourcePaths.add("gfx/invobjs/pickledherring");
 
+
+
+//        rawMeat.add(new JSONObject("{\"layer\": [\"gfx/invobjs/meat-raw\", \"gfx/invobjs/meat-wildbeef\"], \"name\": \"Raw Wild Beef\"}"));
+//        rawMeat.add(new JSONObject("{\"layer\": [\"gfx/invobjs/meat-raw\", \"gfx/invobjs/meat-wildmutton\"], \"name\": \"Raw Wild Mutton\"}"));
+//        rawMeat.add(new JSONObject("{\"layer\": [\"gfx/invobjs/meat-raw\", \"gfx/invobjs/meat-wildpork\"], \"name\": \"Raw Wild Pork\"}"));
 
 
 
