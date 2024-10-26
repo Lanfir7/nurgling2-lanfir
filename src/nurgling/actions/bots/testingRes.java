@@ -25,10 +25,9 @@ public class testingRes implements Action {
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
         ArrayList<String> resourcePaths = new ArrayList<>();
-        resourcePaths.add("gfx/invobjs/beetroot");
-        resourcePaths.add("gfx/invobjs/pickledbeetroot");
-        resourcePaths.add("gfx/invobjs/boiledegg");
-        resourcePaths.add("gfx/invobjs/pickledherring");
+        resourcePaths.add("gfx/invobjs/yarn");
+        resourcePaths.add("gfx/invobjs/yarn-mohair");
+        resourcePaths.add("gfx/invobjs/mohair-yarn");
 
 
 

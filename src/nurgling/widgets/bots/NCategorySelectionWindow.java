@@ -3,6 +3,7 @@ package nurgling.widgets.bots;
 import haven.*;
 import haven.Label;
 import haven.Window;
+import haven.res.lib.layspr.Layered;
 import nurgling.*;
 import nurgling.areas.NArea;
 import nurgling.tools.VSpec;
@@ -11,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -60,7 +62,14 @@ public class NCategorySelectionWindow extends Window {
             List<Element> elements = new ArrayList<>();
             for (JSONObject obj : VSpec.categories.get(categoryName)) {
                 String name = obj.getString("name");
-                String resource = obj.getString("static");
+                String resource;
+                if (obj.has("static")) {
+                    resource = obj.getString("static");
+                }else {
+
+                    JSONArray jlayer = (JSONArray) obj.get("layer");
+                    resource = jlayer.getString(1);
+                }
                 Element element = new Element(name, resource);
                 elements.add(element);
                 allElements.add(element); // Добавляем все элементы в общий список
@@ -422,9 +431,28 @@ public class NCategorySelectionWindow extends Window {
     private Tex loadIcon(Element item) {
         Tex loadedIcon;
         try {
-            Resource res = Resource.remote().loadwait(item.getResource());
-            loadedIcon = res.layer(Resource.imgc).tex();
+            JSONObject resourceObject = new JSONObject();
+            resourceObject.put("static", item.getResource());
+
+            // Проверяем, содержит ли JSON ключ "layer"
+            if (resourceObject.has("layer")) {
+                LinkedList<Indir<Resource>> layReses = new LinkedList<>();
+                JSONArray jlayer = (JSONArray) resourceObject.get("layer");
+                for (int i = 0; i < jlayer.length(); i++) {
+                    layReses.add(Resource.remote().loadwait((String) jlayer.get(i)).indir());
+                }
+                BufferedImage image = new Layered(null, layReses).image();
+                loadedIcon = new TexI(image);
+            } else if (resourceObject.has("static")) {
+                // Если только "static", загружаем его напрямую
+                BufferedImage image = Resource.remote().loadwait((String) resourceObject.get("static")).layer(Resource.imgc).img;
+                loadedIcon = new TexI(image);
+            } else {
+                // Используем иконку по умолчанию, если ничего не найдено
+                loadedIcon = Resource.remote().loadwait("gfx/invobjs/default_icon").layer(Resource.imgc).tex();
+            }
         } catch (Exception e) {
+            // В случае ошибки используем иконку по умолчанию
             loadedIcon = Resource.remote().loadwait("gfx/invobjs/default_icon").layer(Resource.imgc).tex();
         }
         return loadedIcon;
