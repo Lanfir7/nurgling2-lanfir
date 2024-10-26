@@ -90,7 +90,7 @@ public class TransferItems implements Action
                         for (Context.Output output : cnt.getOutputs(item, th)) {
                             if (output instanceof Context.OutputBarrel) {
                                 if (((Context.OutputBarrel) output).getArea() != null)
-                                    new TransferToBarrels(((Context.OutputBarrel) output).getArea().getRCArea(), new NAlias(item), th).run(gui);
+                                    new TransferToBarrels(((Context.OutputBarrel) output).getArea(), new NAlias(item), th).run(gui);
                             }
                             if (output instanceof Context.Pile) {
                                 if (((Context.OutputPile) output).getArea() != null)
@@ -114,7 +114,7 @@ public class TransferItems implements Action
                     for (Context.Output output : cnt.getOutputs(item, 1)) {
                         if (output instanceof Context.OutputBarrel) {
                             if (((Context.OutputBarrel) output).getArea() != null)
-                                new TransferToBarrels(((Context.OutputBarrel) output).getArea().getRCArea(), new NAlias(item), th).run(gui);
+                                new TransferToBarrels(((Context.OutputBarrel) output).getArea(), new NAlias(item)).run(gui);
                         }
                         if (output instanceof Context.Pile) {
                             if (((Context.OutputPile) output).getArea() != null)

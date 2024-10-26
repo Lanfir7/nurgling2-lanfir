@@ -181,17 +181,17 @@ public class Context {
         }
     }
     public static class OutputBarrel  implements Output {
-        private final NArea area;
+        private final Pair<Coord2d,Coord2d> area;
         private final int th;
 
-        public OutputBarrel(Gob gob, NArea area, int th) {
+        public OutputBarrel(Gob gob, Pair<Coord2d,Coord2d> area, int th) {
             super();
             this.area = area;
             this.th = th;
         }
 
         @Override
-        public NArea getArea() {
+        public Pair<Coord2d,Coord2d> getArea() {
             return area;
         }
 
@@ -222,7 +222,7 @@ public class Context {
                     outputs.add(container);
                 }
                 for (Gob gob : Finder.findGobs(area, new NAlias("barrel"))) {
-                outputs.add(new OutputBarrel(gob, area, ingredient.th)); // Добавляем OutputBarrel
+                outputs.add(new OutputBarrel(gob, area.getRCArea(), ingredient.th)); // Добавляем OutputBarrel
                 }
                 for(Gob gob: Finder.findGobs(area, new NAlias ("stockpile")))
                 {
@@ -237,7 +237,7 @@ public class Context {
             case BARREL:
             {
             for (Gob gob : Finder.findGobs(area, new NAlias("barrel"))) {
-                outputs.add(new OutputBarrel(gob, area, ingredient.th)); // Добавляем OutputBarrel
+                outputs.add(new OutputBarrel(gob, area.getRCArea(), ingredient.th)); // Добавляем OutputBarrel
             }
             }
         }
