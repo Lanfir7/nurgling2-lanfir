@@ -25,6 +25,7 @@ public class Specialisation extends Window
     {
         smelter, ore, fuel,
         kiln, toFire,
+        tarKiln,
         water,
         boiler,
         swill, trough, crop, seed,

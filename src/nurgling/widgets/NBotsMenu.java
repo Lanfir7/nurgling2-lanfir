@@ -44,6 +44,7 @@ public class NBotsMenu extends Widget
         productions.elements.add(new NButton("leather", new LeatherAction(), true));
         productions.elements.add(new NButton("smelter", new KilnAshAction(), true));
         productions.elements.add(new NButton("smoking", new Smoking(), true));
+        productions.elements.add(new NButton("attacknearborka", new TarKilnAction(), true));
         addLayout(productions);
         NLayout battle = new NLayout("battle");
         battle.elements.add(new NButton("reagro", new Reagro()));

@@ -86,7 +86,7 @@ public class KilnAshAction implements Action {
             NUtils.getGameUI().msg("No kilns found!");
             return Results.FAIL();
         }
-        //Context icontext = new Context();
+
         ArrayList<Container> containers = new ArrayList<>();
         for (Gob kiln : kilns) {
             Container container = new Container();
@@ -96,48 +96,17 @@ public class KilnAshAction implements Action {
             container.initattr(Container.FuelLvl.class);
             container.getattr(Container.FuelLvl.class).setMaxlvl(maxFuelLvl);
             container.getattr(Container.FuelLvl.class).setFueltype("branch");
-            //container.initattr(Container.Tetris.class);
-            //Container.Tetris tetris = container.getattr(Container.Tetris.class);
-//            if (!stockpileBool){
-//
-//                container.initattr(Container.TargetItems.class);
-//                container.getattr(Container.TargetItems.class).addTarget("Fishwrap");
-//                container.getattr(Container.TargetItems.class).addTarget("Fruitroast");
-//                container.getattr(Container.TargetItems.class).addTarget("Burst Glutton");
-//                container.getattr(Container.TargetItems.class).addTarget("Nutjerky");
-//                container.getattr(Container.TargetItems.class).addTarget("Stuffed Bird");
-//                container.getattr(Container.TargetItems.class).addTarget("Hand Impression");
-//                container.getattr(Container.TargetItems.class).addTarget("Toy Chariot");
-//            }
+            container.initattr(Container.Tetris.class);
+            Container.Tetris tetris = container.getattr(Container.Tetris.class);
 
-            //tetris.getRes().put(Container.Tetris.TARGET_COORD, coords);
+            tetris.getRes().put(Container.Tetris.TARGET_COORD, coords);
 
             containers.add(container);
-            //icontext.icontainers.add(container);
         }
-        Context icontext = new Context();
-        //for(NArea area : NArea.findAllIn(new NAlias("Dough", "Unbaked"))) {
-            for (Gob sm : stockpiles) {
-                Container cand = new Container();
-                cand.gob = sm;
-                cand.cap = Context.contcaps.get(cand.gob.ngob.name);
-                cand.initattr(Container.Space.class);
-                cand.initattr(Container.TargetItems.class);
-                cand.getattr(Container.TargetItems.class).addTarget("Fishwrap");
-                cand.getattr(Container.TargetItems.class).addTarget("Fruitroast");
-                cand.getattr(Container.TargetItems.class).addTarget("Burst Glutton");
-                cand.getattr(Container.TargetItems.class).addTarget("Nutjerky");
-                cand.getattr(Container.TargetItems.class).addTarget("Stuffed Bird");
-                cand.getattr(Container.TargetItems.class).addTarget("Hand Impression");
-                cand.getattr(Container.TargetItems.class).addTarget("Toy Chariot");
-                icontext.icontainers.add(cand);
-            }
-        //}
         ArrayList<Gob> lighted = new ArrayList<>();
         for (Container cont : containers) {
             lighted.add(cont.gob);
         }
-
         Results res = null;
         while (res == null || res.IsSuccess()) {
             NUtils.getUI().core.addTask(new WaitForBurnout(lighted, 1));
@@ -147,12 +116,31 @@ public class KilnAshAction implements Action {
             if (stockpileBool){
                 res = new FillContainersFromPiles(containers, blockPileArea, selectedItemsAlias).run(gui);
             }else{
-                res = new FillContainersFromAreas(containers, selectedItemsAlias, icontext).run(gui);
-            }
+                //res = new FillContainersFromAreas(containers, selectedItemsAlias, icontext).run(gui);
+                Results res2 = null;
+                while (true) {
+                    Context icontext = new Context();
+                    for (Gob sm : stockpiles) {
+                        Container cand = new Container();
+                        cand.gob = sm;
+                        cand.cap = Context.contcaps.get(cand.gob.ngob.name);
+                        cand.initattr(Container.Space.class);
+                        cand.initattr(Container.TargetItems.class);
+                        cand.getattr(Container.TargetItems.class).addTarget("Fishwrap");
+                        cand.getattr(Container.TargetItems.class).addTarget("Fruitroast");
+                        cand.getattr(Container.TargetItems.class).addTarget("Burst Glutton");
+                        cand.getattr(Container.TargetItems.class).addTarget("Nutjerky");
+                        cand.getattr(Container.TargetItems.class).addTarget("Stuffed Bird");
+                        cand.getattr(Container.TargetItems.class).addTarget("Hand Impression");
+                        cand.getattr(Container.TargetItems.class).addTarget("Toy Chariot");
+                        icontext.icontainers.add(cand);
+                    }
+                    new FillContainersFromAreas(containers, selectedItemsAlias, icontext).run(gui);
+                    if (!anyContainerHasItems(icontext.icontainers, selectedItemsAlias)) {
+                        break;
+                    }
 
-            if (res == null || !res.IsSuccess()) {
-                NUtils.getGameUI().msg("Failed to transfer items to kilns.");
-                //return Results.FAIL();
+                }
             }
             ArrayList<Container> forFuel = new ArrayList<>();
             for(Container container: containers) {
@@ -173,5 +161,14 @@ public class KilnAshAction implements Action {
 
         NUtils.getGameUI().msg("Successfully kilns.");
         return Results.SUCCESS();
+    }
+    private boolean anyContainerHasItems(ArrayList<Container> containers, NAlias items) {
+        for (Container container : containers) {
+            Container.TargetItems targetItems = container.getattr(Container.TargetItems.class);
+            if (targetItems != null && targetItems.getTargets(items) > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }
