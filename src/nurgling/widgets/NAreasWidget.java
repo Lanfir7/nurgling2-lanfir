@@ -23,19 +23,20 @@ import java.util.Set;
 import java.util.HashSet;
 import javax.swing.*;
 import javax.swing.colorchooser.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
+
+import static nurgling.widgets.Specialisation.findSpecialisation;
 
 import static haven.OCache.posres;
 
 public class NAreasWidget extends Window
 {
-//    SearchableDropbox<String> groupBy;
-//    List<String> folderItems = new ArrayList<>();
-//    TextEntry folderSearch;
     public IngredientContainer in_items;
     public IngredientContainer out_items;
     CurrentSpecialisationList csl;
@@ -72,8 +73,6 @@ public class NAreasWidget extends Window
         createNewFolder.settip("Create new folder");
 
         IButton create;
-        IButton syncWithCloud;
-
         add(create = new IButton(NStyle.addarea[0].back,NStyle.addarea[1].back,NStyle.addarea[2].back){
             @Override
             public void click()
@@ -82,22 +81,7 @@ public class NAreasWidget extends Window
                 NUtils.getGameUI().msg("Please, select area");
                 new Thread(new NAreaSelector(NAreaSelector.Mode.CREATE)).start();
             }
-
-        },new Coord(30,UI.scale(5)));
-//        add(syncWithCloud = new IButton(NStyle.cloud[0].back, NStyle.cloud[1].back, NStyle.cloud[2].back){
-//            @Override
-//            public void click() {
-//                super.click();
-//                NUtils.getGameUI().msg("Synchronizing with cloud...");
-//                new Thread(() -> {
-//                        new LZoneSync().start();
-//                        NUtils.getGameUI().msg("Sync completed successfully!");
-//                }).start();
-//            }
-//        }, create.pos("ur").add(5, 0));
-//        initAreas();
-//        updateFolderItems();
-
+        },prev.pos("ur").adds(UI.scale(5,0)));
         create.settip("Create new area");
 
         IButton showCat;
@@ -116,9 +100,47 @@ public class NAreasWidget extends Window
         },create.pos("ur").adds(UI.scale(5,0)));
         showCat.settip("Show all categories");
 
-        prev = add(al = new AreaList(UI.scale(new Coord(400,270))), prev.pos("bl").adds(0, 10));
-//        syncWithCloud.settip("Sync with cloud");
+        IButton importbt;
+        add(importbt = new IButton(NStyle.importb[0].back,NStyle.importb[1].back,NStyle.importb[2].back){
+            @Override
+            public void click()
+            {
+                super.click();
+                java.awt.EventQueue.invokeLater(() -> {
+                    JFileChooser fc = new JFileChooser();
+                    fc.setFileFilter(new FileNameExtensionFilter("Areas setting file", "json"));
+                    if(fc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
+                        return;
+                    if(fc.getSelectedFile()!=null)
+                    {
+                        NUtils.getUI().core.config.mergeAreas(fc.getSelectedFile());
+                    }
+                    NAreasWidget.this.hide();
+                    NAreasWidget.this.show();
+                    NConfig.needAreasUpdate();
+                });
+            }
+        },showCat.pos("ur").adds(UI.scale(25,0)));
+        importbt.settip("Import");
 
+        IButton exportbt;
+        add(exportbt = new IButton(NStyle.exportb[0].back,NStyle.exportb[1].back,NStyle.exportb[2].back){
+            @Override
+            public void click()
+            {
+                super.click();
+                java.awt.EventQueue.invokeLater(() -> {
+                    JFileChooser fc = new JFileChooser();
+                    fc.setFileFilter(new FileNameExtensionFilter("Areas setting file", "json"));
+                    if(fc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION)
+                        return;
+                    NUtils.getUI().core.config.writeAreas(fc.getSelectedFile().getAbsolutePath()+".json");
+                });
+            }
+        },importbt.pos("ur").adds(UI.scale(5,0)));
+        exportbt.settip("Export");
+
+        prev = add(al = new AreaList(UI.scale(new Coord(400,270))), prev.pos("bl").adds(0, 10));
         Widget lab = add(new Label("Specialisation",NStyle.areastitle), prev.pos("bl").add(UI.scale(0,5)));
 
         add(csl = new CurrentSpecialisationList(UI.scale(164,70)),lab.pos("bl").add(UI.scale(0,5)));
@@ -164,40 +186,8 @@ public class NAreasWidget extends Window
         add(new Label("Take:",NStyle.areastitle),prev.pos("ul").sub(UI.scale(-5,20)));
         prev = add(Frame.with(out_items = new IngredientContainer("out"),true), prev.pos("ur").adds(UI.scale(5, 0)));
         add(new Label("Put:",NStyle.areastitle),prev.pos("ul").sub(UI.scale(-5,20)));
-//        IButton openCategoryWindowIn;
-//
-//        IButton openCategoryWindowOut;
-//        add(openCategoryWindowOut = new IButton(NStyle.addarea[0].back,NStyle.addarea[1].back,NStyle.addarea[2].back) {
-//            @Override
-//            public void click() {
-//                super.click();
-//                if (al.sel != null && al.sel.area != null) {
-//                    NCategorySelectionWindow categoryWindow = new NCategorySelectionWindow(al.sel.area.id, "out");
-//                    ui.root.add(categoryWindow, new Coord(600,200));
-//                    categoryWindow.show();
-//                } else {
-//                    NUtils.getGameUI().msg("Please select an area first."); // Сообщение, если зона не выбрана
-//                }
-//            }
-//        }, new Coord(540, UI.scale(10)));
-//        openCategoryWindowOut.settip("Open Category Selection for TAKE");
-//        add(openCategoryWindowIn = new IButton(NStyle.addarea[0].back,NStyle.addarea[1].back,NStyle.addarea[2].back) {
-//            @Override
-//            public void click() {
-//                super.click();
-//                if (al.sel != null && al.sel.area != null) {
-//                    NCategorySelectionWindow categoryWindow = new NCategorySelectionWindow(al.sel.area.id, "in");
-//                    ui.root.add(categoryWindow, new Coord(600,200));
-//                    categoryWindow.show();
-//                } else {
-//                    NUtils.getGameUI().msg("Please select an area first."); // Сообщение, если зона не выбрана
-//                }
-//            }
-//        }, new Coord(340, UI.scale(10)));
-//        openCategoryWindowIn.settip("Open Category Selection for PUT");
         pack();
     }
-
 
     public void removeArea(int id)
     {
@@ -521,9 +511,12 @@ public class NAreasWidget extends Window
                                             nol.remove();
                                             NUtils.getGameUI().map.nols.remove(key);
                                             Gob dummy = ((NMapView) NUtils.getGameUI().map).dummys.get(((NMapView) NUtils.getGameUI().map).glob.map.areas.get(key).gid);
-                                            NUtils.getGameUI().map.glob.oc.remove(dummy);
-                                            ((NMapView) NUtils.getGameUI().map).dummys.remove(dummy.id);
+                                            if(dummy!=null) {
+                                                NUtils.getGameUI().map.glob.oc.remove(dummy);
+                                                ((NMapView) NUtils.getGameUI().map).dummys.remove(dummy.id);
+                                            }
                                             ((NMapView) NUtils.getGameUI().map).glob.map.areas.remove(key);
+
                                         }
                                     }
                                     NConfig.needAreasUpdate();
@@ -649,7 +642,7 @@ public class NAreasWidget extends Window
 
     public class CurrentSpecialisationList extends SListBox<SpecialisationItem, Widget> {
         CurrentSpecialisationList(Coord sz) {
-            super(sz, UI.scale(15));
+            super(sz, UI.scale(24));
         }
 
         @Override
@@ -705,16 +698,20 @@ public class NAreasWidget extends Window
         NArea.Specialisation item;
         IButton spec = null;
         NFlowerMenu menu;
-
+        TexI icon;
         public SpecialisationItem(NArea.Specialisation item)
         {
             this.item = item;
+            Specialisation.SpecialisationItem specialisationItem = findSpecialisation(item.name);
             if(item.subtype == null) {
-                this.text = add(new Label(item.name));
+                this.text = add(new Label(specialisationItem == null ? "???" + item.name + "???":specialisationItem.prettyName), new Coord(UI.scale(30,4)));
             }
             else
             {
-                this.text = add(new Label(item.name + "(" + item.subtype + ")"));
+                this.text = add(new Label((specialisationItem == null ? "???" + item.name + "???":specialisationItem.prettyName) + "(" + item.subtype + ")"), new Coord(UI.scale(30,4)));
+            }
+            if(specialisationItem != null) {
+                icon = new TexI(specialisationItem.image);
             }
             if(SpecialisationData.data.get(item.name)!=null)
             {
@@ -756,9 +753,16 @@ public class NAreasWidget extends Window
                         }
                         ui.root.add(menu, pos);
                     }
-                },UI.scale(new Coord(135,0)));
+                },UI.scale(new Coord(135,4)));
             }
             pack();
+            sz.y = UI.scale(24);
+        }
+
+        @Override
+        public void draw(GOut g) {
+            super.draw(g);
+            g.image(icon,Coord.z,UI.scale(24,24));
         }
     }
 
