@@ -164,37 +164,37 @@ public class NAreasWidget extends Window
         add(new Label("Take:",NStyle.areastitle),prev.pos("ul").sub(UI.scale(-5,20)));
         prev = add(Frame.with(out_items = new IngredientContainer("out"),true), prev.pos("ur").adds(UI.scale(5, 0)));
         add(new Label("Put:",NStyle.areastitle),prev.pos("ul").sub(UI.scale(-5,20)));
-        IButton openCategoryWindowIn;
-
-        IButton openCategoryWindowOut;
-        add(openCategoryWindowOut = new IButton(NStyle.addarea[0].back,NStyle.addarea[1].back,NStyle.addarea[2].back) {
-            @Override
-            public void click() {
-                super.click();
-                if (al.sel != null && al.sel.area != null) {
-                    NCategorySelectionWindow categoryWindow = new NCategorySelectionWindow(al.sel.area.id, "out");
-                    ui.root.add(categoryWindow, new Coord(600,200));
-                    categoryWindow.show();
-                } else {
-                    NUtils.getGameUI().msg("Please select an area first."); // Сообщение, если зона не выбрана
-                }
-            }
-        }, new Coord(540, UI.scale(10)));
-        openCategoryWindowOut.settip("Open Category Selection for TAKE");
-        add(openCategoryWindowIn = new IButton(NStyle.addarea[0].back,NStyle.addarea[1].back,NStyle.addarea[2].back) {
-            @Override
-            public void click() {
-                super.click();
-                if (al.sel != null && al.sel.area != null) {
-                    NCategorySelectionWindow categoryWindow = new NCategorySelectionWindow(al.sel.area.id, "in");
-                    ui.root.add(categoryWindow, new Coord(600,200));
-                    categoryWindow.show();
-                } else {
-                    NUtils.getGameUI().msg("Please select an area first."); // Сообщение, если зона не выбрана
-                }
-            }
-        }, new Coord(340, UI.scale(10)));
-        openCategoryWindowIn.settip("Open Category Selection for PUT");
+//        IButton openCategoryWindowIn;
+//
+//        IButton openCategoryWindowOut;
+//        add(openCategoryWindowOut = new IButton(NStyle.addarea[0].back,NStyle.addarea[1].back,NStyle.addarea[2].back) {
+//            @Override
+//            public void click() {
+//                super.click();
+//                if (al.sel != null && al.sel.area != null) {
+//                    NCategorySelectionWindow categoryWindow = new NCategorySelectionWindow(al.sel.area.id, "out");
+//                    ui.root.add(categoryWindow, new Coord(600,200));
+//                    categoryWindow.show();
+//                } else {
+//                    NUtils.getGameUI().msg("Please select an area first."); // Сообщение, если зона не выбрана
+//                }
+//            }
+//        }, new Coord(540, UI.scale(10)));
+//        openCategoryWindowOut.settip("Open Category Selection for TAKE");
+//        add(openCategoryWindowIn = new IButton(NStyle.addarea[0].back,NStyle.addarea[1].back,NStyle.addarea[2].back) {
+//            @Override
+//            public void click() {
+//                super.click();
+//                if (al.sel != null && al.sel.area != null) {
+//                    NCategorySelectionWindow categoryWindow = new NCategorySelectionWindow(al.sel.area.id, "in");
+//                    ui.root.add(categoryWindow, new Coord(600,200));
+//                    categoryWindow.show();
+//                } else {
+//                    NUtils.getGameUI().msg("Please select an area first."); // Сообщение, если зона не выбрана
+//                }
+//            }
+//        }, new Coord(340, UI.scale(10)));
+//        openCategoryWindowIn.settip("Open Category Selection for PUT");
         pack();
     }
 

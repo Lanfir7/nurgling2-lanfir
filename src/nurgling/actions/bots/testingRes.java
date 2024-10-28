@@ -25,9 +25,27 @@ public class testingRes implements Action {
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
         ArrayList<String> resourcePaths = new ArrayList<>();
-        resourcePaths.add("gfx/invobjs/yarn");
-        resourcePaths.add("gfx/invobjs/yarn-mohair");
-        resourcePaths.add("gfx/invobjs/mohair-yarn");
+        resourcePaths.add("gfx/invobjs/splint");
+        resourcePaths.add("gfx/invobjs/antpaste");
+        resourcePaths.add("gfx/invobjs/soapbar");
+        resourcePaths.add("gfx/invobjs/camomilecompress");
+        resourcePaths.add("gfx/invobjs/coldcompress");
+        resourcePaths.add("gfx/invobjs/coldcut");
+        resourcePaths.add("gfx/invobjs/gauze");
+        resourcePaths.add("gfx/invobjs/graygrease");
+        resourcePaths.add("gfx/invobjs/hartshornsalve");
+        resourcePaths.add("gfx/invobjs/honeybroadaid");
+        resourcePaths.add("gfx/invobjs/kelpcream");
+        resourcePaths.add("gfx/invobjs/leech");
+        resourcePaths.add("gfx/invobjs/mudointment");
+        resourcePaths.add("gfx/invobjs/rootfill");
+        resourcePaths.add("gfx/invobjs/jar-snakejuice");
+        resourcePaths.add("gfx/invobjs/stingingpoultice");
+        resourcePaths.add("gfx/invobjs/stitchpatch");
+        resourcePaths.add("gfx/invobjs/toadbutter");
+        resourcePaths.add("gfx/invobjs/herbs/waybroad");
+        resourcePaths.add("gfx/invobjs/herbs/yarrow");
+
 
 
 

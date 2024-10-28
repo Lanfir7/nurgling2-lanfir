@@ -9,6 +9,7 @@ import nurgling.tools.VSpec;
 import org.json.JSONObject;
 
 import java.awt.*;
+import java.net.URI;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -261,6 +262,7 @@ public class NCatSelection extends Window {
             }
             reset(); // Обновляем список для перерисовки
         }
+
     }
 
     public class ElementWidget extends Widget {
@@ -313,6 +315,26 @@ public class NCatSelection extends Window {
             int scaledWidth = UI.scale((int) (icon.sz().x * desiredHeight / icon.sz().y));
 
             g.image(icon, Coord.z, new Coord(scaledWidth,desiredHeight));
+        }
+        @Override
+        public boolean mousedown(Coord c, int button) {
+            if (button == 1 && ui.modflags() == UI.MOD_SHIFT) { // Проверяем Shift+ЛКМ
+                String elementName = element.getName().replace(" ", "_");
+                String url = "https://ringofbrodgar.com/wiki/" + elementName;
+                openUrl(url);
+                return true;
+            }
+            return super.mousedown(c, button);
+        }
+
+        private void openUrl(String url) {
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().browse(new URI(url));
+                } catch (Exception e) {
+                    NUtils.getGameUI().msg("Не удалось открыть ссылку: " + url);
+                }
+            }
         }
     }
 
