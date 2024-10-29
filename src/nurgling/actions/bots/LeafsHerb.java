@@ -28,7 +28,8 @@ public class LeafsHerb implements Action {
     public Results run(NGameUI gui) throws InterruptedException {
 
         NUtils.getGameUI().msg("Starting leaf collection...");
-        NArea leafArea = NArea.findIn("Fresh Tea Leaves");
+       //NArea leafArea = NArea.findIn("Fresh Tea Leaves");
+        NArea leafArea = NArea.findSpec(Specialisation.SpecName.leafs.toString());
 
 
 

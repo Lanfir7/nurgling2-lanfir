@@ -37,11 +37,13 @@ public class LZoneSync {
     public void scheduleSync() {
             scheduler.scheduleAtFixedRate(() -> {
                 new Thread(() -> {
-                    long startTime = System.currentTimeMillis();
-                    start();// Запускаем ваш поток
-                    long endTime = System.currentTimeMillis();  // Конец замера времени
-                    long executionTime = endTime - startTime;  // Разница во времени
-                    System.out.println("Sync time: " + executionTime + " ms");
+                    if (NUtils.getGameUI()!=null) {
+                        long startTime = System.currentTimeMillis();
+                        start();// Запускаем ваш поток
+                        long endTime = System.currentTimeMillis();  // Конец замера времени
+                        long executionTime = endTime - startTime;  // Разница во времени
+                        System.out.println("Sync time: " + executionTime + " ms");
+                    }
                 }).start();
             }, 30,30, TimeUnit.SECONDS);  // Задержка в 1 минут
     }
@@ -88,6 +90,9 @@ public class LZoneSync {
                         Gob dummy = ((NMapView) NUtils.getGameUI().map).dummys.get(((NMapView) NUtils.getGameUI().map).glob.map.areas.get(localZone.id).gid);
                         NUtils.getGameUI().map.glob.oc.remove(dummy);
                         ((NMapView) NUtils.getGameUI().map).dummys.remove(dummy.id);
+                        NOverlay nol = NUtils.getGameUI().map.nols.get(localZone.id);
+                        if (nol != null)
+                            nol.remove();
                         NUtils.getGameUI().map.glob.map.areas.remove(localZone.id);
                     }
                 } else {

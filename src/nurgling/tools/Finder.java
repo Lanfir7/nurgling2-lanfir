@@ -498,6 +498,7 @@ public class Finder
 
         // Список имен объектов, для которых нужно изменять хитбокс
         NAlias targetNames = new NAlias("kritter");
+        NAlias trellis = new NAlias("trellis");
 
         // Проверяем, соответствует ли объект одному из имен
         try {
@@ -513,6 +514,14 @@ public class Finder
                     // Создаем новый хитбокс с увеличенной шириной
                     hitBox = new NHitBox(newBegin, newEnd);
                 }
+            } else if (NParser.isIt(placed, trellis)) {
+                Coord2d newBegin = new Coord2d(hitBox.begin.x-0.5, -1.8);
+                Coord2d newEnd = new Coord2d(hitBox.end.x+0.5, 1.8);
+
+                // Создаем новый хитбокс с увеличенной шириной
+                hitBox = new NHitBox(newBegin, newEnd);
+
+
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -574,7 +583,8 @@ public class Finder
             return null;
 
         // Список имен объектов, для которых нужно изменять хитбокс
-        NAlias targetNames = new NAlias("kritter");
+        NAlias kritter = new NAlias("kritter");
+        NAlias trellis = new NAlias("trellis");
 
         // Проверяем объекты в зоне и увеличиваем их хитбоксы, если они соответствуют целевым
         synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
@@ -585,7 +595,7 @@ public class Finder
 
                         // Если объект соответствует целевому имени и ширина его хитбокса меньше 6, увеличиваем его хитбокс
                         try {
-                            if (NParser.isIt(gob, targetNames)) {
+                            if (NParser.isIt(gob, kritter)) {
                                 double width = hitBoxOfGob.end.y - hitBoxOfGob.begin.y; // ширина хитбокса
 
                                 // Если ширина хитбокса меньше 6, увеличиваем ширину до 6 тайлов
@@ -597,6 +607,14 @@ public class Finder
                                     // Создаем новый хитбокс с увеличенной шириной
                                     hitBoxOfGob = new NHitBox(newBegin, newEnd);
                                 }
+                            } else if (NParser.isIt(gob, trellis)) {
+                                Coord2d newBegin = new Coord2d(-5.5, -1.8);
+                                Coord2d newEnd = new Coord2d(5.5, 1.8);
+
+                                // Создаем новый хитбокс с увеличенной шириной
+                                hitBoxOfGob = new NHitBox(newBegin, newEnd);
+
+
                             }
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);

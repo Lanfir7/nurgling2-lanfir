@@ -8,6 +8,8 @@ import nurgling.areas.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
@@ -69,6 +71,8 @@ public class Specialisation extends Window
         specialisation.add(new SpecialisationItem(SpecName.ttub.toString(),"Tanning tubs",Resource.loadsimg("nurgling/categories/ttub")));
         specialisation.add(new SpecialisationItem(SpecName.tanning.toString(),"Source of tanning fluid",Resource.loadsimg("nurgling/categories/tanning")));
         specialisation.add(new SpecialisationItem(SpecName.smokshed.toString(),"Smoked sheds",Resource.loadsimg("nurgling/categories/smokshed")));
+        specialisation.add(new SpecialisationItem(SpecName.toFire.toString(),"Items to fire in Kiln",Resource.loadsimg("nurgling/categories/smokshed")));
+        specialisation.add(new SpecialisationItem(SpecName.tarKiln.toString(),"Tar Kilns",Resource.loadsimg("nurgling/categories/kiln")));
         specialisation.sort(new Comparator<SpecialisationItem>() {
             @Override
             public int compare(SpecialisationItem o1, SpecialisationItem o2) {
@@ -123,6 +127,7 @@ public class Specialisation extends Window
                     if(!isFound)
                     {
                         area.spec.add(new NArea.Specialisation(value));
+                        area.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
                         NConfig.needAreasUpdate();
                         NUtils.getGameUI().areas.loadSpec(area.id);
                         Specialisation.this.hide();
