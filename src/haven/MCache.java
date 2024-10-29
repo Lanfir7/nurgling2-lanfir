@@ -40,6 +40,7 @@ import nurgling.areas.*;
 import nurgling.conf.LZoneSync;
 import nurgling.overlays.map.*;
 import nurgling.tasks.GridsFilled;
+import nurgling.tasks.NTask;
 import org.json.*;
 
 /* XXX: This whole file is a bit of a mess and could use a bit of a
@@ -1020,7 +1021,20 @@ public class MCache implements MapSource {
 
 	public String[][] constructSection(Coord coord) throws InterruptedException {
 		final String[][] gridMap = new String[3][3];
-		NUtils.addTask(new GridsFilled(coord));
+		NUtils.addTask(new NTask() {
+			@Override
+			public boolean check() {
+				if(NUtils.getGameUI().map.glob.map.grids.size()==9)
+				{
+					if(NUtils.getGameUI().map.glob.map.grids.get(coord)==null)
+					{
+						return true;
+					}
+					return NUtils.player()!=null;
+				}
+				return false;
+			}
+		});
 		if(!grids.containsKey(coord))
 			return null;
 		for(Coord gc : grids.keySet())

@@ -160,7 +160,7 @@ public class NArea
             for(Integer id : nids) {
                 if (id > 0) {
                     NArea cand = NUtils.getGameUI().map.glob.map.areas.get(id);
-                    if (cand.isVisible() && cand.containOut(name, th)) {
+                    if (cand.isVisible() && cand.containOut(name, th) && cand.getRCArea()!=null) {
                         areas.add(new TestedArea(cand, th));
                     }
                 }
@@ -181,7 +181,7 @@ public class NArea
         ArrayList<NArea> targets = new ArrayList<>();
         for(TestedArea area :areas)
         {
-            if(area.th ==tth)
+            if(area.th == tth)
                 targets.add(area.area);
         }
 

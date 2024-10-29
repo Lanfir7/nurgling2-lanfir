@@ -44,7 +44,8 @@ public class NBotsMenu extends Widget
         productions.elements.add(new NButton("leather", new LeatherAction(), true));
         productions.elements.add(new NButton("smelter", new KilnAshAction(), true));
         productions.elements.add(new NButton("smoking", new Smoking(), true));
-        productions.elements.add(new NButton("attacknearborka", new TarKilnAction(), true));
+        productions.elements.add(new NButton("tarkiln", new TarkilnAction(), true));
+        productions.elements.add(new NButton("tabaco", new TabacoAction(), true));
         addLayout(productions);
         NLayout battle = new NLayout("battle");
         battle.elements.add(new NButton("reagro", new Reagro()));
@@ -70,6 +71,7 @@ public class NBotsMenu extends Widget
         utils.elements.add(new NButton("clay_cheker", new CheckClay(), true));
         utils.elements.add(new NButton("clover", new FeedClover(), true));
         utils.elements.add(new NButton("collectalltopile", new CollectSameItemsFromEarth(), true));
+        utils.elements.add(new NButton("worldexplorer", new WorldExplorer(), true));
         addLayout(utils);
         NLayout build = new NLayout("build");
         build.elements.add(new NButton("dframe", new BuildDryingFrame(), true));
@@ -86,7 +88,7 @@ public class NBotsMenu extends Widget
         addLayout(build);
         if (NUtils.getUI().core.debug) {
             NLayout tests = new NLayout("tools");
-            tests.elements.add(new NButton("test1", new TESTLiftDrop()));
+            tests.elements.add(new NButton("test1", new TESTMapv4()));
             tests.elements.add(new NButton("test2", new TESTFillCauldron()));
             tests.elements.add(new NButton("test4", new TESTbranchinvtransferpacks()));
             tests.elements.add(new NButton("test5", new TESTfreeStockpilesAndTransfer()));

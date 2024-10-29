@@ -26,20 +26,35 @@ public class Specialisation extends Window
     }
     public enum SpecName
     {
-        smelter, ore, fuel,
-        kiln, toFire,
-        tarkiln,
+        smelter,
+        toFire,
+        kiln,
         water,
         boiler,
-        swill, trough, crop, seed,
-        cows,sheeps,pigs,goats,
+        swill,
+        trough,
+        crop,
+        seed,
+        cows,
+        sheeps,
+        pigs,
+        goats,
         deadkritter,
+        ore,
+        fuel,
         ovens,
-        gardenpot, barrel,
-        leafs, htable,
-        rawhides, dframe,
-        ttub, tanning, readyHides,
-        logs, smokshed
+        gardenpot,
+        barrel,
+        leafs,
+        htable,
+        rawhides,
+        dframe,
+        ttub,
+        tanning,
+        logs,
+        smokshed,
+        tarkiln,
+        readyHides
     }
 
     private static ArrayList<SpecialisationItem> specialisation = new ArrayList<>();
@@ -72,7 +87,7 @@ public class Specialisation extends Window
         specialisation.add(new SpecialisationItem(SpecName.tanning.toString(),"Source of tanning fluid",Resource.loadsimg("nurgling/categories/tanning")));
         specialisation.add(new SpecialisationItem(SpecName.smokshed.toString(),"Smoked sheds",Resource.loadsimg("nurgling/categories/smokshed")));
         specialisation.add(new SpecialisationItem(SpecName.toFire.toString(),"Items to fire in Kiln",Resource.loadsimg("nurgling/categories/smokshed")));
-        specialisation.add(new SpecialisationItem(SpecName.tarkiln.toString(),"Tar Kilns",Resource.loadsimg("nurgling/categories/kiln")));
+        specialisation.add(new SpecialisationItem(SpecName.tarkiln.toString(),"Tarkilns",Resource.loadsimg("nurgling/categories/tarkiln")));
         specialisation.sort(new Comparator<SpecialisationItem>() {
             @Override
             public int compare(SpecialisationItem o1, SpecialisationItem o2) {

@@ -18,13 +18,24 @@ public class CollectFromGob implements Action {
     String pose;
     boolean withPiles = false;
     Coord targetSize = null;
-
+    int marker = - 1;
     public CollectFromGob(Gob target, String action, String pose, Coord targetSize, NAlias targetItems, Pair<Coord2d, Coord2d> pileArea) {
         this.target = target;
         this.action = action;
         this.pose = pose;
         this.targetSize = targetSize;
         this.withPiles = true;
+        this.targetItems = targetItems;
+        this.pileArea = pileArea;
+    }
+
+    public CollectFromGob(Gob target, String action, String pose, boolean withPiles, Coord targetSize, int marker, NAlias targetItems, Pair<Coord2d, Coord2d> pileArea) {
+        this.target = target;
+        this.action = action;
+        this.pose = pose;
+        this.withPiles = withPiles;
+        this.targetSize = targetSize;
+        this.marker = marker;
         this.targetItems = targetItems;
         this.pileArea = pileArea;
     }
@@ -53,6 +64,15 @@ public class CollectFromGob implements Action {
                 return Results.FAIL();
             }
 
+            if(marker!=-1)
+            {
+                if((target.ngob.getModelAttribute()&marker)!=marker)
+                {
+                    return Results.SUCCESS();
+                }
+            }
+            gui.map.wdgmsg("click", Coord.z, target.rc.floor(posres), 3, 0, 1, (int) target.id, target.rc.floor(posres),
+                    0, -1);
             NFlowerMenu fm = NUtils.findFlowerMenu();
             if (fm != null) {
                 if (fm.hasOpt(action)) {
