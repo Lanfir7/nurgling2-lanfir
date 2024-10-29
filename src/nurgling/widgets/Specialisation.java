@@ -28,7 +28,7 @@ public class Specialisation extends Window
     {
         smelter, ore, fuel,
         kiln, toFire,
-        tarKiln,
+        tarkiln,
         water,
         boiler,
         swill, trough, crop, seed,
@@ -72,7 +72,7 @@ public class Specialisation extends Window
         specialisation.add(new SpecialisationItem(SpecName.tanning.toString(),"Source of tanning fluid",Resource.loadsimg("nurgling/categories/tanning")));
         specialisation.add(new SpecialisationItem(SpecName.smokshed.toString(),"Smoked sheds",Resource.loadsimg("nurgling/categories/smokshed")));
         specialisation.add(new SpecialisationItem(SpecName.toFire.toString(),"Items to fire in Kiln",Resource.loadsimg("nurgling/categories/smokshed")));
-        specialisation.add(new SpecialisationItem(SpecName.tarKiln.toString(),"Tar Kilns",Resource.loadsimg("nurgling/categories/kiln")));
+        specialisation.add(new SpecialisationItem(SpecName.tarkiln.toString(),"Tar Kilns",Resource.loadsimg("nurgling/categories/kiln")));
         specialisation.sort(new Comparator<SpecialisationItem>() {
             @Override
             public int compare(SpecialisationItem o1, SpecialisationItem o2) {
