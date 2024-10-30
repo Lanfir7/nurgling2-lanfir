@@ -80,7 +80,7 @@ public class LeafsHerb implements Action {
         Results res = null;
         while (res == null || res.IsSuccess()) {
             NUtils.getGameUI().msg("Transferring leaves to herbalist tables...");
-            res = new FillContainersFromPiles(containers, leafArea, teaLeaves).run(gui);
+            res = new FillContainersFromPiles(containers, leafArea.getRCArea(), teaLeaves).run(gui);
 
             if (res == null || !res.IsSuccess()) {
                 NUtils.getGameUI().msg("Failed to transfer leaves to herbalist tables.");

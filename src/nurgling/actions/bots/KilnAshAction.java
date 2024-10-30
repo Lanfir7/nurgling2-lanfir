@@ -114,7 +114,7 @@ public class KilnAshAction implements Action {
 
             NUtils.getGameUI().msg("Transferring items to kilns...");
             if (stockpileBool){
-                res = new FillContainersFromPiles(containers, blockPileArea, selectedItemsAlias).run(gui);
+                res = new FillContainersFromPiles(containers, blockPileArea.getRCArea(), selectedItemsAlias).run(gui);
             }else{
                 //res = new FillContainersFromAreas(containers, selectedItemsAlias, icontext).run(gui);
                 Results res2 = null;
