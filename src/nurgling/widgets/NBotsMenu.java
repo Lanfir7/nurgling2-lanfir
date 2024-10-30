@@ -43,10 +43,12 @@ public class NBotsMenu extends Widget
         productions.elements.add(new NButton("hides", new DFrameHidesAction(), true));
         productions.elements.add(new NButton("fishroast", new FriedFish(), true));
         productions.elements.add(new NButton("leather", new LeatherAction(), true));
-        productions.elements.add(new NButton("smelter", new KilnAshAction(), true));
+        productions.elements.add(new NButton("smelter", new KilnAction(), true));
         productions.elements.add(new NButton("smoking", new Smoking(), true));
         productions.elements.add(new NButton("tarkiln", new TarkilnAction(), true));
         productions.elements.add(new NButton("tabaco", new TabacoAction(), true));
+        productions.elements.add(new NButton("tabaco", new GreenTeaAction(), true));
+        productions.elements.add(new NButton("tabaco", new BlackTeaAction(), true));
         addLayout(productions);
         NLayout battle = new NLayout("battle");
         battle.elements.add(new NButton("reagro", new Reagro()));

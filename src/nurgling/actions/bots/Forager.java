@@ -41,7 +41,6 @@ public class Forager implements Action {
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
         while (true) {
-            // Случайное смещение в диапазоне от 50 до 100 координат в любую сторону
             int offsetX = -100 + random.nextInt(201);
             int offsetY = -100 + random.nextInt(201);
 
@@ -57,18 +56,14 @@ public class Forager implements Action {
                 }
             }
 
-            // Если в области рядом с игроком есть враждебные животные, отойти подальше
             if (!isSafe) {
                 NUtils.getGameUI().msg("Враждебные животные поблизости! Отхожу подальше.");
                 newTarget = playerPos.add(-offsetX, -offsetY); // Отойти в противоположную сторону
             }
-            // Перемещение к новой цели
             new GoTo(newTarget).run(gui);
 
-            // Поиск растений в области рядом с игроком
             ArrayList<Gob> nearbyPlants = Finder.findGobs(new Pair<>(new Coord2d(playerPos.x - 500, playerPos.y - 500), new Coord2d(playerPos.x + 500, playerPos.y + 500)), plantsRes);
             nearbyPlants.sort(NUtils.d_comp);
-            // Сбор всех найденных растений  VSpec.getNamesInCategory("Stone")
             for (Gob plant : nearbyPlants) {
 
                 new CollectFromGob(plant, "Pick", null, new Coord(1, 1), plants, null).run(gui);

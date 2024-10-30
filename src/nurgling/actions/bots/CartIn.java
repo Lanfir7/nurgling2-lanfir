@@ -20,6 +20,26 @@ import static haven.OCache.posres;
 
 
 public class CartIn implements Action {
+    NAlias lifteble = new NAlias(new ArrayList<>(List.of(
+            "kritter", "bumlings", "Alchemist", "Ancestral", "Anvil", "Chair", "Archery",
+            "Barrel", "Skep", "Basket", "Bush", "Chest",
+            "Boulder", "Brazier", "Candelabrum", "Fern", "Cheese", "Churn", "Cauldron",
+            "Armchair", "Footstool", "Coffer", "Coinpress", "Compost",
+            "Table", "Throne", "Crate", "Cupboard", "Tub",
+            "Cushioned", "Stool", "Demijohn", "Display", "Sign",
+            "Catcher", "Dugout", "Easel", "Cutout",
+            "Sofa", "Trough", "Bench", "Pot", "Gemcutter",
+            "Ghostpipe", "Giant", "Glass", "Hatrack", "Herbalist", "Hookah",
+            "Ice", "Kicksled", "Sail", "Lantern",
+            "Loom", "Mannequin", "Meatgrinder",
+            "Plow",  "Potter", "Lantern", "Quern", "Raft",
+            "Chair", "Rocking", "Rowboat",
+            "Runestone",  "Signboard", "Spinning", "Still",
+            "Casket", "Study",
+            "Sturdy", "Thatched", "Urn", "Wardrobe", "Wheelbarrow",
+            "Wilderness", "Rack", "Witherstand", "Box",
+            "Wrecking"
+    )),new ArrayList<String>(Arrays.asList("body")));
     private int getPerceptionValue(NGameUI gui) {
         // Поиск окна с атрибутами в интерфейсе
         if (gui.chrwdg != null && gui.chrwdg.battr != null) {
@@ -45,13 +65,6 @@ public class CartIn implements Action {
     }
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
-        // Select the target area
-
-//        int exploration = getExplorationValue(gui);
-//        System.out.println("Exploration: " + exploration);
-//        int perception = getPerceptionValue(gui);
-//        System.out.println("Perception: " + perception);
-//        //DatabaseUtils.addItemsWithTiming(1);
         SelectArea targetArea;
         NUtils.getGameUI().msg("Please, select intput area.");
         (targetArea = new SelectArea()).run(gui);
@@ -66,8 +79,7 @@ public class CartIn implements Action {
         int gobsInCart = 0;
         // Находим все объекты (гобы) в исходной зоне
         ArrayList<Gob> objectsToMove;
-        NAlias lifted = new NAlias(new ArrayList<String>(List.of("")),new ArrayList<String>(Arrays.asList("body")));
-        while (!(objectsToMove = Finder.findGobs(targetZone, lifted)).isEmpty()) {
+        while (!(objectsToMove = Finder.findGobs(targetZone, lifteble)).isEmpty()) {
             if (gobsInCart >= maxGobsInCart) {
                 NUtils.getGameUI().msg("Cart is full (6 objects).");
                 return Results.SUCCESS(); // Завершаем, если телега полная

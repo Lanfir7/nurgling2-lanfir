@@ -39,18 +39,6 @@ public class CartOut implements Action {
                 Gob lifted = Finder.findLiftedbyPlayer();
                 new FindPlaceAndAction(lifted, targetZone).run(gui);
 
-//                // Рассчитываем координаты для отхода в противоположную сторону от объекта
-//                Coord2d objectPos = lifted.rc; // Координаты объекта
-//                Coord2d playerPos = NUtils.player().rc; // Координаты игрока
-//
-//                // Рассчитываем вектор движения (противоположный объекту)
-//                Coord2d moveDirection = playerPos.sub(objectPos).norm().mul(11); // Направление и расстояние 11 тайлов
-//                Coord2d newPos = playerPos.add(moveDirection); // Новая позиция для перемещения
-//
-//                // Выполняем шаг в противоположную сторону
-//                gui.map.wdgmsg("click", Coord.z, newPos.floor(posres), 1, 0);
-//                NUtils.getUI().core.addTask(new IsMoving(newPos));
-
                 Coord2d shift = lifted.rc.sub(NUtils.player().rc).norm().mul(2);
                 new GoTo(NUtils.player().rc.sub(shift)).run(gui);
 

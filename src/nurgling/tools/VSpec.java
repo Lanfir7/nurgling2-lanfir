@@ -1533,6 +1533,18 @@ public class VSpec
         return new NAlias(names.toArray(new String[0]));
     }
 
+    public static NAlias getAllFish()
+    {
+        NAlias res = new NAlias();
+        for(JSONObject object : categories.get("Fish"))
+        {
+            res.keys.add(object.optString("name"));
+        }
+        res.exceptions.add("Filet");
+        res.exceptions.add("Roe");
+        return res;
+    }
+
     public static HashMap<NStyle.Container, Integer> chest_state = new HashMap<>();
     static
     {

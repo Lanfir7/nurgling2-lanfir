@@ -2,8 +2,6 @@ package nurgling.actions.bots;
 
 import haven.Coord;
 import haven.Gob;
-import haven.UI;
-import haven.WItem;
 import nurgling.NGameUI;
 import nurgling.NUtils;
 import nurgling.actions.*;
@@ -18,7 +16,7 @@ import nurgling.widgets.Specialisation;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class KilnAshAction implements Action {
+public class KilnAction implements Action {
     private static final NAlias Piles = new NAlias("gfx/terobjs/stockpile", "gfx/terobjs/chest");
     private static final NAlias blockPiles = new NAlias("gfx/terobjs/stockpile-wblock");
     private static final NAlias boardPiles = new NAlias("gfx/terobjs/stockpile-board");
