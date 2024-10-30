@@ -25,7 +25,26 @@ public class NMiniMap extends MiniMap implements Console.Directory {
     public boolean dragp(int button) {
         return(false);
     }
-
+    @Override
+    public Object tooltip(Coord c, Widget prev) {
+        if (dloc != null) {
+            DisplayIcon icon = iconat(c);
+            if (icon != null) {
+                    Resource res = icon.icon.res;
+                    Resource.Tooltip tt = res.layer(Resource.tooltip);
+                    if (tt != null) {
+                        String name = tt.t;
+                        return Text.render(name).tex();
+                    }
+            }
+            Coord tc = c.sub(sz.div(2)).mul(scalef()).add(dloc.tc);
+            DisplayMarker mark = markerat(tc);
+            if (mark != null) {
+                return (mark.tip);
+            }
+        }
+        return (super.tooltip(c, prev));
+    }
     public boolean clickmarker(DisplayMarker mark, Location loc, int button, boolean press) {
         if(mark.m instanceof MapFile.SMarker) {
             Gob gob = MarkerID.find(ui.sess.glob.oc, (MapFile.SMarker)mark.m);
