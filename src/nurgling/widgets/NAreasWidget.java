@@ -15,6 +15,7 @@ import nurgling.conf.LZoneSync;
 import nurgling.overlays.map.*;
 import nurgling.tools.*;
 import nurgling.widgets.bots.NCategorySelectionWindow;
+import org.json.JSONObject;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -360,7 +361,12 @@ public class NAreasWidget extends Window
         public boolean mousedown(Coord c, int button)
         {
             boolean shiftPressed = ui.modflags() == UI.MOD_SHIFT; // Проверяем, нажата ли клавиша Shift
+            boolean ctrlPressed = ui.modflags() == UI.MOD_CTRL; // Проверка, нажат ли Ctrl
 
+            if (ctrlPressed && button == 1) { // Если нажаты Ctrl и ЛКМ
+                autoRenameArea(); // Вызываем метод для автоматического изменения имени зоны
+                return true;
+            }
             if (shiftPressed) {
                 // Если Shift нажат, вызываем метод для перемещения к зоне
                 goToArea(this.area);
@@ -388,7 +394,23 @@ public class NAreasWidget extends Window
             return super.mousedown(c, button);
 
         }
+        // Метод для автоматического изменения имени зоны
+        private void autoRenameArea() {
+            if (area != null) {
+                // Получаем первое имя из списков in_items или out_items
+                String newName = area.jin.length() > 0 ? ((JSONObject) area.jin.get(0)).getString("name") :
+                        area.jout.length() > 0 ? ((JSONObject) area.jout.get(0)).getString("name") : "Unnamed Area";
 
+                // Устанавливаем новое имя и сохраняем его
+                ((NMapView) NUtils.getGameUI().map).changeAreaName(area.id, newName);
+                text.settext(newName);
+                area.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
+                NConfig.needAreasUpdate();
+                NUtils.getGameUI().msg("Area name updated to: " + newName);
+            } else {
+                NUtils.getGameUI().msg("No area selected for renaming.");
+            }
+        }
         private void goToArea(NArea area) {
             if (area != null) {
                 // Получаем пару координат зоны (начало и конец зоны) в игровом мире

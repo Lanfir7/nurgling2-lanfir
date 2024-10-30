@@ -358,7 +358,7 @@ public class VSpec
         leaves.add(new JSONObject("{\"static\":\"gfx/invobjs/leaf-maple\",\"name\":\"Maple Leaf\"}"));
         leaves.add(new JSONObject("{\"static\":\"gfx/invobjs/leaf-mulberrytree\",\"name\":\"Mulberry Leaf\"}"));
         leaves.add(new JSONObject("{\"static\":\"gfx/invobjs/herbs/perfectautumnleaf\",\"name\":\"Perfect Autumn Leaf\"}"));
-        leaves.add(new JSONObject("{\"static\":\"gfx/invobjs/leaf-swamplily\",\"name\":\"Swamplily Leaf Shred\"}"));
+        leaves.add(new JSONObject("{\"static\":\"gfx/invobjs/swamplilyshred\",\"name\":\"Swamplily Leaf Shred\"}"));
         categories.put("Leaf", leaves);
 
         ArrayList<JSONObject> treeBoughs = new ArrayList<>();

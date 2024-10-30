@@ -24,6 +24,7 @@ public class NBotsMenu extends Widget
         resources.elements.add(new NButton("bark", new CollectBark(), true));
         resources.elements.add(new NButton("bough", new CollectBough(), true));
         resources.elements.add(new NButton("leaf", new CollectLeaf(), true));
+        resources.elements.add(new NButton("leather", new CollectNuts(), true));
         resources.elements.add(new NButton("pblocks", new testingRes(), true));
         resources.elements.add(new NButton("pblocks", new ResourceFinder(), true));
         resources.elements.add(new NButton("choper", new CollectDream(), true));
@@ -89,6 +90,7 @@ public class NBotsMenu extends Widget
         build.elements.add(new NButton("turnip", new BuildSmokeShed(), true));
         build.elements.add(new NButton("shieldsword", new BuildTarKiln(), true));
         build.elements.add(new NButton("goats", new BuildTrellis(), true));
+        build.elements.add(new NButton("clay_cheker", new BuildKiln(), true));
         addLayout(build);
         if (NUtils.getUI().core.debug) {
             NLayout tests = new NLayout("tools");

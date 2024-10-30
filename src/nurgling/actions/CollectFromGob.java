@@ -14,11 +14,14 @@ import static haven.OCache.posres;
 public class CollectFromGob implements Action {
 
     Gob target;
-    String action;
+    String action; // Одиночное действие
+    NAlias actions; // Множественные действия
     String pose;
     boolean withPiles = false;
     Coord targetSize = null;
-    int marker = - 1;
+    int marker = -1;
+
+    // Конструктор для одиночного действия (String)
     public CollectFromGob(Gob target, String action, String pose, Coord targetSize, NAlias targetItems, Pair<Coord2d, Coord2d> pileArea) {
         this.target = target;
         this.action = action;
@@ -29,9 +32,27 @@ public class CollectFromGob implements Action {
         this.pileArea = pileArea;
     }
 
-    public CollectFromGob(Gob target, String action, String pose, boolean withPiles, Coord targetSize, int marker, NAlias targetItems, Pair<Coord2d, Coord2d> pileArea) {
+    // Конструктор для списка действий (NAlias)
+    public CollectFromGob(Gob target, NAlias actions, String pose, Coord targetSize, NAlias targetItems, Pair<Coord2d, Coord2d> pileArea) {
         this.target = target;
+        this.actions = actions;
+        this.pose = pose;
+        this.targetSize = targetSize;
+        this.withPiles = true;
+        this.targetItems = targetItems;
+        this.pileArea = pileArea;
+    }
+
+    // Конструктор для одиночного действия с дополнительными параметрами
+    public CollectFromGob(Gob target, String action, String pose, boolean withPiles, Coord targetSize, int marker, NAlias targetItems, Pair<Coord2d, Coord2d> pileArea) {
+        this(target, new NAlias(action), pose, withPiles, targetSize, marker, targetItems, pileArea);
         this.action = action;
+    }
+
+    // Конструктор для списка действий с дополнительными параметрами
+    public CollectFromGob(Gob target, NAlias actions, String pose, boolean withPiles, Coord targetSize, int marker, NAlias targetItems, Pair<Coord2d, Coord2d> pileArea) {
+        this.target = target;
+        this.actions = actions;
         this.pose = pose;
         this.withPiles = withPiles;
         this.targetSize = targetSize;
@@ -49,47 +70,55 @@ public class CollectFromGob implements Action {
         boolean success = false;  // Флаг для успешного сбора
         int attempts = 0;  // Счетчик попыток сборов
 
-        while (attempts < 3) {  // Цикл для двух попыток сбора с одного объекта
-            // Проверяем свободное место в инвентаре перед сбором
+        while (attempts < 3) {  // Цикл для нескольких попыток сбора с одного объекта
             if (NUtils.getGameUI().getInventory().getNumberFreeCoord(targetSize) == 0) {
                 if (withPiles) {
                     new TransferToPiles(pileArea, targetItems).run(gui);
                 }
             }
 
-            // Пытаемся взаимодействовать с объектом "Dreca"
+            // Взаимодействуем с объектом
             if (target != null) {
                 gui.map.wdgmsg("click", Coord.z, target.rc.floor(posres), 3, 0, 1, (int) target.id, target.rc.floor(posres), 0, -1);
             } else {
                 return Results.FAIL();
             }
 
-            if(marker!=-1)
-            {
-                if((target.ngob.getModelAttribute()&marker)!=marker)
-                {
+            if(marker != -1) {
+                if((target.ngob.getModelAttribute() & marker) != marker) {
                     return Results.SUCCESS();
                 }
             }
-            gui.map.wdgmsg("click", Coord.z, target.rc.floor(posres), 3, 0, 1, (int) target.id, target.rc.floor(posres),
-                    0, -1);
+
             NFlowerMenu fm = NUtils.findFlowerMenu();
             if (fm != null) {
-                if (fm.hasOpt(action)) {
-                    success = true;  // Нужное действие найдено, продолжаем сбор
+                String chosenAction = null;
 
-                    // Двигаемся к объекту для выполнения действия
+                if (action != null) {  // Если передан одиночный action
+                    if (fm.hasOpt(action)) {
+                        chosenAction = action;
+                    }
+                } else if (actions != null) {  // Если передан NAlias
+                    for (String act : actions.keys) {
+                        if (fm.hasOpt(act)) {
+                            chosenAction = act;
+                            break;
+                        }
+                    }
+                }
+
+                if (chosenAction != null) {
+                    success = true;  // Нужное действие найдено
+
                     if (target != null) {
                         new PathFinder(target).run(gui);
                     } else {
                         return Results.FAIL();
                     }
 
-                    // Выполняем выбор действия из меню
-                    if (fm.chooseOpt(action)) {
+                    if (fm.chooseOpt(chosenAction)) {
                         NUtils.getUI().core.addTask(new NFlowerMenuIsClosed());
 
-                        // Если цель - Dreca, не ждем позу, а проверяем появление ресурса в инвентаре
                         if (pose == null) {
                             wcs = new WaitCollectState(target, targetSize);
                             NUtils.getUI().core.addTask(wcs);
@@ -99,30 +128,26 @@ public class CollectFromGob implements Action {
                             NUtils.getUI().core.addTask(wcs);
                         }
 
-                        // После успешного сбора увеличиваем счетчик
                         attempts++;
                     } else {
                         NUtils.getUI().core.addTask(new NFlowerMenuIsClosed());
                     }
                 } else {
-                    // Если меню не содержит нужного действия, закрываем и выходим
                     fm.wdgmsg("cl", -1);
                     NUtils.getUI().core.addTask(new NFlowerMenuIsClosed());
-                    return Results.SUCCESS();  // Переход к следующему объекту
+                    return Results.SUCCESS();
                 }
             } else {
-                return Results.FAIL();  // Если меню не появилось
+                return Results.FAIL();
             }
 
-            // Если оба ресурса собраны (3 попытки), выходим
             if (attempts >= 3) {
                 break;
             }
         }
 
-        // Если ни одно действие не было выполнено успешно, переходим к следующему объекту
         if (!success) {
-            return Results.FAIL();  // Если ничего не было собрано, бот считает это неудачей
+            return Results.FAIL();
         }
 
         return Results.SUCCESS();
