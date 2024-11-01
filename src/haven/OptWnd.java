@@ -828,6 +828,7 @@ public class OptWnd extends Window {
 	public Panel nquickAct;
 	public Panel nautomap;
 	public Panel nringsettings;
+	public Panel lanfirSettingsPanel;
     public OptWnd(boolean gopts) {
 	super(Coord.z, "Options", true);
 	main = add(new Panel());
@@ -836,10 +837,11 @@ public class OptWnd extends Window {
 	Panel iface = add(new InterfacePanel(main));
 	Panel keybind = add(new BindingPanel(main));
 	Panel noptwnd = add(new NQolPanel(main));
+
 	nautomap = add( new NAutoMapperPanel(main));
 	nquickAct = add(new NQuickActionsPanel(main));
 	nringsettings = add(new NRingSettingsPanel(main));
-
+	lanfirSettingsPanel = add(new LanfirSettingsPanel(main));
 	int y = 0;
 	int x = 0;
 	Widget prev;
@@ -852,7 +854,7 @@ public class OptWnd extends Window {
 	main.add(new PButton(UI.scale(200), "Auto mapper", 'k', nautomap), x, prev.pos("ur").y);
 	y = (prev = main.add(new PButton(UI.scale(200), "Keybindings", 'k', keybind), 0, y)).pos("bl").adds(0, 5).y;
 	main.add(new PButton(UI.scale(200), "Animal rings settings", 'k', nringsettings), x, prev.pos("ur").y);
-
+	main.add(new PButton(UI.scale(200), "Lanfir Settings", 'l', lanfirSettingsPanel), 0, y);
 	y += UI.scale(60);
 	if(gopts) {
 	    if((SteamStore.steamsvc.get() != null) && (Steam.get() != null)) {
@@ -1014,7 +1016,48 @@ public class OptWnd extends Window {
 		}
 	}
 
+	public class LanfirSettingsPanel extends Panel {
+		private final TextEntry zoneSyncEntry;
+		private final Button generateButton;
+		private final Button saveButton;
+		private final Button backButton;
 
+		public LanfirSettingsPanel(Panel back) {
+			super();
+
+			// Текст и поле для ввода zone_sync
+			add(new Label("Zone Sync Key:"), Coord.z);
+			zoneSyncEntry = add(new TextEntry(UI.scale(200), (String) NConfig.get(NConfig.Key.zone_sync)), new Coord(0, 20));
+
+			// Кнопка генерации нового ключа
+			generateButton = add(new Button(UI.scale(100), "Generate") {
+				@Override
+				public void click() {
+					String newZoneSyncKey = UUID.randomUUID().toString().substring(0, 20); // Генерация 10-символьного UUID
+					zoneSyncEntry.settext(newZoneSyncKey);
+				}
+			}, new Coord(210, 15));
+
+			// Кнопка сохранения
+			saveButton = add(new Button(UI.scale(200), "Save") {
+				@Override
+				public void click() {
+					NConfig.set(NConfig.Key.zone_sync, zoneSyncEntry.text());
+					NConfig.needUpdate();
+				}
+			}, new Coord(0, 60));
+
+			// Кнопка для возврата
+			backButton = add(new Button(UI.scale(200), "Back") {
+				@Override
+				public void click() {
+					chpanel(back);
+				}
+			}, new Coord(210, 60));
+
+			pack();
+		}
+	}
 
 	public class NAutoMapperPanel extends Panel  {
 		private final Widget save;

@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.nio.charset.StandardCharsets;
 
+import nurgling.NConfig;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
@@ -14,15 +15,29 @@ public class LZoneServer {
 
     private static final String SERVER_URL = "https://worker-production-e53b.up.railway.app";  // Адрес сервера
 
+    // Метод для получения zone_sync
+    private static String getZoneSyncKey() {
+        return (String) NConfig.get(NConfig.Key.zone_sync);
+    }
+
     // Отправка зоны на сервер
     public static void sendZoneToServer(JSONObject zoneData) {
         try {
+            String zoneSyncKey = getZoneSyncKey();
+            if (zoneSyncKey == null || zoneSyncKey.isEmpty()) {
+                System.out.println("zone_sync key is missing or empty.");
+                return;
+            }
+
             String serverUrl = SERVER_URL + "/add_zone";
             URL url = new URL(serverUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json; utf-8");
             connection.setDoOutput(true);
+
+            // Добавляем zone_sync в данные зоны
+            zoneData.put("zone_sync", zoneSyncKey);
 
             // Отправка JSON на сервер
             try (OutputStream os = connection.getOutputStream()) {
@@ -32,9 +47,9 @@ public class LZoneServer {
 
             // Проверка ответа от сервера
             int responseCode = connection.getResponseCode();
-            if (responseCode != HttpURLConnection.HTTP_OK) {
-//                System.out.println("Zone sent successfully!");
-//            } else {
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                System.out.println("Zone sent successfully!");
+            } else {
                 System.out.println("Failed to send zone. Response code: " + responseCode);
             }
 
@@ -46,7 +61,13 @@ public class LZoneServer {
     // Получение всех зон с сервера
     public static JSONArray getAllZones() {
         try {
-            String serverUrl = SERVER_URL + "/get_zones";
+            String zoneSyncKey = getZoneSyncKey();
+            if (zoneSyncKey == null || zoneSyncKey.isEmpty()) {
+                System.out.println("zone_sync key is missing or empty.");
+                return null;
+            }
+
+            String serverUrl = SERVER_URL + "/get_zones?zone_sync=" + zoneSyncKey;
             URL url = new URL(serverUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -73,10 +94,17 @@ public class LZoneServer {
         }
         return null;
     }
+
     // Удаление зоны с сервера
     public static void deleteZoneFromServer(String uuid) {
         try {
-            String serverUrl = SERVER_URL + "/delete_zone/" + uuid;
+            String zoneSyncKey = getZoneSyncKey();
+            if (zoneSyncKey == null || zoneSyncKey.isEmpty()) {
+                System.out.println("zone_sync key is missing or empty.");
+                return;
+            }
+
+            String serverUrl = SERVER_URL + "/delete_zone/" + uuid + "?zone_sync=" + zoneSyncKey;
             URL url = new URL(serverUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("DELETE");
@@ -91,10 +119,17 @@ public class LZoneServer {
             e.printStackTrace();
         }
     }
+
     // Получение зон, обновленных после определенной даты
     public static JSONArray getUpdatedZones(String lastUpdated) {
         try {
-            String serverUrl = SERVER_URL + "/get_zones?updated_after=" + lastUpdated;
+            String zoneSyncKey = getZoneSyncKey();
+            if (zoneSyncKey == null || zoneSyncKey.isEmpty()) {
+                System.out.println("zone_sync key is missing or empty.");
+                return null;
+            }
+
+            String serverUrl = SERVER_URL + "/get_zones?zone_sync=" + zoneSyncKey + "&updated_after=" + lastUpdated;
             URL url = new URL(serverUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -124,7 +159,13 @@ public class LZoneServer {
     // Получение конкретной зоны по UUID
     public static JSONObject getZoneByUUID(String uuid) {
         try {
-            String serverUrl = SERVER_URL + "/get_zone/" + uuid;
+            String zoneSyncKey = getZoneSyncKey();
+            if (zoneSyncKey == null || zoneSyncKey.isEmpty()) {
+                System.out.println("zone_sync key is missing or empty.");
+                return null;
+            }
+
+            String serverUrl = SERVER_URL + "/get_zone/" + uuid + "?zone_sync=" + zoneSyncKey;
             URL url = new URL(serverUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");

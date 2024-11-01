@@ -8,11 +8,9 @@ import java.sql.SQLException;
 
 public class DatabaseUtils {
 
-    // URL базы данных (замените на ваш)
-    //private static final String URL = "jdbc:postgresql://postgres:qrNtYOAnnPRiCeEoQJLAjKAjdqMCPzYD@junction.proxy.rlwy.net:38959/railway";
-    private static final String URL = "jdbc:postgresql://junction.proxy.rlwy.net:38959/railway?user=postgres&password=qrNtYOAnnPRiCeEoQJLAjKAjdqMCPzYD";
+    private static final String URL = "";
     private static final String USER = "postgres";  // Имя пользователя БД
-    private static final String PASSWORD = "qrNtYOAnnPRiCeEoQJLAjKAjdqMCPzYD";  // Пароль
+    private static final String PASSWORD = "";  // Пароль
 
     // Метод для получения соединения с базой данных
     public static Connection getConnection() throws SQLException {
