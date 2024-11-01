@@ -27,9 +27,9 @@ public class NBotsMenu extends Widget
         resources.elements.add(new NButton("leather", new CollectNuts(), true));
         //resources.elements.add(new NButton("pblocks", new testingRes(), true));
         //resources.elements.add(new NButton("pblocks", new ResourceFinder(), true));
-        resources.elements.add(new NButton("l_LiftAndMoveObjects", new LiftAndMoveObjects()));
-        resources.elements.add(new NButton("l_CartIn", new CartIn()));
-        resources.elements.add(new NButton("l_CartOut", new CartOut()));
+//        resources.elements.add(new NButton("l_LiftAndMoveObjects", new LiftAndMoveObjects()));
+//        resources.elements.add(new NButton("l_CartIn", new CartIn()));
+//        resources.elements.add(new NButton("l_CartOut", new CartOut()));
         resources.elements.add(new NButton("reagro", new MoveStockpiles(), true));
         resources.elements.add(new NButton("fisher", new Fishing(), true));
         addLayout(resources);
