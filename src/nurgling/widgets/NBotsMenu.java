@@ -25,8 +25,8 @@ public class NBotsMenu extends Widget
         resources.elements.add(new NButton("bough", new CollectBough(), true));
         resources.elements.add(new NButton("leaf", new CollectLeaf(), true));
         resources.elements.add(new NButton("leather", new CollectNuts(), true));
-        resources.elements.add(new NButton("pblocks", new testingRes(), true));
-        resources.elements.add(new NButton("pblocks", new ResourceFinder(), true));
+        //resources.elements.add(new NButton("pblocks", new testingRes(), true));
+        //resources.elements.add(new NButton("pblocks", new ResourceFinder(), true));
         resources.elements.add(new NButton("choper", new CollectDream(), true));
         resources.elements.add(new NButton("smelter", new LiftAndMoveObjects()));
         resources.elements.add(new NButton("backer", new CartIn()));
@@ -52,7 +52,7 @@ public class NBotsMenu extends Widget
         productions.elements.add(new NButton("wrap", new WrapAction(), true));
         productions.elements.add(new NButton("tabaco", new GreenTeaAction(), true));
         productions.elements.add(new NButton("tabaco", new BlackTeaAction(), true));
-        productions.elements.add(new NButton("tabaco", new LyeBoiler(), true));
+        //productions.elements.add(new NButton("tabaco", new LyeBoiler(), true));
         addLayout(productions);
         NLayout battle = new NLayout("battle");
         battle.elements.add(new NButton("reagro", new Reagro()));
