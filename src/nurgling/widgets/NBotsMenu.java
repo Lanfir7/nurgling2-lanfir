@@ -27,12 +27,10 @@ public class NBotsMenu extends Widget
         resources.elements.add(new NButton("leather", new CollectNuts(), true));
         //resources.elements.add(new NButton("pblocks", new testingRes(), true));
         //resources.elements.add(new NButton("pblocks", new ResourceFinder(), true));
-        resources.elements.add(new NButton("choper", new CollectDream(), true));
-        resources.elements.add(new NButton("smelter", new LiftAndMoveObjects()));
-        resources.elements.add(new NButton("backer", new CartIn()));
-        resources.elements.add(new NButton("ugardenpot", new CartOut()));
+        resources.elements.add(new NButton("l_LiftAndMoveObjects", new LiftAndMoveObjects()));
+        resources.elements.add(new NButton("l_CartIn", new CartIn()));
+        resources.elements.add(new NButton("l_CartOut", new CartOut()));
         resources.elements.add(new NButton("reagro", new MoveStockpiles(), true));
-        resources.elements.add(new NButton("reagro", new FreeInventory(new Context()), true));
         resources.elements.add(new NButton("fisher", new Fishing(), true));
         addLayout(resources);
 
@@ -52,6 +50,7 @@ public class NBotsMenu extends Widget
         productions.elements.add(new NButton("wrap", new WrapAction(), true));
         productions.elements.add(new NButton("tabaco", new GreenTeaAction(), true));
         productions.elements.add(new NButton("tabaco", new BlackTeaAction(), true));
+        productions.elements.add(new NButton("choper", new CollectDream(), true));
         //productions.elements.add(new NButton("tabaco", new LyeBoiler(), true));
         addLayout(productions);
         NLayout battle = new NLayout("battle");
@@ -74,6 +73,7 @@ public class NBotsMenu extends Widget
         utils.elements.add(new NButton("shieldsword", new EquipShieldSword()));
         utils.elements.add(new NButton("filwater", new FillWaterskins(false)));
         utils.elements.add(new NButton("unbox", new FreeContainersInArea(), true));
+        utils.elements.add(new NButton("reagro", new FreeInventory(new Context()), true));
         utils.elements.add(new NButton("water_cheker", new CheckWater()));
         utils.elements.add(new NButton("clay_cheker", new CheckClay(), true));
         utils.elements.add(new NButton("clover", new FeedClover(), true));
