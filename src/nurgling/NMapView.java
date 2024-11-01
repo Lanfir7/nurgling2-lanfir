@@ -316,11 +316,14 @@ public class NMapView extends MapView
                     }
                 }
                 MCache mCache = ui.sess.glob.map;
-                int tile = mCache.gettile(mc.div(tilesz).floor());
-                Resource res = mCache.tilesetr(tile);
-                if (res != null) {
-                    ttip.put("tile", res.name);
+                try {
+                    int tile = mCache.gettile(mc.div(tilesz).floor());
+                    Resource res = mCache.tilesetr(tile);
+                    if (res != null) {
+                        ttip.put("tile", res.name);
+                    }
                 }
+                catch (Exception e) {}
             }
 
             @Override

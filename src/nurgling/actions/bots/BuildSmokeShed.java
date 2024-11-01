@@ -35,7 +35,7 @@ public class BuildSmokeShed implements Action {
         command.ingredients.add(new Build.Ingredient(new Coord(1,2),blockarea.getRCArea(),new NAlias("Block"),4));
 
         NUtils.getGameUI().msg("Please, select area for thatching material");
-        SelectArea thatchingarea = new SelectArea();
+        SelectArea thatchingarea = new SelectArea(Resource.loadsimg("baubles/tatching"));
         thatchingarea.run(NUtils.getGameUI());
         if (Finder.findGob(thatchingarea.getRCArea(), new NAlias("stockpile-bough"))!= null) {
             command.ingredients.add(new Build.Ingredient(new Coord(2, 1), thatchingarea.getRCArea(), new NAlias("Bough"), 6));
@@ -43,7 +43,7 @@ public class BuildSmokeShed implements Action {
             command.ingredients.add(new Build.Ingredient(new Coord(1, 1), thatchingarea.getRCArea(), new NAlias("Straw", "Reeds", "Glimmermoss", "Tarsticks"), 6));
         }
         NUtils.getGameUI().msg("Please, select area for brick");
-        SelectArea brickarea = new SelectArea();
+        SelectArea brickarea = new SelectArea(Resource.loadsimg("baubles/bricks"));
         brickarea.run(NUtils.getGameUI());
         command.ingredients.add(new Build.Ingredient(new Coord(1,1), brickarea.getRCArea(),new NAlias("Brick"),10));
 

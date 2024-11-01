@@ -225,7 +225,7 @@ public class NGob {
         if(name!=null && name.contains("kritter") && (parent.pose()==null || !NParser.checkName(parent.pose(),"dead","knock")) && parent.findol(NAreaRad.class)==null)
         {
             nurgling.conf.NAreaRad rad = nurgling.conf.NAreaRad.get(name);
-            if(rad!=null)
+            if(rad!=null && rad.vis)
                 parent.addcustomol(new NAreaRange(parent,rad));
         }
         int nlu = NQuestInfo.lastUpdate.get();
@@ -238,13 +238,12 @@ public class NGob {
             {
                 parent.addcustomol(new NQuestGiver(parent, markerInfo));
             }
-            if(NQuestInfo.isForageTarget(name))
-            {
-                parent.addcustomol(new NQuestTarget(parent,false));
-            }
-            else if(NQuestInfo.isHuntingTarget(name))
-            {
-                parent.addcustomol(new NQuestTarget(parent,true));
+            if((Boolean)NConfig.get(NConfig.Key.questNotified)) {
+                if (NQuestInfo.isForageTarget(name)) {
+                    parent.addcustomol(new NQuestTarget(parent, false));
+                } else if (NQuestInfo.isHuntingTarget(name)) {
+                    parent.addcustomol(new NQuestTarget(parent, true));
+                }
             }
             lastUpdate = nlu;
         }

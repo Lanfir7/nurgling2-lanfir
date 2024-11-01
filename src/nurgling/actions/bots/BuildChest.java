@@ -25,7 +25,7 @@ public class BuildChest implements Action {
         command.ingredients.add(new Build.Ingredient(new Coord(4,1),brancharea.getRCArea(),new NAlias("Board"),4));
 
         NUtils.getGameUI().msg("Please, select area for nuggets");
-        SelectArea bougharea = new SelectArea();
+        SelectArea bougharea = new SelectArea(Resource.loadsimg("baubles/nugget"));
         bougharea.run(NUtils.getGameUI());
         command.ingredients.add(new Build.Ingredient(new Coord(1,1),bougharea.getRCArea(),new NAlias("Nugget"),4));
 

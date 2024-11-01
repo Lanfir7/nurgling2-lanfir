@@ -21,12 +21,12 @@ public class BuildTarKiln implements Action {
         buildarea.run(NUtils.getGameUI());
 
         NUtils.getGameUI().msg("Please, select area for stone");
-        SelectArea stonearea = new SelectArea();
+        SelectArea stonearea = new SelectArea(Resource.loadsimg("baubles/chipperPiles"));
         stonearea.run(NUtils.getGameUI());
         command.ingredients.add(new Build.Ingredient(new Coord(1,1),stonearea.getRCArea(), VSpec.getNamesInCategory("Stone"),35));
 
         NUtils.getGameUI().msg("Please, select area for clay");
-        SelectArea clayarea = new SelectArea();
+        SelectArea clayarea = new SelectArea(Resource.loadsimg("baubles/clayPiles"));
         clayarea.run(NUtils.getGameUI());
         command.ingredients.add(new Build.Ingredient(new Coord(1,1),clayarea.getRCArea(),new NAlias("Clay"),50));
 
