@@ -76,8 +76,7 @@ public class NConfig
         smokeprop,
         worldexplorerprop,
         questNotified, fishingsettings,
-        zone_sync
-
+        zone_sync, lpassistent
     }
 
 
@@ -124,6 +123,8 @@ public class NConfig
         conf.put(Key.endpoint, "");
         conf.put(Key.questNotified, false);
         conf.put(Key.zone_sync, "");
+        conf.put(Key.lpassistent, false);
+
         ArrayList<HashMap<String, Object>> qpattern = new ArrayList<>();
         HashMap<String, Object> res1 = new HashMap<>();
         res1.put("type", "NPattern");
@@ -363,7 +364,6 @@ public class NConfig
         }
         conf.put(Key.showCSprite,conf.get(Key.nextshowCSprite));
         conf.put(Key.flatsurface,conf.get(Key.nextflatsurface));
-
     }
 
     private ArrayList<Object> prepareArray(ArrayList<Object> objs)
