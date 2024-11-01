@@ -23,7 +23,7 @@ public class NMapWnd extends MapWnd {
     private boolean altPressed = false;
     private PathFollower pathFollower = new PathFollower();
     private boolean recordingRoute = false;
-    private List<Coord> waypoints = new ArrayList<>();
+    private List<Coord2d> waypoints = new ArrayList<>();
 
     public NMapWnd(MapFile file, MapView mv, Coord sz, String title) {
         super(file, mv, sz, title);
@@ -77,7 +77,7 @@ public class NMapWnd extends MapWnd {
             altPressed = true;
             recordingRoute = true;
             pathFollower.clear();
-            //waypoints.clear(); // Start a new route
+            waypoints.clear();
             return true;
         }
         return super.keydown(ev);
@@ -88,10 +88,9 @@ public class NMapWnd extends MapWnd {
         if (ev.getKeyCode() == KeyEvent.VK_ALT) {
             altPressed = false;
             recordingRoute = false;
-            //List<Coord2d> worldWaypoints = convertWaypointsToWorldCoords();
-            //pathFollower.setPath(worldWaypoints);
-            //sendMovementCommands(); // Initiate movement along the route
-            waypoints.clear(); // Clear the waypoints for the next route
+            if (!pathFollower.isMoving()) {
+                pathFollower.moveToNextPoint();
+            }
             return true;
         }
         return super.keyup(ev);
@@ -99,59 +98,72 @@ public class NMapWnd extends MapWnd {
     @Override
     public boolean mousedown(Coord c, int button) {
         if (recordingRoute && button == 1) {
-            waypoints.add(c);
-            // Конвертируем координаты клика по карте в мировые координаты
             Coord2d worldCoord = mapToWorld(c);
             if (worldCoord != null) {
-                pathFollower.addPoint(worldCoord);  // Добавляем мировые координаты в маршрут
-                System.out.println("точка игрока: " + NUtils.player().rc.floor(posres));
-                System.out.println("Добавлена точка для перемещения: " + worldCoord);
+                waypoints.add(worldCoord);
+                pathFollower.addPoint(worldCoord);
+                System.out.println("Player position: " + NUtils.player().rc.floor(posres));
+                System.out.println("Added movement point: " + worldCoord);
                 return true;
             } else {
-                System.out.println("Не удалось преобразовать координаты клика в мировые координаты.");
+                System.out.println("Failed to convert map click to world coordinates.");
             }
         }
         return super.mousedown(c, button);
     }
-    private List<Coord2d> convertWaypointsToWorldCoords() {
-        List<Coord2d> worldCoords = new ArrayList<>();
-        for (Coord mapCoord : waypoints) {
-            Coord2d worldCoord = mapToWorld(mapCoord);
-            if (worldCoord != null) {
-                worldCoords.add(worldCoord);
-            }
-        }
-        return worldCoords;
-    }
+//    private Coord worldToMap(Coord2d worldCoord) {
+//        if (view.dloc == null)
+//            return null;
+//
+//        Coord2d delta = worldCoord.sub(view.dloc.tc.mul(MCache.tilesz));
+//
+//        double scale = view.scalef() * MCache.tilesz.x;
+//
+//        Coord2d scaled = delta.div(scale);
+//
+//        Coord mapCoord = scaled.round().add(view.sz.div(2));
+//
+//        return mapCoord;
+//    }
 
     private Coord2d mapToWorld(Coord c) {
-        // Получаем объект Location по координатам клика на карте
         MiniMap.Location clickLoc = view.xlate(c);
         if (clickLoc == null)
             return null;
 
-        // Вычисляем мировые координаты клика
         Coord2d click_wc = clickLoc.tc.mul(MCache.tilesz).add(MCache.tilesz.div(2));
 
         return click_wc;
     }
 
 
+//    @Override
+//    public void draw(GOut g) {
+//        super.draw(g);
+//
+//        if (waypoints.size() > 1) {
+//            g.chcolor(Color.CYAN);
+//            Coord lastCoord = null;
+//            for (Coord2d worldCoord : waypoints) {
+//                Coord mapCoord = worldToMap(worldCoord);
+//                if (mapCoord != null) {
+//                    if (lastCoord != null) {
+//                        g.line(lastCoord, mapCoord, 2);
+//                    }
+//                    lastCoord = mapCoord;
+//                }
+//            }
+//            g.chcolor();
+//        }
+//    }
     @Override
-    public void draw(GOut g) {
-        super.draw(g);
+    public void tick(double dt) {
+        super.tick(dt);
+        pathFollower.tick();
+    }
 
-        // Отрисовываем маршрут на карте
-        if (waypoints.size() > 1) {
-            g.chcolor(Color.CYAN);
-            Coord lastCoord = waypoints.get(0);
-            for (int i = 1; i < waypoints.size(); i++) {
-                Coord mapCoord = waypoints.get(i);
-                g.line(lastCoord, mapCoord, 2);
-                lastCoord = mapCoord;
-            }
-            g.chcolor();
-        }
+    public void pathCompleted() {
+        waypoints.clear();
     }
     public long playerSegmentId() {
         MiniMap.Location sessloc = view.sessloc;
