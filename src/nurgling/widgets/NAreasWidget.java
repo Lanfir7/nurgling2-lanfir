@@ -299,6 +299,7 @@ public class NAreasWidget extends Window
                     add("Select area space");
                     add("Set color");
                     add("Edit name");
+                    add("Edit folder");
                     add("Scan");
                 }
             };
@@ -510,6 +511,8 @@ public class NAreasWidget extends Window
                             else if (option.name.equals("Edit name"))
                             {
                                 NEditAreaName.changeName(area, AreaItem.this);
+                            } else if (option.name.equals("Edit folder")) { // Обработчик для Edit folder
+                                NEditFolderWindow.show(area);
                             }
                             else if (option.name.equals("Scan"))
                             {
