@@ -112,21 +112,11 @@ public class Build implements Action{
             }
             NUtils.addTask(new WaitPlob());
 
-            NAlias trellis = new NAlias("gfx/terobjs/plants/trellis");
             MapView.Plob plob = NUtils.getGameUI().map.placing.get();
-            NHitBox hitBox;
-            NUtils.getGameUI().msg("area " + plob.ngob.name);
-            if (plob.ngob.name.equals("gfx/terobjs/plants/trellis")) {
-                NUtils.getGameUI().msg("Удачно");
-                Coord2d newBegin = new Coord2d(-1.8, -5.5);
-                Coord2d newEnd = new Coord2d( 1.8, 5.5);
-                hitBox = new NHitBox(newBegin, newEnd);
-            }else{
-                hitBox = plob.ngob.hitBox;
-            }
+            NHitBox hitBox = plob.ngob.hitBox;
             plob.a = needRotate ? Math.PI / 2 : 0;
             NUtils.getGameUI().msg("needRotate " + needRotate);
-            pos = Finder.getFreePlaceMod(area, needRotate?hitBox.rotate():hitBox);
+            pos = Finder.getFreePlace(area, needRotate?hitBox.rotate():hitBox);
 
             PathFinder pf = new PathFinder(NGob.getDummy(pos, plob.a, plob.ngob.hitBox), true);
             pf.isHardMode = true;

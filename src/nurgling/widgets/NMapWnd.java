@@ -19,11 +19,11 @@ import static haven.MCache.tilesz;
 import static haven.OCache.posres;
 
 public class NMapWnd extends MapWnd {
-    private boolean switching = true;
-    private boolean altPressed = false;
-    private PathFollower pathFollower = new PathFollower();
-    private boolean recordingRoute = false;
-    private List<Coord2d> waypoints = new ArrayList<>();
+//    private boolean switching = true;
+//    private boolean altPressed = false;
+//    private PathFollower pathFollower = new PathFollower();
+//    private boolean recordingRoute = false;
+//    private List<Coord2d> waypoints = new ArrayList<>();
 
     public NMapWnd(MapFile file, MapView mv, Coord sz, String title) {
         super(file, mv, sz, title);
@@ -71,46 +71,46 @@ public class NMapWnd extends MapWnd {
             return Objects.hash(gobid);
         }
     }
-    @Override
-    public boolean keydown(KeyEvent ev) {
-        if (ev.getKeyCode() == KeyEvent.VK_ALT && !recordingRoute) {
-            altPressed = true;
-            recordingRoute = true;
-            pathFollower.clear();
-            waypoints.clear();
-            return true;
-        }
-        return super.keydown(ev);
-    }
+//    @Override
+//    public boolean keydown(KeyEvent ev) {
+//        if (ev.getKeyCode() == KeyEvent.VK_ALT && !recordingRoute) {
+//            altPressed = true;
+//            recordingRoute = true;
+//            pathFollower.clear();
+//            waypoints.clear();
+//            return true;
+//        }
+//        return super.keydown(ev);
+//    }
 
-    @Override
-    public boolean keyup(KeyEvent ev) {
-        if (ev.getKeyCode() == KeyEvent.VK_ALT) {
-            altPressed = false;
-            recordingRoute = false;
-            if (!pathFollower.isMoving()) {
-                pathFollower.moveToNextPoint();
-            }
-            return true;
-        }
-        return super.keyup(ev);
-    }
-    @Override
-    public boolean mousedown(Coord c, int button) {
-        if (recordingRoute && button == 1) {
-            Coord2d worldCoord = mapToWorld(c);
-            if (worldCoord != null) {
-                waypoints.add(worldCoord);
-                pathFollower.addPoint(worldCoord);
-                System.out.println("Player position: " + NUtils.player().rc.floor(posres));
-                System.out.println("Added movement point: " + worldCoord);
-                return true;
-            } else {
-                System.out.println("Failed to convert map click to world coordinates.");
-            }
-        }
-        return super.mousedown(c, button);
-    }
+//    @Override
+//    public boolean keyup(KeyEvent ev) {
+//        if (ev.getKeyCode() == KeyEvent.VK_ALT) {
+//            altPressed = false;
+//            recordingRoute = false;
+//            if (!pathFollower.isMoving()) {
+//                pathFollower.moveToNextPoint();
+//            }
+//            return true;
+//        }
+//        return super.keyup(ev);
+//    }
+//    @Override
+//    public boolean mousedown(Coord c, int button) {
+//        if (recordingRoute && button == 1) {
+//            Coord2d worldCoord = mapToWorld(c);
+//            if (worldCoord != null) {
+//                waypoints.add(worldCoord);
+//                pathFollower.addPoint(worldCoord);
+//                System.out.println("Player position: " + NUtils.player().rc.floor(posres));
+//                System.out.println("Added movement point: " + worldCoord);
+//                return true;
+//            } else {
+//                System.out.println("Failed to convert map click to world coordinates.");
+//            }
+//        }
+//        return super.mousedown(c, button);
+//    }
 //    private Coord worldToMap(Coord2d worldCoord) {
 //        if (view.dloc == null)
 //            return null;
@@ -125,16 +125,16 @@ public class NMapWnd extends MapWnd {
 //
 //        return mapCoord;
 //    }
-
-    private Coord2d mapToWorld(Coord c) {
-        MiniMap.Location clickLoc = view.xlate(c);
-        if (clickLoc == null)
-            return null;
-
-        Coord2d click_wc = clickLoc.tc.mul(MCache.tilesz).add(MCache.tilesz.div(2));
-
-        return click_wc;
-    }
+//
+//    private Coord2d mapToWorld(Coord c) {
+//        MiniMap.Location clickLoc = view.xlate(c);
+//        if (clickLoc == null)
+//            return null;
+//
+//        Coord2d click_wc = clickLoc.tc.mul(MCache.tilesz).add(MCache.tilesz.div(2));
+//
+//        return click_wc;
+//    }
 
 
 //    @Override
@@ -156,15 +156,15 @@ public class NMapWnd extends MapWnd {
 //            g.chcolor();
 //        }
 //    }
-    @Override
-    public void tick(double dt) {
-        super.tick(dt);
-        pathFollower.tick();
-    }
+//    @Override
+//    public void tick(double dt) {
+//        super.tick(dt);
+//        pathFollower.tick();
+//    }
 
-    public void pathCompleted() {
-        waypoints.clear();
-    }
+//    public void pathCompleted() {
+//        waypoints.clear();
+//    }
     public long playerSegmentId() {
         MiniMap.Location sessloc = view.sessloc;
         if(sessloc == null) {return 0;}
