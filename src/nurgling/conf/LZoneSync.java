@@ -87,12 +87,21 @@ public class LZoneSync {
                     if (localZone != null) {
                         System.out.println("Удаление зоны с UUID: " + uuid);
                         NUtils.getGameUI().map.nols.remove(localZone.id);
+
                         Gob dummy = ((NMapView) NUtils.getGameUI().map).dummys.get(((NMapView) NUtils.getGameUI().map).glob.map.areas.get(localZone.id).gid);
-                        NUtils.getGameUI().map.glob.oc.remove(dummy);
-                        ((NMapView) NUtils.getGameUI().map).dummys.remove(dummy.id);
+
+                        // Проверка на null для dummy перед удалением из oc
+                        if (dummy != null) {
+                            NUtils.getGameUI().map.glob.oc.remove(dummy);
+                            ((NMapView) NUtils.getGameUI().map).dummys.remove(dummy.id);
+                        } else {
+                            System.out.println("Не удалось найти объект dummy для зоны с UUID: " + uuid);
+                        }
+
                         NOverlay nol = NUtils.getGameUI().map.nols.get(localZone.id);
                         if (nol != null)
                             nol.remove();
+
                         NUtils.getGameUI().map.glob.map.areas.remove(localZone.id);
                     }
                 } else {
@@ -135,7 +144,6 @@ public class LZoneSync {
                     if (serverZone != null) {
                         LocalDateTime serverLastUpdated = LocalDateTime.parse(serverZone.getString("last_updated"));
                         if (localZone.lastUpdated.isAfter(serverLastUpdated)) {
-                            //System.out.println("ОТПРАВКА:Серверное: " + serverLastUpdated + " Локальное: " + localZone.lastUpdated);
                             System.out.println("Локальная зона новее, отправляется на сервер: " + localZone.name);
 
                             if (localZone.uuid == null || localZone.uuid.isEmpty()) {
