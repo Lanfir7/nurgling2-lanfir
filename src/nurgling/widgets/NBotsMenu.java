@@ -32,6 +32,7 @@ public class NBotsMenu extends Widget
         resources.elements.add(new NButton("fishroast", new CartOut()));
         resources.elements.add(new NButton("flax", new MoveStockpiles(), true));
         resources.elements.add(new NButton("fisher", new Fishing(), true));
+        resources.elements.add(new NButton("fisher", new Fishing(), true));
         addLayout(resources);
 
         NLayout productions = new NLayout("productions");
@@ -50,7 +51,7 @@ public class NBotsMenu extends Widget
         productions.elements.add(new NButton("wrap", new WrapAction(), true));
         productions.elements.add(new NButton("tabaco", new GreenTeaAction(), true));
         productions.elements.add(new NButton("tabaco", new BlackTeaAction(), true));
-        productions.elements.add(new NButton("choper", new CollectDream(), true));
+        productions.elements.add(new NButton("cows", new MiningMaster(), true));
         //productions.elements.add(new NButton("tabaco", new LyeBoiler(), true));
         addLayout(productions);
         NLayout battle = new NLayout("battle");

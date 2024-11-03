@@ -42,7 +42,7 @@ public class LZoneSync {
                         start();// Запускаем ваш поток
                         long endTime = System.currentTimeMillis();  // Конец замера времени
                         long executionTime = endTime - startTime;  // Разница во времени
-                        System.out.println("Sync time: " + executionTime + " ms");
+                        //System.out.println("Sync time: " + executionTime + " ms");
                     }
                 }).start();
             }, 30,30, TimeUnit.SECONDS);  // Задержка в 1 минут

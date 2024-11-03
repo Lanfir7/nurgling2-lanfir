@@ -102,8 +102,10 @@ public class Tree extends Sprite {
 	if(gob != null) {
 	    gob.setattr(new TreeRotation(gob, rndrot(gob)));
 	    gob.setattr(new GobSvaj(gob));
-	    if(fscale < 1.0f)
-		gob.setattr(new TreeScale(gob, fscale));
+		if(fscale >= 1.4f) {
+			System.out.println("Увидел " + gob.ngob.name + " выше: " + fscale);
+			gob.setattr(new TreeScale(gob, fscale));
+		}
 	}
 	parts = mkparts(res, s, fl);
 	sel = s;
