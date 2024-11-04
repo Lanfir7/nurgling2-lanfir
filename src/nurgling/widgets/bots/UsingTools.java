@@ -29,7 +29,7 @@ public class UsingTools extends Widget {
             axes.add(new Tool("gfx/invobjs/stoneaxe", "Stone Axe"));
             axes.add(new Tool("gfx/invobjs/butcherscleaver", "Butcher's cleaver"));
             axes.add(new Tool("gfx/invobjs/axe-m", "Metal Axe"));
-            axes.add(new Tool("gfx/invobjs/tinkersthrowingaxe", "Tinker's Axe"));
+            axes.add(new Tool("gfx/invobjs/tinkersthrowingaxe", "Tinker's Throwing Axe"));
             axes.add(new Tool("gfx/invobjs/b12axe", "Battle Axe of the Twelfth Bay", "gfx/invobjs/small/b12axe"));
             shovels.add(new Tool("gfx/invobjs/small/shovel-w", "Wooden Shovel"));
             shovels.add(new Tool("gfx/invobjs/small/shovel-m", "Metal Shovel"));
@@ -41,7 +41,7 @@ public class UsingTools extends Widget {
             pickaxe.add(new Tool("gfx/invobjs/stoneaxe", "Stone Axe"));
             pickaxe.add(new Tool("gfx/invobjs/butcherscleaver", "Butcher's cleaver"));
             pickaxe.add(new Tool("gfx/invobjs/axe-m", "Metal Axe"));
-            pickaxe.add(new Tool("gfx/invobjs/tinkersthrowingaxe", "Tinker's Axe"));
+            pickaxe.add(new Tool("gfx/invobjs/tinkersthrowingaxe", "Tinker's Throwing Axe"));
             pickaxe.add(new Tool("gfx/invobjs/b12axe", "Battle Axe of the Twelfth Bay", "gfx/invobjs/small/b12axe"));
             pickaxe.add(new Tool("gfx/invobjs/pickaxe", "Pickaxe", "gfx/invobjs/small/pickaxe"));
 
