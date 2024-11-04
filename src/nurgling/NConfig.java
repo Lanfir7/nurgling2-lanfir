@@ -174,6 +174,7 @@ public class NConfig
         conf.put(Key.dragprop, dragprop);
 
         ArrayList<NAreaRad> arearadprop = new ArrayList<>();
+        arearadprop.add(new NAreaRad("gfx/kritter/rat/caverat", 50));
         arearadprop.add(new NAreaRad("gfx/kritter/bat/bat", 50));
         arearadprop.add(new NAreaRad("gfx/kritter/boar/boar", 100));
         arearadprop.add(new NAreaRad("gfx/kritter/bear/bear", 100));
