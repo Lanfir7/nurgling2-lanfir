@@ -1018,6 +1018,7 @@ public class OptWnd extends Window {
 
 	public class LanfirSettingsPanel extends Panel {
 		private final TextEntry zoneSyncEntry;
+		private final TextEntry treeQShowEntry; // Новое поле для ввода tree_q_show
 		private final Button generateButton;
 		private final Button saveButton;
 		private final Button backButton;
@@ -1037,15 +1038,19 @@ public class OptWnd extends Window {
 					zoneSyncEntry.settext(newZoneSyncKey);
 				}
 			}, new Coord(210, 15));
+			// Новый текст и поле для ввода tree_q_show
+			add(new Label("Какие деревья интерестны (ку)"), new Coord(0, 60)); // Текст метки
+			treeQShowEntry = add(new TextEntry(UI.scale(200), (String) NConfig.get(NConfig.Key.tree_q_show)), new Coord(0, 80));
 
 			// Кнопка сохранения
 			saveButton = add(new Button(UI.scale(200), "Save") {
 				@Override
 				public void click() {
 					NConfig.set(NConfig.Key.zone_sync, zoneSyncEntry.text());
+					NConfig.set(NConfig.Key.tree_q_show, treeQShowEntry.text());
 					NConfig.needUpdate();
 				}
-			}, new Coord(0, 60));
+			}, new Coord(0, 120));
 
 			// Кнопка для возврата
 			backButton = add(new Button(UI.scale(200), "Back") {
@@ -1053,7 +1058,7 @@ public class OptWnd extends Window {
 				public void click() {
 					chpanel(back);
 				}
-			}, new Coord(210, 60));
+			}, new Coord(210, 120));
 
 			pack();
 		}

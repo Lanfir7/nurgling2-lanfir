@@ -9,6 +9,10 @@ import haven.*;
 import haven.render.*;
 import haven.res.lib.leaves.*;
 import haven.res.lib.svaj.*;
+import nurgling.NConfig;
+import nurgling.NUtils;
+import nurgling.widgets.options.TreeAlertWindow;
+
 import java.util.*;
 
 @haven.FromResource(name = "lib/tree", version = 15)
@@ -97,16 +101,30 @@ public class Tree extends Sprite {
     }
 
     public Tree(Owner owner, Resource res, float scale, int s, int fl) {
-	super(owner, res);
-	this.fscale = scale;
-	if(gob != null) {
-	    gob.setattr(new TreeRotation(gob, rndrot(gob)));
-	    gob.setattr(new GobSvaj(gob));
-		if(fscale >= 1.5f) {
-			System.out.println("Увидел " + res.name + " квалити: " + fscale*10);
-			gob.setattr(new TreeScale(gob, fscale));
+		super(owner, res);
+		this.fscale = scale;
+		float treeQShowValue;
+		try {
+			treeQShowValue = Float.parseFloat((String) NConfig.get(NConfig.Key.tree_q_show));
+		} catch (NumberFormatException e) {
+			System.out.println("Ошибка: значение tree_q_show не является допустимым числом. Установлено значение по умолчанию.");
+			treeQShowValue = 1000.0f;
 		}
-	}
+		if (gob != null) {
+			gob.setattr(new TreeRotation(gob, rndrot(gob)));
+			gob.setattr(new GobSvaj(gob));
+			if (fscale * 10 >= treeQShowValue) {
+				System.out.println("Увидел " + res.name + " квалити: " + fscale * 10);
+				gob.setattr(new TreeScale(gob, fscale));
+
+				// Отображение окна при выполнении условия
+				GameUI gui = NUtils.getGameUI();
+				if (gui != null) {
+					TreeAlertWindow alert = new TreeAlertWindow(res.name, fscale * 10);
+					gui.add(alert, new Coord(200, 200));  // Позиция окна на экране
+				}
+			}
+		}
 	parts = mkparts(res, s, fl);
 	sel = s;
     }

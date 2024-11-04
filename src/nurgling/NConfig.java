@@ -76,7 +76,7 @@ public class NConfig
         smokeprop,
         worldexplorerprop,
         questNotified, fishingsettings,
-        zone_sync, lpassistent
+        tree_q_show, zone_sync, lpassistent
     }
 
 
@@ -123,6 +123,7 @@ public class NConfig
         conf.put(Key.endpoint, "");
         conf.put(Key.questNotified, false);
         conf.put(Key.zone_sync, "");
+        conf.put(Key.tree_q_show, "10");
         conf.put(Key.lpassistent, false);
 
         ArrayList<HashMap<String, Object>> qpattern = new ArrayList<>();
