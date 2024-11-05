@@ -115,8 +115,8 @@ public class Build implements Action{
             MapView.Plob plob = NUtils.getGameUI().map.placing.get();
             NHitBox hitBox = plob.ngob.hitBox;
             plob.a = needRotate ? Math.PI / 2 : 0;
-            NUtils.getGameUI().msg("needRotate " + needRotate);
-            pos = Finder.getFreePlace(area, needRotate?hitBox.rotate():hitBox);
+            //NUtils.getGameUI().msg("needRotate " + needRotate);
+            pos = Finder.getFreePlace(area, needRotate?plob.ngob.hitBox.rotate():plob.ngob.hitBox);
 
             PathFinder pf = new PathFinder(NGob.getDummy(pos, plob.a, plob.ngob.hitBox), true);
             pf.isHardMode = true;
