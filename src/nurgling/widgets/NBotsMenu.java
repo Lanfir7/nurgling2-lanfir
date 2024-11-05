@@ -33,6 +33,7 @@ public class NBotsMenu extends Widget
         resources.elements.add(new NButton("flax", new MoveStockpiles(), true));
         resources.elements.add(new NButton("fisher", new Fishing(), true));
         resources.elements.add(new NButton("fisher", new Fishing(), true));
+        resources.elements.add(new NButton("plower", new Plower(), true));
         addLayout(resources);
 
         NLayout productions = new NLayout("productions");
