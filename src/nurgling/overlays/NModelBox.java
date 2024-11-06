@@ -66,7 +66,7 @@ public class NModelBox extends Sprite implements RenderTree.Node
 
     public static class HidePol extends Sprite implements RenderTree.Node
     {
-        public static Pipe.Op lmat = Pipe.Op.compose(Rendered.last, States.Depthtest.none, States.maskdepth,new States.Facecull(),new States.LineWidth(2), new BaseColor(new java.awt.Color(0, 255, 246, 189)));
+        public static Pipe.Op lmat = Pipe.Op.compose(Rendered.last, States.Depthtest.none, States.maskdepth,new States.Facecull(),new States.LineWidth(2), new BaseColor(new java.awt.Color(0, 255, 246, 107)));
         public static Pipe.Op emat = Pipe.Op.compose(new BaseColor(new java.awt.Color(0, 255, 246, 129)));
         final Model emod;
         final Model lmod;
