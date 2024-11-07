@@ -32,7 +32,7 @@ public class NBotsMenu extends Widget
         resources.elements.add(new NButton("fishroast", new CartOut()));
         resources.elements.add(new NButton("flax", new MoveStockpiles(), true));
         resources.elements.add(new NButton("fisher", new Fishing(), true));
-        resources.elements.add(new NButton("fisher", new Fishing(), true));
+        resources.elements.add(new NButton("fisher", new FreeInventory(new Context()), true));
         resources.elements.add(new NButton("plower", new Plower(), true));
         addLayout(resources);
 
@@ -88,11 +88,11 @@ public class NBotsMenu extends Widget
         build.elements.add(new NButton("ttub", new BuildTtub()));
         build.elements.add(new NButton("cupboard", new BuildCupboard()));
         build.elements.add(new NButton("cheese_rack", new BuildCheeseRack()));
-        build.elements.add(new NButton("kiln", new BuildKiln()));
+        build.elements.add(new NButton("kiln", new BuildKiln(), true));
         build.elements.add(new NButton("barrel", new BuildBarrel()));
-        build.elements.add(new NButton("chest", new BuildChest()));
-        build.elements.add(new NButton("tarkilnb", new BuildTarKiln()));
-        build.elements.add(new NButton("smoke_shed", new BuildSmokeShed()));
+        build.elements.add(new NButton("chest", new BuildChest(), true));
+        build.elements.add(new NButton("tarkilnb", new BuildTarKiln(), true));
+        build.elements.add(new NButton("smoke_shed", new BuildSmokeShed(), true));
         build.elements.add(new NButton("smoke_shed", new BuildCrate()));
         addLayout(build);
         if (NUtils.getUI().core.debug) {

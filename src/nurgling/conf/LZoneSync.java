@@ -45,7 +45,7 @@ public class LZoneSync {
                         //System.out.println("Sync time: " + executionTime + " ms");
                     }
                 }).start();
-            }, 120,120, TimeUnit.SECONDS);  // Задержка в 1 минут
+            }, 240,240, TimeUnit.SECONDS);  // Задержка в 1 минут
     }
 
     public static NArea createZoneFromJSON(JSONObject jsonZone) {
