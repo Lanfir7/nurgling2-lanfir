@@ -79,6 +79,7 @@ public class MiningMaster implements Action {
                         // Get the item name
                         String itemName = ((NGItem) gitem).name();
                         // Check if the item matches the stones alias
+                        if (!itemName.isEmpty()){
                         if (stones.check(itemName)) {
                             foundStone = true;
 
@@ -124,6 +125,7 @@ public class MiningMaster implements Action {
                                 // Optional: Wait for item to be dropped
                                 Thread.sleep(100);
                             }
+                        }
                         }
                     }
                 }
