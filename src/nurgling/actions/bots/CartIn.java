@@ -21,7 +21,7 @@ import static haven.OCache.posres;
 
 public class CartIn implements Action {
     NAlias lifteble = new NAlias(new ArrayList<>(List.of(
-            "kritter", "bumlings", "Alchemist", "Ancestral", "Anvil", "Chair", "Archery",
+            "kritter", "log", "bumlings", "Alchemist", "Ancestral", "Anvil", "Chair", "Archery",
             "Barrel", "Skep", "Basket", "Bush", "Chest",
             "Boulder", "Brazier", "Candelabrum", "Fern", "Cheese", "Churn", "Cauldron",
             "Armchair", "Footstool", "Coffer", "Coinpress", "Compost",
@@ -87,7 +87,7 @@ public class CartIn implements Action {
             // Фильтруем объекты, до которых можно дойти
             ArrayList<Gob> availableObjects = new ArrayList<>();
             for (Gob currGob : objectsToMove) {
-                if (PathFinder.isAvailable(currGob) && currGob.ngob.isLiftable()) {
+                if (PathFinder.isAvailable(currGob)) {
                     availableObjects.add(currGob);
                 }
             }

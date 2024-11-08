@@ -13,6 +13,8 @@ public class Context {
         contcaps.put("gfx/terobjs/crate", "Crate");
         contcaps.put("gfx/terobjs/kiln", "Kiln");
         contcaps.put("gfx/terobjs/cupboard", "Cupboard");
+        contcaps.put("gfx/terobjs/map/jotunclam", "Jotun Clam");
+        contcaps.put("gfx/terobjs/thatchbasket", "Basket");
         contcaps.put("gfx/terobjs/shed", "Shed");
         contcaps.put("gfx/terobjs/largechest", "Large Chest");
         contcaps.put("gfx/terobjs/metalcabinet", "Metal Cabinet");
