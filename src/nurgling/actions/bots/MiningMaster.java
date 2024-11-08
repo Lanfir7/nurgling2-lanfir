@@ -79,7 +79,7 @@ public class MiningMaster implements Action {
                         // Get the item name
                         String itemName = ((NGItem) gitem).name();
                         // Check if the item matches the stones alias
-                        if (!itemName.isEmpty()){
+                        if (itemName != null){
                         if (stones.check(itemName)) {
                             foundStone = true;
 
