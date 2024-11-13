@@ -49,10 +49,10 @@ public class CollectNuts implements Action {
 
         ArrayList<Gob> trees = Finder.findGobs(insa.getRCArea(),ntrees);
         trees.sort(NUtils.d_comp);
-        for(Gob tree : trees)
-        {
-            new CollectFromGob(tree, actions, "gfx/borka/treepickan", new Coord(1,1), VSpec.getNamesInCategory("Nuts"),outsa.getRCArea()).run(gui);
-        }
+//        for(Gob tree : trees)
+//        {
+//            new CollectFromGob(tree, actions, "gfx/borka/treepickan", new Coord(1,1), VSpec.getNamesInCategory("Nuts"),outsa.getRCArea()).run(gui);
+//        }
         new TransferToPiles(outsa.getRCArea(), VSpec.getNamesInCategory("Nuts") ).run(gui);
         return Results.SUCCESS();
     }

@@ -92,6 +92,7 @@ public class CollectStone implements Action {
         trees.sort(NUtils.d_comp);
         for(Gob tree : trees)
         {
+            new PathFinder(tree).run(gui);
             //String pickAction = tree.getres().name.contains("tree") ? "gfx/borka/chipping" : "gfx/borka/bushpickan";
             new CollectFromGob(tree,"Chip stone", "gfx/borka/chipping" ,new Coord(1,1), stones, outsa.getRCArea()).run(gui);
         }
