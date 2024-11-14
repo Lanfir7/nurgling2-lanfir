@@ -21,7 +21,7 @@ import static haven.OCache.posres;
 
 public class CartIn implements Action {
     NAlias lifteble = new NAlias(new ArrayList<>(List.of(
-            "kritter", "log", "bumlings", "Alchemist", "Ancestral", "Anvil", "Chair", "Archery",
+            "kritter", "jotunclam", "log", "bumlings", "Alchemist", "Ancestral", "Anvil", "Chair", "Archery",
             "Barrel", "Skep", "Basket", "Bush", "Chest",
             "Boulder", "Brazier", "Candelabrum", "Fern", "Cheese", "Churn", "Cauldron",
             "Armchair", "Footstool", "Coffer", "Coinpress", "Compost",

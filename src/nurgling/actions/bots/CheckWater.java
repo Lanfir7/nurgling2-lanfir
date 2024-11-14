@@ -20,7 +20,7 @@ import nurgling.tools.NParser;
 import static haven.OCache.posres;
 
 public class CheckWater implements Action {
-    NAlias cups = new NAlias("Wooden Cup", "Kuksa");
+    NAlias cups = new NAlias("Wooden Cup", "Kuksa", "Leaf Cup");
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
         WItem item = gui.getInventory().getItem(cups);
