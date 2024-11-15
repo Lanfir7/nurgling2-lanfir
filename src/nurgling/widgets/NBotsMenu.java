@@ -50,6 +50,7 @@ public class NBotsMenu extends Widget
         productions.elements.add(new NButton("tarkiln", new TarkilnAction(), true));
         productions.elements.add(new NButton("tabaco", new TabacoAction(), true));
         productions.elements.add(new NButton("brick", new BricksAction(), true));
+        productions.elements.add(new NButton("branch", new BranchAction(), true));
         productions.elements.add(new NButton("wrap", new WrapAction(), true));
         productions.elements.add(new NButton("tabaco", new GreenTeaAction(), true));
         productions.elements.add(new NButton("tabaco", new BlackTeaAction(), true));

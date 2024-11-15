@@ -49,6 +49,10 @@ public class NCore extends Widget
         }
     }
 
+    public void setLastAction() {
+        actions = null;
+    }
+
 
     public enum Mode
     {
@@ -63,7 +67,7 @@ public class NCore extends Widget
         public Gob gob = null;
     }
 
-    private LastActions actions = new LastActions();
+    private LastActions actions = null;
 
     public LastActions getLastActions()
     {
@@ -97,7 +101,7 @@ public class NCore extends Widget
     }
     public void resetLastAction()
     {
-        actions = new LastActions();
+        actions = null;
     }
 
 
