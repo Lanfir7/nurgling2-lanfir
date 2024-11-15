@@ -50,7 +50,7 @@ public class MiningMonitorWindow extends Window {
                 resetData();
             }
         };
-        this.add(resetButton, new Coord(10, 110));
+        this.add(resetButton, new Coord(100, 110));
 
         pack();
     }
