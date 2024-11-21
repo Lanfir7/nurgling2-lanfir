@@ -39,6 +39,8 @@ public class BuildSmokeShed implements Action {
         thatchingarea.run(NUtils.getGameUI());
         if (Finder.findGob(thatchingarea.getRCArea(), new NAlias("stockpile-bough"))!= null) {
             command.ingredients.add(new Build.Ingredient(new Coord(2, 1), thatchingarea.getRCArea(), new NAlias("Bough"), 6));
+        }else if (Finder.findGob(thatchingarea.getRCArea(), new NAlias("stockpile-standgrass"))!= null) {
+            command.ingredients.add(new Build.Ingredient(new Coord(1, 1), thatchingarea.getRCArea(), new NAlias("Standing Grass"), 6));
         }else{
             command.ingredients.add(new Build.Ingredient(new Coord(1, 1), thatchingarea.getRCArea(), new NAlias("Straw", "Reeds", "Glimmermoss", "Tarsticks", "Brown Kelp"), 6));
         }
