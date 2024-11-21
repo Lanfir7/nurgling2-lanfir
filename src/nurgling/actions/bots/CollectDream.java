@@ -65,7 +65,7 @@ public class CollectDream implements Action {
         // Собираем ресурс "Dream" из каждого объекта Dreca
         for (Gob dreca : drecaObjects) {
             int initialDreamCount = gui.getInventory().getTotalAmountItems(dream); // Количество дримов перед сбором
-
+            new PathFinder(dreca).run(gui);
             // Выполняем сбор
             new CollectFromGob(dreca, "Harvest", null, new Coord(1, 1), dream, null).run(gui);
 
