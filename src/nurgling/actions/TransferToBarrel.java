@@ -1,6 +1,7 @@
 package nurgling.actions;
 
 import haven.*;
+import haven.res.ui.tt.cn.CustomName;
 import nurgling.NGItem;
 import nurgling.NGameUI;
 import nurgling.NUtils;
@@ -37,42 +38,30 @@ public class TransferToBarrel implements Action{
         if ( !(new OpenTargetContainer (  "Barrel",barrel ).run ( gui ).isSuccess) ) {
             return Results.ERROR("OPEN FAIL");
         }
-        Pair<Double, String> barrelConts= gui.getBarrelContentMod(new NAlias(""));
-        double barrelCont;
-        if (barrelConts.b.equals("kg")){
-            barrelCont = barrelConts.a * 100;
-        }else{
-            barrelCont = barrelConts.a;
-        }
-        NUtils.getGameUI().msg("В бочке: " + barrelCont + " из: " + th);
+        double barrelCont = gui.getBarrelContent();
         total+=barrelCont;
-        if (barrelCont > -1 && barrelCont < th) {
+        if(barrelCont>-1 && barrelCont < th) {
 
             ArrayList<WItem> witems = gui.getInventory().getItems(items);
             ArrayList<WItem> targetItems = new ArrayList<>();
-            int sum = 0;
+            double sum = 0;
             for (WItem item : witems) {
                 if (sum + barrelCont > th) {
                     break;
                 }
-
-                boolean added = false;
                 for (ItemInfo inf : item.item.info) {
                     if (inf instanceof GItem.Amount) {
-                        sum += ((GItem.Amount) inf).itemnum();
-                        targetItems.add(item);
-                        added = true;
-                        if (sum + barrelCont > th) {
+                        if(sum + ((GItem.Amount) inf).itemnum()<10000) {
+                            sum += ((GItem.Amount) inf).itemnum();
+                            targetItems.add(item);
                             break;
                         }
                     }
-                }
-                if (!added) {
-                    double pileAmount = ((NGItem) item.item).getPileAmount();
-                    if (pileAmount > 0) {
-                        sum += pileAmount * 100;
-                        targetItems.add(item);
-                        if (sum + barrelCont > th) {
+                    if (inf instanceof CustomName)
+                    {
+                        if(((CustomName) inf).count>0 && sum + ((CustomName) inf).count<100) {
+                            sum+=((CustomName)inf).count;
+                            targetItems.add(item);
                             break;
                         }
                     }
@@ -111,6 +100,7 @@ public class TransferToBarrel implements Action{
                 }
             }
         }
+        new CloseTargetContainer ( "Barrel" ).run ( gui );
         return Results.SUCCESS();
     }
 

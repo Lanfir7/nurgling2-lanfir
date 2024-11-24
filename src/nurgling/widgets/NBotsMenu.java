@@ -58,6 +58,9 @@ public class NBotsMenu extends Widget
         productions.elements.add(new NButton("cows", new MiningMaster(), true));
         //productions.elements.add(new NButton("tabaco", new LyeBoiler(), true));
 //        productions.elements.add(new NButton("bonestoash", new BoneAshAction(),true));
+        productions.elements.add(new NButton("bonestoash", new BoneAshAction(),true));
+        productions.elements.add(new NButton("ash", new BlockAshAction(),true));
+        productions.elements.add(new NButton("lye", new LyeBoiler(),true));
         addLayout(productions);
         NLayout battle = new NLayout("battle");
         battle.elements.add(new NButton("reagro", new Reagro()));
@@ -74,13 +77,16 @@ public class NBotsMenu extends Widget
         farming.elements.add(new NButton("goats", new GoatsAction()));
         farming.elements.add(new NButton("sheeps", new SheepsAction()));
         farming.elements.add(new NButton("pigs", new PigsAction()));
+        farming.elements.add(new NButton("horses", new HorsesAction()));
         farming.elements.add(new NButton("cows", new nurgling.actions.bots.CowsAction()));
+        farming.elements.add(new NButton("barley", new BarleyFarmer(), true));
+        farming.elements.add(new NButton("millet", new MilletFarmer(), true));
+        farming.elements.add(new NButton("wheat", new WheatFarmer(), true));
         addLayout(farming);
         NLayout utils = new NLayout("utils");
         utils.elements.add(new NButton("shieldsword", new EquipShieldSword()));
         utils.elements.add(new NButton("filwater", new FillWaterskins(false)));
         utils.elements.add(new NButton("unbox", new FreeContainersInArea(), true));
-        utils.elements.add(new NButton("reagro", new FreeInventory(new Context()), true));
         utils.elements.add(new NButton("water_cheker", new CheckWater()));
         utils.elements.add(new NButton("clay_cheker", new CheckClay(), true));
         utils.elements.add(new NButton("clover", new FeedClover(), true));

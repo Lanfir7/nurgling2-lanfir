@@ -137,6 +137,14 @@ public class Context {
         }
     }
 
+    public static class InputBarrel extends Barrel implements Input
+    {
+        public InputBarrel(Gob barrel)
+        {
+            super(barrel);
+        }
+    }
+
     public static class InputPile extends Pile implements Input
     {
         public InputPile(Gob gob)
@@ -231,7 +239,12 @@ public class Context {
                     if (outputs.isEmpty()) {
                         outputs.add(new OutputPile(null, area.getRCArea(), ingredient.th));
                     }
-
+                    break;
+                }
+                case BARREL: {
+                    for (Gob gob : Finder.findGobs(area, new NAlias("barrel"))) {
+                        outputs.add(new OutputBarrel(gob, area.getRCArea(), ingredient.th));
+                    }
                 }
                 case BARREL: {
                     for (Gob gob : Finder.findGobs(area, new NAlias("barrel"))) {
@@ -250,11 +263,17 @@ public class Context {
             return outputs;
         for(Gob gob: Finder.findGobs(area, new NAlias(new ArrayList<String>(contcaps.keySet()),new ArrayList<>())))
         {
-            outputs.add(new OutputContainer(gob, area ,1));
+            OutputContainer container = new OutputContainer(gob, area ,1);
+            container.initattr(Container.Space.class);
+            outputs.add(container);
         }
         for(Gob gob: Finder.findGobs(area, new NAlias ("stockpile")))
         {
             outputs.add(new OutputPile(gob, area, 1));
+        }
+        for(Gob gob: Finder.findGobs(area, new NAlias ("barrel")))
+        {
+            outputs.add(new OutputBarrel(gob, area, 1));
         }
         if(outputs.isEmpty())
         {
@@ -347,6 +366,31 @@ public class Context {
         Integer th = 1;
     }
 
+
+    public static class OutputBarrel extends Barrel implements Output
+    {
+        public OutputBarrel(Gob barrel, Pair<Coord2d,Coord2d> area, int th)
+        {
+            super(barrel);
+            this.area = area;
+            this.th = th;
+        }
+
+        @Override
+        public Pair<Coord2d,Coord2d> getArea() {
+            return area;
+        }
+
+        Pair<Coord2d,Coord2d> area = null;
+        @Override
+        public int getTh()
+        {
+            return th;
+        }
+
+        Integer th = 1;
+    }
+
     public ArrayList<Output> getOutputs(String name, int th) {
         if(output.get(name)!=null)
         {
@@ -368,6 +412,16 @@ public class Context {
         {
             this.barter = barter;
             this.chest = chest;
+        }
+    }
+
+    public static class Barrel
+    {
+        public Gob barrel;
+
+        public Barrel(Gob barrel)
+        {
+            this.barrel = barrel;
         }
     }
 

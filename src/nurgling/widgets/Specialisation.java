@@ -49,13 +49,12 @@ public class Specialisation extends Window
         htable,
         rawhides,
         dframe,
+        horses,
         ttub,
         tanning,
         logs,
         smokshed,
-        tarkiln,
-        boneforash,
-        readyHides
+        tarkiln, boneforash, blockforash, readyHides
     }
 
     private static ArrayList<SpecialisationItem> specialisation = new ArrayList<>();
@@ -74,6 +73,7 @@ public class Specialisation extends Window
         specialisation.add(new SpecialisationItem(SpecName.sheeps.toString(),"Sheep",Resource.loadsimg("nurgling/categories/sheeps")));
         specialisation.add(new SpecialisationItem(SpecName.deadkritter.toString(),"Animal carcasses",Resource.loadsimg("nurgling/categories/deadkritter")));
         specialisation.add(new SpecialisationItem(SpecName.pigs.toString(),"Pigs",Resource.loadsimg("nurgling/categories/pigs")));
+        specialisation.add(new SpecialisationItem(SpecName.horses.toString(),"Horses",Resource.loadsimg("nurgling/categories/horses")));
         specialisation.add(new SpecialisationItem(SpecName.ore.toString(),"Piles of ore",Resource.loadsimg("nurgling/categories/ores")));
         specialisation.add(new SpecialisationItem(SpecName.fuel.toString(),"Fuel",Resource.loadsimg("nurgling/categories/fuel")));
         specialisation.add(new SpecialisationItem(SpecName.barrel.toString(),"Barrel",Resource.loadsimg("nurgling/categories/barrel")));
@@ -90,6 +90,7 @@ public class Specialisation extends Window
         specialisation.add(new SpecialisationItem(SpecName.toFire.toString(),"Items to fire in Kiln",Resource.loadsimg("nurgling/categories/smokshed")));
         specialisation.add(new SpecialisationItem(SpecName.tarkiln.toString(),"Tarkilns",Resource.loadsimg("nurgling/categories/tarkiln")));
         specialisation.add(new SpecialisationItem(SpecName.boneforash.toString(),"Bones for Ash",Resource.loadsimg("nurgling/categories/boneash")));
+        specialisation.add(new SpecialisationItem(SpecName.blockforash.toString(),"Block for Ash",Resource.loadsimg("nurgling/categories/block")));
         specialisation.sort(new Comparator<SpecialisationItem>() {
             @Override
             public int compare(SpecialisationItem o1, SpecialisationItem o2) {
@@ -144,7 +145,6 @@ public class Specialisation extends Window
                     if(!isFound)
                     {
                         area.spec.add(new NArea.Specialisation(value));
-                        area.lastUpdated = LocalDateTime.now(ZoneOffset.UTC).withNano(0);
                         NConfig.needAreasUpdate();
                         NUtils.getGameUI().areas.loadSpec(area.id);
                         Specialisation.this.hide();

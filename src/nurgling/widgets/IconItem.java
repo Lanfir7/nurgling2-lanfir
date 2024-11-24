@@ -13,6 +13,7 @@ public class IconItem extends Widget
     public static final TexI frame = new TexI(Resource.loadimg("nurgling/hud/iconframe"));
     public static final TexI framet = new TexI(Resource.loadimg("nurgling/hud/iconframet"));
     public static final TexI bm = new TexI(Resource.loadimg("nurgling/hud/bartermark"));
+    public static final TexI barm = new TexI(Resource.loadimg("nurgling/hud/barrelmark"));
     public JSONObject src;
     TexI tex = null;
 
@@ -76,6 +77,10 @@ public class IconItem extends Widget
             {
                 g.image(bm, UI.scale(16,16), UI.scale(16, 16));
             }
+            if(type == NArea.Ingredient.Type.BARREL)
+            {
+                g.image(barm, UI.scale(16,16), UI.scale(16, 16));
+            }
         }
     }
 
@@ -105,7 +110,7 @@ public class IconItem extends Widget
             add("Threshold");
             add("Delete");
             add("Mark as barter");
-            add("Mark as Barrel");
+            add("Mark as barrel");
         }
     };
 
@@ -159,7 +164,8 @@ public class IconItem extends Widget
                         {
                             ((IngredientContainer)IconItem.this.parent).setType(IconItem.this.name, NArea.Ingredient.Type.BARTER);
                         }
-                        else if (option.name.equals("Mark as Barrel")) {
+                        else if(option.name.equals("Mark as barrel"))
+                        {
                             ((IngredientContainer)IconItem.this.parent).setType(IconItem.this.name, NArea.Ingredient.Type.BARREL);
                         }
                         else if(option.name.equals("Unmark"))
