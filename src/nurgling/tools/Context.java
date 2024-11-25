@@ -191,26 +191,26 @@ public class Context {
             this.pile = gob;
         }
     }
-    public static class OutputBarrel  implements Output {
-        private final Pair<Coord2d,Coord2d> area;
-        private final int th;
-
-        public OutputBarrel(Gob gob, Pair<Coord2d,Coord2d> area, int th) {
-            super();
-            this.area = area;
-            this.th = th;
-        }
-
-        @Override
-        public Pair<Coord2d,Coord2d> getArea() {
-            return area;
-        }
-
-        @Override
-        public int getTh() {
-            return th;
-        }
-    }
+//    public static class OutputBarrel  implements Output {
+//        private final Pair<Coord2d,Coord2d> area;
+//        private final int th;
+//
+//        public OutputBarrel(Gob gob, Pair<Coord2d,Coord2d> area, int th) {
+//            super();
+//            this.area = area;
+//            this.th = th;
+//        }
+//
+//        @Override
+//        public Pair<Coord2d,Coord2d> getArea() {
+//            return area;
+//        }
+//
+//        @Override
+//        public int getTh() {
+//            return th;
+//        }
+//    }
     public static ArrayList<Output> GetOutput(String item, NArea area)  throws InterruptedException
     {
 
@@ -244,11 +244,6 @@ public class Context {
                 case BARREL: {
                     for (Gob gob : Finder.findGobs(area, new NAlias("barrel"))) {
                         outputs.add(new OutputBarrel(gob, area.getRCArea(), ingredient.th));
-                    }
-                }
-                case BARREL: {
-                    for (Gob gob : Finder.findGobs(area, new NAlias("barrel"))) {
-                        outputs.add(new OutputBarrel(gob, area.getRCArea(), ingredient.th)); // Добавляем OutputBarrel
                     }
                 }
             }
