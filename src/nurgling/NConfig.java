@@ -79,6 +79,8 @@ public class NConfig
         worldexplorerprop,
         questNotified, fishingsettings,
         tree_q_show, zone_sync, lpassistent
+        ,
+        simplecrops
     }
 
 
@@ -127,6 +129,7 @@ public class NConfig
         conf.put(Key.zone_sync, "");
         conf.put(Key.tree_q_show, "17");
         conf.put(Key.lpassistent, false);
+        conf.put(Key.simplecrops, true);
 
         ArrayList<HashMap<String, Object>> qpattern = new ArrayList<>();
         HashMap<String, Object> res1 = new HashMap<>();
