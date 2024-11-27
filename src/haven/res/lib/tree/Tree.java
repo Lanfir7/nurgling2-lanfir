@@ -113,16 +113,18 @@ public class Tree extends Sprite {
 		if (gob != null) {
 			gob.setattr(new TreeRotation(gob, rndrot(gob)));
 			gob.setattr(new GobSvaj(gob));
-			if (fscale * 10 >= treeQShowValue) {
-				System.out.println("Увидел " + res.name + " квалити: " + fscale * 10);
+			if (fscale < 1.0f || fscale * 10 >= treeQShowValue) {
 				gob.setattr(new TreeScale(gob, fscale));
 
-				// Отображение окна при выполнении условия
-				GameUI gui = NUtils.getGameUI();
-				if (gui != null) {
-					TreeAlertWindow alert = new TreeAlertWindow(res.name, fscale * 10);
-					gui.add(alert, new Coord(200, 200));  // Позиция окна на экране
+				if (fscale * 10 >= treeQShowValue) {
+					System.out.println("Увидел " + res.name + " квалити: " + fscale * 10);
+					GameUI gui = NUtils.getGameUI();
+					if (gui != null) {
+						TreeAlertWindow alert = new TreeAlertWindow(res.name, fscale * 10);
+						gui.add(alert, new Coord(200, 200));  // Позиция окна на экране
+					}
 				}
+
 			}
 		}
 	parts = mkparts(res, s, fl);
