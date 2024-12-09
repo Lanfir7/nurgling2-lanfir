@@ -99,6 +99,9 @@ public class NBotsMenu extends Widget
         addLayout(utils);
         NLayout build = new NLayout("build");
         build.elements.add(new NButton("dframe", new BuildDryingFrame(), true));
+        build.elements.add(new NButton("dframe", new BuildHTable(), true));
+        build.elements.add(new NButton("dframe", new BuildBeeHive(), true));
+        build.elements.add(new NButton("cellar", new BuildBeeHive(), true));
         build.elements.add(new NButton("cellar", new BuildCellar()));
         build.elements.add(new NButton("ttub", new BuildTtub()));
         build.elements.add(new NButton("cupboard", new BuildCupboard()));
@@ -108,7 +111,7 @@ public class NBotsMenu extends Widget
         build.elements.add(new NButton("chest", new BuildChest(), true));
         build.elements.add(new NButton("tarkilnb", new BuildTarKiln(), true));
         build.elements.add(new NButton("smoke_shed", new BuildSmokeShed(), true));
-        build.elements.add(new NButton("smoke_shed", new BuildCrate()));
+        build.elements.add(new NButton("smoke_shed", new BuildCrate(), true));
         addLayout(build);
         if (NUtils.getUI().core.debug) {
             NLayout tests = new NLayout("tools");
