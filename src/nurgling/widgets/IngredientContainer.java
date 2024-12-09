@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
-public class IngredientContainer extends Widget implements NDTarget
+public class IngredientContainer extends Widget implements DTarget
 {
     static Color bg = new Color(30,40,40,160);
 
@@ -79,15 +79,15 @@ public class IngredientContainer extends Widget implements NDTarget
     ArrayList<IconItem> icons = new ArrayList<>();
 
     @Override
-    public boolean drop(WItem item, Coord cc, Coord ul)
-    {
+    public boolean drop(Drop ev) {
         if(id!=-1)
         {
-            String name = ((NGItem) item.item).name();
-            JSONObject res = ItemTex.save(item.item.spr);
+            String name = ((NGItem) ev.src.item).name();
+            JSONObject res = ItemTex.save(((NGItem) ev.src.item).spr);
             addItem(name, res);
         }
-        return true;
+        return DTarget.super.drop(ev);
+
     }
 
     public void addItem(String name, JSONObject res)
