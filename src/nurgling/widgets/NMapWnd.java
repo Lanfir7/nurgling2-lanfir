@@ -24,6 +24,7 @@ public class NMapWnd extends MapWnd {
 
     public NMapWnd(MapFile file, MapView mv, Coord sz, String title) {
         super(file, mv, sz, title);
+        setfocus(view);
     }
 
     public class GobMarker extends MapFile.Marker {
@@ -108,8 +109,17 @@ public class NMapWnd extends MapWnd {
             if (worldCoord != null) {
                 waypoints.add(worldCoord);
                 pathFollower.addPoint(worldCoord);
-                System.out.println("Player position: " + NUtils.player().rc);
-                System.out.println("Added movement point: " + worldCoord);
+                //System.out.println("Player position: " + NUtils.player().rc);
+                Coord2d delta = worldCoord.sub(view.dloc.tc.mul(MCache.tilesz));
+                double scale = view.scalef() * MCache.tilesz.x;
+                Coord2d scaled = delta.div(scale);
+                Coord mapCoord = scaled.round().add(view.sz.div(2));
+                System.out.println("Added movement point worldCoord: " + worldCoord);
+                System.out.println("Added movement point delta: " + delta);
+                System.out.println("Added movement point scaled: " + scaled);
+                System.out.println("Added movement point mapCoord: " + mapCoord);
+                System.out.println("Added movement point:RAW" + vc);
+                System.out.println("Added movement point MAP: " + worldToMap(worldCoord));
                 return true;
             } else {
                 System.out.println("Failed to convert map click to world coordinates.");
@@ -128,7 +138,7 @@ public class NMapWnd extends MapWnd {
             return null;
 
         // Вычисляем глобальные координаты
-        Coord2d globalCoord = clickLoc.tc.sub(view.sessloc.tc).mul(MCache.tilesz).add(MCache.tilesz.div(2)).sub(MCache.tilesz.mul(6));
+        Coord2d globalCoord = clickLoc.tc.sub(view.sessloc.tc).mul(MCache.tilesz).add(MCache.tilesz.div(2)).sub(MCache.tilesz.mul(47));//6
         return globalCoord;
     }
 
@@ -142,6 +152,7 @@ public class NMapWnd extends MapWnd {
         Coord mapCoord = scaled.round().add(view.sz.div(2));
         return mapCoord;
     }
+
 
     @Override
     public void draw(GOut g) {
@@ -169,6 +180,9 @@ public class NMapWnd extends MapWnd {
     public void tick(double dt) {
         pathFollower.tick();
         super.tick(dt);
+        if (ui != null && ui.root.focused != view) {
+            setfocus(view); // Если фокус не на карте, устанавливаем
+        }
     }
 
     public void pathCompleted() {
