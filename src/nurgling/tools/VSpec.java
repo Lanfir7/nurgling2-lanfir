@@ -2712,6 +2712,16 @@ public class VSpec {
         }
         return null;
     }
+    public static List<JSONObject> getAlternatives(String itemName) {
+        for (Map.Entry<String, ArrayList<JSONObject>> entry : categories.entrySet()) {
+            for (JSONObject obj : entry.getValue()) {
+                if (obj.optString("name").equalsIgnoreCase(itemName)) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return Collections.emptyList();
+    }
     public static void checkLpExplorer(Gob clickedGob, String name) {
         if(clickedGob!=null) {
             if (clickedGob.ngob.name != null && object.containsKey(clickedGob.ngob.name)) {

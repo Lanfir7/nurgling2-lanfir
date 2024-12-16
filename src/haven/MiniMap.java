@@ -66,7 +66,7 @@ public class MiniMap extends Widget
     protected Area dgext, dtext;
     protected Segment dseg;
     protected int dlvl;
-    protected Location dloc;
+    public Location dloc;
 
     public MiniMap(Coord sz, MapFile file) {
 	super(sz);
@@ -502,7 +502,7 @@ public class MiniMap extends Widget
 	}
     }
 
-    protected float scalef() {
+    public float scalef() {
 	return(UI.unscale((float)(1 << dlvl)));
     }
 

@@ -122,7 +122,7 @@ public class NMiniMap extends MiniMap implements Console.Directory {
     }
 
     @Override
-    protected float scalef() {
+    public float scalef() {
         return(UI.unscale((float)(1 << dlvl))/scale);
     }
 

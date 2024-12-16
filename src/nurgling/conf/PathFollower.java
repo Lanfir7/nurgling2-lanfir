@@ -40,6 +40,14 @@ public class PathFollower {
     public boolean isMoving() {
         return isMoving;
     }
+    public void setPoints(List<Coord2d> coords) {
+        clear();
+        pathQueue.addAll(coords);
+        // Как только список точек установлен, можно сразу начать движение к первой точке
+        if (!pathQueue.isEmpty()) {
+            moveToNextPoint();
+        }
+    }
 
     public void moveToNextPoint() {
         if (!pathQueue.isEmpty()) {
