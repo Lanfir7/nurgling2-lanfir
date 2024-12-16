@@ -2652,6 +2652,8 @@ public class VSpec {
         medicine.add(new JSONObject("{\"static\":\"gfx/invobjs/mudointment\",\"name\":\"Mud Ointment\"}"));
         medicine.add(new JSONObject("{\"static\":\"gfx/invobjs/rootfill\",\"name\":\"Rootfill\"}"));
         medicine.add(new JSONObject("{\"static\":\"gfx/invobjs/jar-snakejuice\",\"name\":\"Snake Juice\"}"));
+        medicine.add(new JSONObject("{\"static\":\"gfx/invobjs/jar-willowweep\",\"name\":\"Willow Weep\"}"));
+        medicine.add(new JSONObject("{\"static\":\"gfx/invobjs/jar-tansyextract\",\"name\":\"Tansy Extract\"}"));
         medicine.add(new JSONObject("{\"static\":\"gfx/invobjs/stingingpoultice\",\"name\":\"Stinging Poultice\"}"));
         medicine.add(new JSONObject("{\"static\":\"gfx/invobjs/stitchpatch\",\"name\":\"Stitch Patch\"}"));
         medicine.add(new JSONObject("{\"static\":\"gfx/invobjs/toadbutter\",\"name\":\"Toad Butter\"}"));
@@ -2699,7 +2701,17 @@ public class VSpec {
         chest_state.put(NStyle.Container.FREE, 3);
         chest_state.put(NStyle.Container.FULL, 28);
     }
+    public static String getIconPathForMedicine(String medicineName) {
+        ArrayList<JSONObject> medicineItems = categories.get("Medicine");
+        if (medicineItems == null) return null;
 
+        for (JSONObject item : medicineItems) {
+            if (medicineName.equals(item.optString("name"))) {
+                return item.optString("static");
+            }
+        }
+        return null;
+    }
     public static void checkLpExplorer(Gob clickedGob, String name) {
         if(clickedGob!=null) {
             if (clickedGob.ngob.name != null && object.containsKey(clickedGob.ngob.name)) {

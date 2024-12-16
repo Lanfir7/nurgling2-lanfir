@@ -58,7 +58,11 @@ public class SAttrWnd extends Widget {
 	    super(Coord.of(attrw, attrf.height() + UI.scale(2)), glob, attr);
 	    Resource res = Loading.waitfor(this.attr.res());
 	    this.img = new TexI(convolve(res.flayer(Resource.imgc).img, new Coord(this.sz.y, this.sz.y), iconfilter));
-	    this.rnm = attrf.render(res.flayer(Resource.tooltip).t);
+		String shortName = res.flayer(Resource.tooltip).t;
+		if(shortName.equals("Unarmed Combat")) shortName = "Unarmed";
+		if(shortName.equals("Melee Combat")) shortName = "Melee";
+		if(shortName.equals("Marksmanship")) shortName = "MM";
+		this.rnm = attrf.render(shortName);
 	    this.bg = bg;
 	    add = adda(new IButton("gfx/hud/buttons/add", "u", "d", "h").action(() -> adj(1)),
 		       sz.x - UI.scale(5), sz.y / 2, 1, 0.5);
@@ -95,7 +99,8 @@ public class SAttrWnd extends Widget {
 	    Coord cn = new Coord(0, sz.y / 2);
 	    g.aimage(img, cn.add(5, 0), 0, 0.5);
 	    g.aimage(rnm.tex(), cn.add(img.sz().x + UI.scale(10), 1), 0, 0.5);
-	    g.aimage(ct.tex(), cn.add(sub.c.x - UI.scale(5), 1), 1, 0.5);
+		g.aimage(attrf.render(Integer.toString(cbv), Color.WHITE).tex(), cn.add(sub.c.x - UI.scale(40), 1), 1, 0.5);
+		g.aimage(ct.tex(), cn.add(sub.c.x - UI.scale(5), 1), 1, 0.5);
 	}
 
 	private void updcost() {

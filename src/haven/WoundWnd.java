@@ -26,6 +26,10 @@
 
 package haven;
 
+import haven.res.lib.itemtex.ItemTex;
+import nurgling.tools.VSpec;
+import org.json.JSONObject;
+
 import java.util.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -75,6 +79,43 @@ public class WoundWnd extends Widget {
 	public int order() {return(10);}
     }
 
+	public static final Map<String, List<String>> woundTreatments = new HashMap<>();
+	static {
+		woundTreatments.put("Adder Bite", Arrays.asList("Snake Juice"));
+		woundTreatments.put("Antcid Burns", Arrays.asList("Yarrow"));
+		woundTreatments.put("Beesting", Arrays.asList("Kelp Cream", "Ant Paste", "Gray Grease"));
+		woundTreatments.put("Black-eyed", Arrays.asList("Toad Butter", "Hartshorn Salve", "Honey Wayband", "Cold Cut"));
+		woundTreatments.put("Blade Kiss", Arrays.asList("Toad Butter", "Gauze"));
+		woundTreatments.put("Blunt Trauma", Arrays.asList("Hartshorn Salve", "Leech", "Gauze", "Toad Butter", "Camomile Compress", "Opium", "Willow Weep"));
+		woundTreatments.put("Bruises", Arrays.asList("Leech", "Willow Weep"));
+		woundTreatments.put("Coaler's Cough", Arrays.asList("Opium"));
+		woundTreatments.put("Concussion", Arrays.asList("Cold Compress", "Opium", "Willow Weep"));
+		woundTreatments.put("Crab Caressed", Arrays.asList("Ant Paste"));
+		woundTreatments.put("Cruel Incision", Arrays.asList("Gauze", "Stitch Patch", "Rootfill"));
+		woundTreatments.put("Deep Cut", Arrays.asList("Gauze", "Stinging Poultice", "Rootfill", "Waybroad", "Honey Wayband", "Cold Cut"));
+		woundTreatments.put("Deep Worm", Arrays.asList("Tansy Extract"));
+		woundTreatments.put("Fell Slash", Arrays.asList("Gauze"));
+		woundTreatments.put("Infected Sore", Arrays.asList("Camomile Compress", "Bar of Soap", "Opium", "Ant Paste"));
+		woundTreatments.put("Jellyfish Sting", Arrays.asList("Gray Grease"));
+		woundTreatments.put("Leech Burns", Arrays.asList("Toad Butter"));
+		woundTreatments.put("Midge Bite", Arrays.asList("Yarrow"));
+		woundTreatments.put("Nasty Laceration", Arrays.asList("Stitch Patch", "Toad Butter"));
+		woundTreatments.put("Nasty Wart", Arrays.asList("Ancient Root"));
+		woundTreatments.put("Nerve Damage", Arrays.asList("Ancient Root"));
+		woundTreatments.put("Nicks & Knacks", Arrays.asList("Yarrow", "Honey Wayband"));
+		woundTreatments.put("Punch-Sore", Arrays.asList("Mud Ointment", "Opium", "Willow Weep"));
+		woundTreatments.put("Quicksilver Poisoning", Arrays.asList("Ancient Root"));
+		woundTreatments.put("Sand Flea Bites", Arrays.asList("Yarrow", "Gray Grease"));
+		woundTreatments.put("Scrapes & Cuts", Arrays.asList("Yarrow", "Mud Ointment", "Honey Wayband"));
+		woundTreatments.put("Seal Finger", Arrays.asList("Hartshorn Salve", "Kelp Cream", "Ant Paste"));
+		woundTreatments.put("Severe Mauling", Arrays.asList("Hartshorn Salve", "Opium"));
+		woundTreatments.put("Something Broken", Arrays.asList("Splint"));
+		woundTreatments.put("Sore Snout", Arrays.asList("Ant Paste", "Gray Grease", "Mud Ointment", "Toad Butter"));
+		woundTreatments.put("Swamp Fever", Arrays.asList("Snake Juice"));
+		woundTreatments.put("Swollen Bumps", Arrays.asList("Cold Compress", "Leech", "Stinging Poultice", "Cold Cut"));
+		woundTreatments.put("Unfaced", Arrays.asList("Leech", "Mud Ointment", "Toad Butter", "Kelp Cream"));
+		woundTreatments.put("Wretched Gore", Arrays.asList("Stitch Patch"));
+	}
     public static class Wound implements ItemInfo.ResOwner {
 	public final Glob glob;
 	public final int id, parentid;
@@ -82,14 +123,13 @@ public class WoundWnd extends Widget {
 	public int level;
 	public ItemInfo.Raw rawinfo;
 	private String sortkey = "\uffff";
-
+	public List<String> treatments = new ArrayList<>();
 	private Wound(Glob glob, int id, Indir<Resource> res, int parentid) {
 	    this.glob = glob;
 	    this.id = id;
 	    this.res = res;
 	    this.parentid = parentid;
 	}
-
 	private static final OwnerContext.ClassResolver<Wound> ctxr = new OwnerContext.ClassResolver<Wound>()
 	    .add(Wound.class, wnd -> wnd)
 	    .add(Glob.class, wnd -> wnd.glob)
@@ -149,24 +189,65 @@ public class WoundWnd extends Widget {
 
 	public void drawbg(GOut g) {}
 
-	public BufferedImage renderinfo(int width) {
-	    Wound wnd = wound();
-	    ItemInfo.Layout l = new ItemInfo.Layout(wnd);
-	    l.width = width;
-	    List<ItemInfo> info = wnd.info();
-	    l.cmp.add(wnd.icon(), Coord.z);
-	    ItemInfo.Name nm = ItemInfo.find(ItemInfo.Name.class, info);
-	    l.cmp.add(namef.render(nm.str.text).img, Coord.of(0, l.cmp.sz.y + UI.scale(10)));
-	    l.cmp.sz = l.cmp.sz.add(0, UI.scale(10));
-	    for(ItemInfo inf : info) {
-		if((inf != nm) && (inf instanceof ItemInfo.Tip))
-		    l.add((ItemInfo.Tip)inf);
-	    }
-	    this.info = info;
-	    return(l.render());
-	}
+		public BufferedImage renderinfo(int width) {
+			Wound wnd = wound();
+			ItemInfo.Layout l = new ItemInfo.Layout(wnd);
+			l.width = width;
+			List<ItemInfo> info = wnd.info();
 
-	public int woundid() {return(id);}
+			// Добавляем иконку раны и название
+			l.cmp.add(wnd.icon(), Coord.z);
+			ItemInfo.Name nm = ItemInfo.find(ItemInfo.Name.class, info);
+			l.cmp.add(namef.render(nm.str.text).img, Coord.of(0, l.cmp.sz.y + UI.scale(10)));
+			l.cmp.sz = l.cmp.sz.add(0, UI.scale(10));
+
+			// Добавляем описание раны
+			for (ItemInfo inf : info) {
+				if ((inf != nm) && (inf instanceof ItemInfo.Tip)) {
+					l.add((ItemInfo.Tip) inf);
+				}
+			}
+
+			// Добавляем заголовок для лечения, если есть доступные способы
+			if (!wnd.treatments.isEmpty()) {
+				l.cmp.sz = l.cmp.sz.add(0, UI.scale(15)); // Отступ перед заголовком
+				l.cmp.add(ifnd.render("Treated with:", width).img, Coord.of(0, l.cmp.sz.y));
+
+				int xOffset = UI.scale(10); // Смещение X для иконок
+				int yOffset = l.cmp.sz.y;   // Текущая позиция Y
+
+				for (String treatment : wnd.treatments) {
+					// Получаем путь иконки из VSpec
+					String iconPath = VSpec.getIconPathForMedicine(treatment);
+					if (iconPath == null) continue; // Пропускаем, если путь отсутствует
+
+					// Создаем JSONObject для ItemTex.create()
+					JSONObject iconObj = new JSONObject();
+					iconObj.put("static", iconPath);
+
+					// Создаем иконку и текст
+					BufferedImage iconImg = PUtils.uiscale(ItemTex.create(iconObj), new Coord(UI.scale(25), UI.scale(25)));
+					BufferedImage textImg = ifnd.render("   " + treatment, width).img;
+
+					// Центрируем текст по вертикали относительно иконки
+					int yText = yOffset + (iconImg.getHeight() / 2) - (textImg.getHeight() / 2);
+
+					// Добавляем иконку и текст
+					l.cmp.add(iconImg, Coord.of(xOffset, yOffset)); // Иконка
+					l.cmp.add(textImg, Coord.of(xOffset + UI.scale(30), yText)); // Текст рядом с иконкой
+
+					// Смещаем Y для следующего элемента
+					yOffset += iconImg.getHeight() + UI.scale(5);
+				}
+				l.cmp.sz = l.cmp.sz.add(0, yOffset - l.cmp.sz.y); // Обновляем размер компонента
+			}
+
+			this.info = info;
+			return l.render();
+		}
+
+
+		public int woundid() {return(id);}
     }
 
     @RName("wound")
@@ -371,6 +452,7 @@ public class WoundWnd extends Widget {
 	    }
 	    w.rawinfo = new ItemInfo.Raw(Utils.splice(args, a + 4, len - 4));
 	    w.info = null;
+		w.treatments = woundTreatments.getOrDefault(w.name(), Collections.emptyList());
 	    wounds.loading = true;
 	} else {
 	    wounds.remove(id);
